@@ -84,7 +84,7 @@
             padding: 24px;
             margin-bottom: 16px;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
         .header::before {
             content: "";
@@ -92,6 +92,7 @@
             top: -50%; right: -50%;
             width: 150%; height: 150%;
             background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 60%);
+            pointer-events: none;
         }
         .header-title {
             font-size: 20px;
@@ -113,7 +114,7 @@
             right: 16px;
             display: flex;
             gap: 8px;
-            z-index: 1;
+            z-index: 100;
         }
         .header-btn {
             width: 32px;
@@ -400,6 +401,35 @@
             background: var(--primary);
             color: #fff;
             border-color: var(--primary);
+        }
+        .collection-categories {
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .category-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .category-tab {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .category-tab.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
         }
         .card-grid {
             display: grid;
@@ -889,10 +919,7 @@
                         <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">数据存储在浏览器本地，请定期导出备份！</div>
                     </div>
                 </div>
-                <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;">
-                    <div style="font-size:10px;color:var(--text-secondary);">更新时间: <span id="lastUpdateTime">2026-07-13</span></div>
-                    <button class="btn btn-secondary" onclick="editNotification()" style="font-size:11px;padding:6px 12px;">编辑通知</button>
-                </div>
+                
             </div>
 
             <!-- 核心数据 -->
@@ -942,9 +969,9 @@
             <!-- 全员满赠 -->
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
-                <div class="input-group">
-                    <label>全服总抽数（手动更新）</label>
-                    <input type="number" id="globalDrawsInput" placeholder="输入全服总抽数" oninput="updateGlobalDraws(this.value)" />
+                <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">45005</span> 个</div>
+                    <div style="font-size:12px;color:var(--text-secondary);">更新时间: <span id="lastUpdateTime">2026-07-13 01:19:11</span></div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -966,11 +993,11 @@
                 <div class="card-title">🔄 碎卡兑换计算器</div>
                 <div class="input-row">
                     <div class="input-group">
-                        <label>D卡数量</label>
+                        <label>R卡数量</label>
                         <input type="number" id="dCardCount" value="0" min="0" oninput="calculateExchange()" />
                     </div>
                     <div class="input-group">
-                        <label>SD卡数量</label>
+                        <label>SR卡数量</label>
                         <input type="number" id="sdCardCount" value="0" min="0" oninput="calculateExchange()" />
                     </div>
                 </div>
@@ -980,19 +1007,19 @@
             <!-- 宣传礼追踪 -->
             <div class="card">
                 <div class="card-title">📣 宣传礼追踪</div>
-                <div class="checkbox-row" onclick="togglePromo('posted')">
+                <div class="checkbox-row" onclick="document.getElementById('promoPosted').click()">
                     <input type="checkbox" id="promoPosted" onchange="togglePromo('posted')" />
                     <label for="promoPosted">已发帖（抖音/小红书）</label>
                 </div>
-                <div class="checkbox-row" onclick="togglePromo('liked52')">
+                <div class="checkbox-row" onclick="document.getElementById('promoLiked').click()">
                     <input type="checkbox" id="promoLiked" onchange="togglePromo('liked52')" />
                     <label for="promoLiked">已集满52个赞</label>
                 </div>
-                <div class="checkbox-row" onclick="togglePromo('reached10')">
+                <div class="checkbox-row" onclick="document.getElementById('promoReached10').click()">
                     <input type="checkbox" id="promoReached10" onchange="togglePromo('reached10')" />
                     <label for="promoReached10">已满10抽</label>
                 </div>
-                <div class="checkbox-row" onclick="togglePromo('redeemed')">
+                <div class="checkbox-row" onclick="document.getElementById('promoRedeemed').click()">
                     <input type="checkbox" id="promoRedeemed" onchange="togglePromo('redeemed')" />
                     <label for="promoRedeemed">已兑换</label>
                 </div>
@@ -1084,6 +1111,14 @@
                 </div>
                 <div style="font-size:12px;color:var(--text-secondary);">
                     <span id="collectionStats">0 已收集</span>
+                </div>
+            </div>
+
+            <div class="collection-categories" id="collectionCategories">
+                <div class="category-scroll">
+                    <div class="category-tab active" onclick="switchCategory('daily')">📅 日常卡</div>
+                    <div class="category-tab" onclick="switchCategory('pet')">🐾 萌宠卡</div>
+                    <div class="category-tab" onclick="switchCategory('rare')">✨ SSR卡</div>
                 </div>
             </div>
 
@@ -1270,10 +1305,14 @@
             toastTimer = setTimeout(() => el.classList.remove('show'), duration);
         }
 
-        function showConfirm(title, desc, confirmText = '确定', cancelText = '取消') {
+        function showConfirm(title, desc, confirmText = '确定', cancelText = '取消', isHtml = false) {
             return new Promise((resolve) => {
                 document.getElementById('confirmTitle').textContent = title;
-                document.getElementById('confirmDesc').textContent = desc;
+                if (isHtml) {
+                    document.getElementById('confirmDesc').innerHTML = desc;
+                } else {
+                    document.getElementById('confirmDesc').textContent = desc;
+                }
                 document.getElementById('confirmOk').textContent = confirmText;
                 document.getElementById('confirmCancel').textContent = cancelText;
                 document.getElementById('confirmModal').classList.add('active');
@@ -1322,6 +1361,7 @@
 
             renderPersonalMilestones(totalDraws);
             renderGlobalMilestones();
+            updateGlobalDrawsDisplay();
             renderTimeBonus();
             renderPromoStatus();
             calculateExchange();
@@ -1389,10 +1429,15 @@
             container.innerHTML = html;
         }
 
-        function updateGlobalDraws(value) {
-            state.settings.globalTotalDraws = parseInt(value) || 0;
-            saveData();
-            renderGlobalMilestones();
+        function updateGlobalDrawsDisplay() {
+            const display = document.getElementById('globalDrawsDisplay');
+            const timeEl = document.getElementById('lastUpdateTime');
+            if (display && state.settings.globalTotalDraws > 0) {
+                display.textContent = state.settings.globalTotalDraws.toLocaleString();
+            }
+            if (timeEl && state.settings.lastUpdateTime) {
+                timeEl.textContent = state.settings.lastUpdateTime;
+            }
         }
 
         function renderTimeBonus() {
@@ -1453,10 +1498,10 @@
 
             const container = document.getElementById('exchangeResult');
             container.innerHTML = `
-                <div class="line"><span class="label">可兑换SD卡：</span><span class="value">×${canExchangeSD}</span></div>
+                <div class="line"><span class="label">可兑换SR卡：</span><span class="value">×${canExchangeSD}</span></div>
                 <div class="line"><span class="label">可兑换任意卡面：</span><span class="value">×${canExchangeAny}</span></div>
-                <div class="line"><span class="label">剩余D卡：</span><span class="value">${remainingD}</span></div>
-                <div class="line"><span class="label">剩余SD卡：</span><span class="value">${remainingSD}</span></div>
+                <div class="line"><span class="label">剩余R卡：</span><span class="value">${remainingD}</span></div>
+                <div class="line"><span class="label">剩余SR卡：</span><span class="value">${remainingSD}</span></div>
             `;
         }
 
@@ -1507,11 +1552,21 @@
         function renderCollection() {
             const cards = generateCards();
             const progress = getCollectionProgress();
-            const activeTab = document.querySelector('.collection-tab.active')?.getAttribute('onclick').match(/'([^']+)'/)[1] || 'all';
 
             document.getElementById('collectionProgressText').textContent = `${progress.got}/${progress.total}`;
 
-            const filteredCards = activeTab === 'all' ? cards : cards.filter(c => c.rarity === activeTab);
+            let filteredCards = [];
+            if (currentCategory === 'daily') {
+                filteredCards = cards.filter(c => c.rarity === 'R');
+            } else if (currentCategory === 'pet') {
+                filteredCards = cards.filter(c => c.rarity === 'SR');
+            } else if (currentCategory === 'rare') {
+                filteredCards = cards.filter(c => c.rarity === 'SSR');
+            } else {
+                const activeTab = document.querySelector('.collection-tab.active')?.getAttribute('onclick').match(/'([^']+)'/)[1] || 'all';
+                filteredCards = activeTab === 'all' ? cards : cards.filter(c => c.rarity === activeTab);
+            }
+            
             const gotCount = filteredCards.filter(c => (state.cardCounts[c.rarity]?.[c.id] || 0) > 0).length;
 
             document.getElementById('collectionStats').textContent = `${gotCount} 已收集 / ${filteredCards.length} 总计`;
@@ -1746,6 +1801,14 @@
         function switchCollectionTab(rarity) {
             document.querySelectorAll('.collection-tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`[onclick="switchCollectionTab('${rarity}')"]`).classList.add('active');
+            renderCollection();
+        }
+
+        let currentCategory = 'daily';
+        function switchCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[onclick="switchCategory('${category}')"]`).classList.add('active');
             renderCollection();
         }
 
@@ -2043,30 +2106,44 @@
         }
 
         function exportData() {
-            const dateStr = new Date().toISOString().slice(0, 10);
-            const exportData = {
-                cardCounts: state.cardCounts,
-                history: state.history,
-                settings: state.settings
-            };
-            const data = JSON.stringify(exportData, null, 2);
-            const blob = new Blob([data], { type: 'application/json;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.download = `周柯宇抽抽乐记录_${dateStr}.json`;
-            a.href = url;
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 100);
-            showToast('📤 导出成功');
+            try {
+                const dateStr = new Date().toISOString().slice(0, 10);
+                const exportData = {
+                    cardCounts: state.cardCounts,
+                    history: state.history,
+                    settings: state.settings
+                };
+                const data = JSON.stringify(exportData, null, 2);
+                const blob = new Blob([data], { type: 'application/json;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.download = `周柯宇抽抽乐记录_${dateStr}.json`;
+                a.href = url;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 500);
+                showToast('📤 导出成功');
+            } catch (e) {
+                console.error('Export error:', e);
+                showToast('❌ 导出失败，请重试');
+            }
         }
 
         function triggerImport() {
-            const input = document.getElementById('importInput');
-            input.click();
+            try {
+                const input = document.getElementById('importInput');
+                if (input) {
+                    input.click();
+                } else {
+                    showToast('❌ 导入控件未找到');
+                }
+            } catch (e) {
+                console.error('Import trigger error:', e);
+                showToast('❌ 导入失败，请重试');
+            }
         }
 
         function importData(input) {
@@ -2135,7 +2212,7 @@
                 `;
             });
 
-            showConfirm('通知公告', html + '<div style="font-size:11px;color:var(--text-secondary);margin-top:10px;">如需自定义通知内容，请联系开发者。</div>', '我知道了', '关闭');
+            showConfirm('通知公告', html + '<div style="font-size:11px;color:var(--text-secondary);margin-top:10px;">如需自定义通知内容，请联系开发者。</div>', '我知道了', '关闭', true);
         }
 
         function closeOnboarding() {
