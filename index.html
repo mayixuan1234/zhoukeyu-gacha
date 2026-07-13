@@ -1098,21 +1098,21 @@
                 <div class="card-title">📢 公告</div>
                 <div id="notificationContent">
                     <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
+                        <div style="font-size:13px;color:var(--accent);font-weight:600;">⚠️ 重要提醒</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.6;">
+                            <div>✅ 本网站无需登录，打开即可使用</div>
+                            <div>💾 数据自动保存在浏览器本地</div>
+                            <div>❌ 清除浏览器缓存会丢失全部记录！</div>
+                            <div>📤 建议定期使用右上角导出功能备份</div>
+                        </div>
+                    </div>
+                    <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
                         <div style="font-size:13px;color:var(--text);font-weight:600;">🎉 欢迎使用周柯宇抽抽乐记录器</div>
                         <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">记录你的每一次抽卡！</div>
                     </div>
                     <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
                         <div style="font-size:13px;color:var(--text);font-weight:600;">🚀 最新活动资讯</div>
                         <a href="https://weibo.com/u/1851141241" target="_blank" style="font-size:11px;color:var(--accent);margin-top:2px;display:block;">请关注官方微博：Liid·宇航员巡游卫星</a>
-                    </div>
-                    <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
-                        <div style="font-size:13px;color:var(--accent);font-weight:600;">⚠️ 重要提醒</div>
-                        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.5;">
-                            <div>• 数据存储在浏览器本地，清除缓存会丢失全部记录！</div>
-                            <div>• 建议定期使用右上角导出功能备份</div>
-                            <div>• 导出：生成JSON可保存到备忘录/文件</div>
-                            <div>• 导入：支持上传文件或粘贴JSON恢复数据</div>
-                        </div>
                     </div>
                     <div style="padding:10px 0;">
                         <div style="font-size:13px;color:var(--text);font-weight:600;">📝 更新信息 v1.2</div>
@@ -1181,8 +1181,8 @@
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
                 <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">54128</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 19:22）</div>
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">54466</span> 个</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 19:52）</div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -1390,8 +1390,8 @@
     <!-- 底部导航 -->
     <div class="tab-bar">
         <div class="tab-item active" onclick="switchTab('dashboard')">
-            <span class="icon">📊</span>
-            <span>总览</span>
+            <span class="icon">🏠</span>
+            <span>首页</span>
         </div>
         <div class="tab-item" onclick="switchTab('entry')">
             <span class="icon">✍</span>
@@ -2726,10 +2726,12 @@
 
                         saveData();
                         entrySelections = {};
+                        window.currentOCRResults = {};
                         filterEntryCards();
                         renderDashboard();
                         renderCollection();
                         renderHistory();
+                        renderOCRResults();
                         showToast(`✅ 已添加 ${total} 张卡片`);
                     }
                 });
