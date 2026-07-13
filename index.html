@@ -871,7 +871,7 @@
 </head>
 <body>
     <!-- file:// 协议警告 -->
-    <div id="fileProtocolWarning" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;">
+    <div id="fileProtocolWarning" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
         <div style="background:var(--bg-card);border-radius:16px;padding:24px;max-width:400px;width:100%;text-align:center;">
             <div style="font-size:48px;margin-bottom:12px;">⚠️</div>
             <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;">无法使用截图识别</div>
@@ -1577,45 +1577,59 @@
 
         function extractCardIdsFromLine(line, validCards) {
             const results = [];
-            let cleanedLine = line.toUpperCase();
+            let processedLine = line.toUpperCase();
             
-            cleanedLine = cleanedLine.replace(/[：:]/g, ' ');
-            cleanedLine = cleanedLine.replace(/月/g, ' ');
-            cleanedLine = cleanedLine.replace(/日/g, ' ');
-            cleanedLine = cleanedLine.replace(/订单/g, ' ');
-            cleanedLine = cleanedLine.replace(/详情/g, ' ');
-            cleanedLine = cleanedLine.replace(/记录/g, ' ');
-            cleanedLine = cleanedLine.replace(/我的/g, ' ');
-            cleanedLine = cleanedLine.replace(/\d{1,2}[:：]\d{2}/g, ' ');
-            cleanedLine = cleanedLine.replace(/\d{4}/g, ' ');
-            cleanedLine = cleanedLine.replace(/\s+/g, ' ');
+            processedLine = processedLine.replace(/[：:]/g, ' ');
+            processedLine = processedLine.replace(/[月日]/g, ' ');
+            processedLine = processedLine.replace(/[订单详情记录我的]/g, ' ');
+            processedLine = processedLine.replace(/\d{1,2}[:：]\d{2}/g, ' ');
+            processedLine = processedLine.replace(/\d{4}/g, ' ');
+            processedLine = processedLine.replace(/\s+/g, ' ');
             
-            const tokens = cleanedLine.split(/[\s,，。、；;]+/).filter(t => t.trim().length > 0);
+            const tokens = processedLine.split(/[\s,，。、；;]+/).filter(t => t.trim().length > 1);
             
             for (const token of tokens) {
-                const trimmed = token.trim();
+                const cleaned = token.trim().replace(/[^A-Z0-9]/g, '');
                 
-                if (/^[RRS]{1,3}\d+$/i.test(trimmed)) {
-                    const matchedCard = fuzzyMatchCard(trimmed, validCards);
-                    if (matchedCard && !results.includes(matchedCard)) {
-                        results.push(matchedCard);
-                    }
-                    continue;
-                }
-                
-                const patterns = [
-                    /[S]{2}R\d+/gi,
-                    /SR\d+/gi,
-                    /R\d+/gi
-                ];
-                
-                for (const pattern of patterns) {
-                    pattern.lastIndex = 0;
-                    let match;
-                    while ((match = pattern.exec(trimmed)) !== null) {
-                        const matchedCard = fuzzyMatchCard(match[0], validCards);
-                        if (matchedCard && !results.includes(matchedCard)) {
-                            results.push(matchedCard);
+                if (cleaned.length >= 2 && cleaned.length <= 6) {
+                    const rMatch = cleaned.match(/(R)(\d+)/);
+                    const srMatch = cleaned.match(/(SR)(\d+)/);
+                    const ssrMatch = cleaned.match(/(SSR)(\d+)/);
+                    
+                    if (ssrMatch) {
+                        const candidate = `SSR${ssrMatch[2]}`;
+                        if (validCards.includes(candidate) && !results.includes(candidate)) {
+                            results.push(candidate);
+                        } else {
+                            const matched = fuzzyMatchCard(candidate, validCards);
+                            if (matched && !results.includes(matched)) {
+                                results.push(matched);
+                            }
+                        }
+                    } else if (srMatch) {
+                        const candidate = `SR${srMatch[2]}`;
+                        if (validCards.includes(candidate) && !results.includes(candidate)) {
+                            results.push(candidate);
+                        } else {
+                            const matched = fuzzyMatchCard(candidate, validCards);
+                            if (matched && !results.includes(matched)) {
+                                results.push(matched);
+                            }
+                        }
+                    } else if (rMatch) {
+                        const candidate = `R${rMatch[2]}`;
+                        if (validCards.includes(candidate) && !results.includes(candidate)) {
+                            results.push(candidate);
+                        } else {
+                            const matched = fuzzyMatchCard(candidate, validCards);
+                            if (matched && !results.includes(matched)) {
+                                results.push(matched);
+                            }
+                        }
+                    } else {
+                        const matched = fuzzyMatchCard(cleaned, validCards);
+                        if (matched && !results.includes(matched)) {
+                            results.push(matched);
                         }
                     }
                 }
@@ -1669,14 +1683,14 @@
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     
-                    const scale = Math.max(2, 2000 / Math.max(img.width, img.height));
+                    const scale = Math.max(3, 3000 / Math.max(img.width, img.height));
                     canvas.width = Math.floor(img.width * scale);
                     canvas.height = Math.floor(img.height * scale);
                     
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const data = imageData.data;
+                    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    let data = imageData.data;
                     
                     let totalBrightness = 0;
                     for (let i = 0; i < data.length; i += 4) {
@@ -1700,14 +1714,66 @@
                         
                         const gray = 0.299 * r + 0.587 * g + 0.114 * b;
                         
-                        const contrast = 1.5;
-                        const factor = (259 * (contrast * 255 + 255)) / (255 * (259 - contrast * 255));
-                        let contrasted = factor * (gray - 128) + 128;
-                        contrasted = Math.max(0, Math.min(255, contrasted));
-                        
-                        const threshold = 128;
-                        const binary = contrasted > threshold ? 255 : 0;
-                        
+                        data[i] = gray;
+                        data[i + 1] = gray;
+                        data[i + 2] = gray;
+                    }
+                    
+                    ctx.putImageData(imageData, 0, 0);
+                    
+                    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    data = imageData.data;
+                    
+                    const sharpenKernel = [
+                        0, -1, 0,
+                        -1, 5, -1,
+                        0, -1, 0
+                    ];
+                    
+                    const width = canvas.width;
+                    const height = canvas.height;
+                    const outputData = new Uint8ClampedArray(data);
+                    
+                    for (let y = 1; y < height - 1; y++) {
+                        for (let x = 1; x < width - 1; x++) {
+                            for (let c = 0; c < 3; c++) {
+                                let sum = 0;
+                                for (let ky = -1; ky <= 1; ky++) {
+                                    for (let kx = -1; kx <= 1; kx++) {
+                                        const idx = ((y + ky) * width + (x + kx)) * 4 + c;
+                                        const kernelIdx = (ky + 1) * 3 + (kx + 1);
+                                        sum += data[idx] * sharpenKernel[kernelIdx];
+                                    }
+                                }
+                                outputData[((y * width) + x) * 4 + c] = Math.max(0, Math.min(255, sum));
+                            }
+                        }
+                    }
+                    
+                    imageData.data.set(outputData);
+                    ctx.putImageData(imageData, 0, 0);
+                    
+                    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    data = imageData.data;
+                    
+                    let brightCount = 0;
+                    let darkCount = 0;
+                    for (let i = 0; i < data.length; i += 4) {
+                        const gray = data[i];
+                        if (gray > 180) brightCount++;
+                        else if (gray < 80) darkCount++;
+                    }
+                    
+                    let threshold = 128;
+                    if (brightCount > darkCount * 2) {
+                        threshold = 180;
+                    } else if (darkCount > brightCount * 2) {
+                        threshold = 80;
+                    }
+                    
+                    for (let i = 0; i < data.length; i += 4) {
+                        const gray = data[i];
+                        const binary = gray > threshold ? 255 : 0;
                         data[i] = binary;
                         data[i + 1] = binary;
                         data[i + 2] = binary;
@@ -3177,6 +3243,13 @@
                     errorHandler: e => {
                         console.error('Tesseract worker error:', e);
                     }
+                });
+                
+                await worker.setParameters({
+                    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789RSsrSSR-',
+                    tessedit_pageseg_mode: Tesseract.PSM.AUTO,
+                    load_system_dawg: 0,
+                    load_freq_dawg: 0,
                 });
 
                 progressFill.style.width = '50%';
