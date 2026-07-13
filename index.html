@@ -6,13 +6,6 @@
     <title>周柯宇爱意正值炽夏抽抽乐记录器</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@6.5.0/dist/tesseract.min.js"></script>
-    <script>
-        if (typeof Tesseract === 'undefined') {
-            var script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js';
-            document.head.appendChild(script);
-        }
-    </script>
     <style>
         :root {
             --primary: #20517d;
@@ -870,28 +863,6 @@
     </style>
 </head>
 <body>
-    <!-- file:// 协议警告 -->
-    <div id="fileProtocolWarning" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
-        <div style="background:var(--bg-card);border-radius:16px;padding:24px;max-width:400px;width:100%;text-align:center;">
-            <div style="font-size:48px;margin-bottom:12px;">⚠️</div>
-            <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;">无法使用截图识别</div>
-            <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;text-align:left;">
-                <p style="margin:8px 0;"><strong>原因：</strong>你是直接双击打开的文件（file:// 协议）</p>
-                <p style="margin:8px 0;">浏览器安全策略会阻止 OCR 识别功能运行。</p>
-                <p style="margin:8px 0;"><strong>解决方法（选一个即可）：</strong></p>
-                <div style="background:var(--bg);padding:10px;border-radius:8px;margin:8px 0;">
-                    <p style="margin:4px 0;font-weight:600;">方案1：用在线网站 ✅</p>
-                    <p style="margin:4px 0;font-size:12px;">直接访问 <a href="https://zhoukeyu-gacha.pages.dev/" target="_blank" style="color:var(--accent);">zhoukeyu-gacha.pages.dev</a></p>
-                </div>
-                <div style="background:var(--bg);padding:10px;border-radius:8px;margin:8px 0;">
-                    <p style="margin:4px 0;font-weight:600;">方案2：启动本地服务器</p>
-                    <p style="margin:4px 0;font-size:12px;">在文件夹里开一个简易服务器，用 http://localhost 访问</p>
-                </div>
-            </div>
-            <button onclick="document.getElementById('fileProtocolWarning').style.display='none'" style="padding:10px 20px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;">我知道了（基础功能仍可用）</button>
-        </div>
-    </div>
-
     <div class="toast" id="toast"></div>
 
     <!-- 确认弹窗 -->
@@ -1223,8 +1194,8 @@
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
                 <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">54671</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 20:26）</div>
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">55143</span> 个</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 21:09）</div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -1683,103 +1654,11 @@
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     
-                    const scale = Math.max(3, 3000 / Math.max(img.width, img.height));
+                    const scale = Math.max(2, 2000 / Math.max(img.width, img.height));
                     canvas.width = Math.floor(img.width * scale);
                     canvas.height = Math.floor(img.height * scale);
                     
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    let data = imageData.data;
-                    
-                    let totalBrightness = 0;
-                    for (let i = 0; i < data.length; i += 4) {
-                        const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-                        totalBrightness += brightness;
-                    }
-                    const avgBrightness = totalBrightness / (data.length / 4);
-                    
-                    const isDarkBackground = avgBrightness < 128;
-                    
-                    for (let i = 0; i < data.length; i += 4) {
-                        let r = data[i];
-                        let g = data[i + 1];
-                        let b = data[i + 2];
-                        
-                        if (isDarkBackground) {
-                            r = 255 - r;
-                            g = 255 - g;
-                            b = 255 - b;
-                        }
-                        
-                        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
-                        
-                        data[i] = gray;
-                        data[i + 1] = gray;
-                        data[i + 2] = gray;
-                    }
-                    
-                    ctx.putImageData(imageData, 0, 0);
-                    
-                    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    data = imageData.data;
-                    
-                    const sharpenKernel = [
-                        0, -1, 0,
-                        -1, 5, -1,
-                        0, -1, 0
-                    ];
-                    
-                    const width = canvas.width;
-                    const height = canvas.height;
-                    const outputData = new Uint8ClampedArray(data);
-                    
-                    for (let y = 1; y < height - 1; y++) {
-                        for (let x = 1; x < width - 1; x++) {
-                            for (let c = 0; c < 3; c++) {
-                                let sum = 0;
-                                for (let ky = -1; ky <= 1; ky++) {
-                                    for (let kx = -1; kx <= 1; kx++) {
-                                        const idx = ((y + ky) * width + (x + kx)) * 4 + c;
-                                        const kernelIdx = (ky + 1) * 3 + (kx + 1);
-                                        sum += data[idx] * sharpenKernel[kernelIdx];
-                                    }
-                                }
-                                outputData[((y * width) + x) * 4 + c] = Math.max(0, Math.min(255, sum));
-                            }
-                        }
-                    }
-                    
-                    imageData.data.set(outputData);
-                    ctx.putImageData(imageData, 0, 0);
-                    
-                    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    data = imageData.data;
-                    
-                    let brightCount = 0;
-                    let darkCount = 0;
-                    for (let i = 0; i < data.length; i += 4) {
-                        const gray = data[i];
-                        if (gray > 180) brightCount++;
-                        else if (gray < 80) darkCount++;
-                    }
-                    
-                    let threshold = 128;
-                    if (brightCount > darkCount * 2) {
-                        threshold = 180;
-                    } else if (darkCount > brightCount * 2) {
-                        threshold = 80;
-                    }
-                    
-                    for (let i = 0; i < data.length; i += 4) {
-                        const gray = data[i];
-                        const binary = gray > threshold ? 255 : 0;
-                        data[i] = binary;
-                        data[i + 1] = binary;
-                        data[i + 2] = binary;
-                    }
-                    
-                    ctx.putImageData(imageData, 0, 0);
                     
                     canvas.toBlob((blob) => {
                         resolve(new File([blob], 'processed.png', { type: 'image/png' }));
@@ -1859,31 +1738,26 @@
                     return;
                 }
                 
-                const processedFile = await preprocessImage(file);
-                const { data: { text } } = await window.worker.recognize(processedFile);
+                const { data: { text } } = await window.worker.recognize(file);
                 
                 const validCards = generateCards().map(c => c.id);
                 const ocrResults = {};
                 
-                const hasPrizeFormat = text.includes('奖品') || /奖品\s*\d+/.test(text);
-                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                const upperText = text.toUpperCase();
                 
-                lines.forEach(line => {
-                    if (hasPrizeFormat) {
-                        if (/奖品\s*\d+/.test(line)) {
-                            const cardIds = extractCardIdsFromLine(line, validCards);
-                            cardIds.forEach(id => {
-                                ocrResults[id] = (ocrResults[id] || 0) + 1;
-                            });
-                        }
+                const ssrMatches = upperText.match(/SSR\d+/g) || [];
+                const srMatches = upperText.match(/SR\d+/g) || [];
+                const rMatches = upperText.match(/\bR\d+\b/g) || [];
+                
+                const allMatches = [...ssrMatches, ...srMatches, ...rMatches];
+                
+                allMatches.forEach(match => {
+                    if (validCards.includes(match)) {
+                        ocrResults[match] = (ocrResults[match] || 0) + 1;
                     } else {
-                        const hasR = /R\d/i.test(line) || /SR\d/i.test(line) || /SSR\d/i.test(line);
-                        
-                        if (hasR) {
-                            const cardIds = extractCardIdsFromLine(line, validCards);
-                            cardIds.forEach(id => {
-                                ocrResults[id] = (ocrResults[id] || 0) + 1;
-                            });
+                        const cleaned = match.replace(/[^A-Z0-9]/g, '');
+                        if (validCards.includes(cleaned)) {
+                            ocrResults[cleaned] = (ocrResults[cleaned] || 0) + 1;
                         }
                     }
                 });
@@ -3244,13 +3118,6 @@
                         console.error('Tesseract worker error:', e);
                     }
                 });
-                
-                await worker.setParameters({
-                    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789RSsrSSR-',
-                    tessedit_pageseg_mode: Tesseract.PSM.AUTO,
-                    load_system_dawg: 0,
-                    load_freq_dawg: 0,
-                });
 
                 progressFill.style.width = '50%';
                 resultsContainer.innerHTML = '<div style="text-align:center;color:var(--text-secondary);font-size:12px;">正在识别图片...</div>';
@@ -3264,32 +3131,28 @@
                     progressFill.style.width = `${progress}%`;
 
                     try {
-                        const processedFile = await preprocessImage(file);
-                        const { data: { text } } = await worker.recognize(processedFile);
+                        const { data: { text } } = await worker.recognize(file);
+                        
+                        console.log('OCR Raw Text:', text);
                         
                         const validCards = generateCards().map(c => c.id);
                         const ocrResultsTemp = {};
                         
-                        const hasPrizeFormat = text.includes('奖品') || /奖品\s*\d+/.test(text);
-                        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                        const upperText = text.toUpperCase();
                         
-                        lines.forEach(line => {
-                            if (hasPrizeFormat) {
-                                if (/奖品\s*\d+/.test(line)) {
-                                    const cardIds = extractCardIdsFromLine(line, validCards);
-                                    cardIds.forEach(id => {
-                                        ocrResultsTemp[id] = (ocrResultsTemp[id] || 0) + 1;
-                                    });
-                                }
+                        const ssrMatches = upperText.match(/SSR\d+/g) || [];
+                        const srMatches = upperText.match(/SR\d+/g) || [];
+                        const rMatches = upperText.match(/\bR\d+\b/g) || [];
+                        
+                        const allMatches = [...ssrMatches, ...srMatches, ...rMatches];
+                        
+                        allMatches.forEach(match => {
+                            if (validCards.includes(match)) {
+                                ocrResultsTemp[match] = (ocrResultsTemp[match] || 0) + 1;
                             } else {
-                                const hasR = /R\d/i.test(line) || /SR\d/i.test(line) || /SSR\d/i.test(line);
-                                const hasDateLike = /\d{1,2}月\d{1,2}日/.test(line) || /\d{1,2}[:：]\d{2}/.test(line);
-                                
-                                if (hasR) {
-                                    const cardIds = extractCardIdsFromLine(line, validCards);
-                                    cardIds.forEach(id => {
-                                        ocrResultsTemp[id] = (ocrResultsTemp[id] || 0) + 1;
-                                    });
+                                const cleaned = match.replace(/[^A-Z0-9]/g, '');
+                                if (validCards.includes(cleaned)) {
+                                    ocrResultsTemp[cleaned] = (ocrResultsTemp[cleaned] || 0) + 1;
                                 }
                             }
                         });
@@ -3330,7 +3193,13 @@
             } catch (e) {
                 console.error('OCR error:', e);
                 progressFill.style.width = '0%';
-                resultsContainer.innerHTML = `<div style="text-align:center;color:var(--danger);font-size:12px;">识别失败: ${e.message}<br/><span style="font-size:10px;">请检查网络连接后重试</span></div>`;
+                
+                let errorMsg = e.message;
+                if (location.protocol === 'file:') {
+                    errorMsg += '<br/><span style="font-size:10px;color:var(--warning);">注意：直接双击打开文件无法使用OCR，请使用本地服务器或在线网站</span>';
+                }
+                
+                resultsContainer.innerHTML = `<div style="text-align:center;color:var(--danger);font-size:12px;">识别失败: ${errorMsg}<br/><span style="font-size:10px;">请检查网络连接后重试</span></div>`;
                 footerInfo.textContent = '识别失败';
                 showToast('❌ OCR识别失败，请检查网络');
             }
@@ -3515,11 +3384,6 @@
         }
 
         function init() {
-            if (location.protocol === 'file:') {
-                const warning = document.getElementById('fileProtocolWarning');
-                if (warning) warning.style.display = 'flex';
-            }
-            
             loadData();
             applyTheme();
             initCategories();
