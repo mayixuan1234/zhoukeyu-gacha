@@ -100,7 +100,7 @@
         .header {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary));
             border-radius: var(--card-radius);
-            padding: 24px;
+            padding: 20px 16px;
             margin-bottom: 16px;
             position: relative;
             overflow: visible;
@@ -114,12 +114,14 @@
             pointer-events: none;
         }
         .header-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 800;
             color: #fff;
             margin-bottom: 4px;
             position: relative;
             z-index: 1;
+            padding-right: 80px;
+            line-height: 1.3;
         }
         .header-subtitle {
             font-size: 12px;
@@ -129,20 +131,20 @@
         }
         .header-actions {
             position: absolute;
-            top: 16px;
-            right: 16px;
+            top: 12px;
+            right: 12px;
             display: flex;
-            gap: 8px;
+            gap: 6px;
             z-index: 100;
         }
         .header-btn {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background: rgba(255,255,255,0.2);
             border: none;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
@@ -1047,6 +1049,26 @@
         </div>
     </div>
 
+    <!-- 回收站弹窗 -->
+    <div class="modal-overlay" id="trashModal">
+        <div class="modal-box" style="max-width:90vw;width:340px;max-height:80vh;display:flex;flex-direction:column;">
+            <div class="modal-header">
+                <div class="modal-title">🗑️ 回收站</div>
+                <button class="btn btn-secondary" onclick="document.getElementById('trashModal').classList.remove('active')" style="padding:4px 8px;font-size:14px;">✕</button>
+            </div>
+            <div id="trashList" style="flex:1;overflow-y:auto;margin-bottom:16px;">
+                <div style="text-align:center;padding:40px;color:var(--text-secondary);">
+                    <div style="font-size:48px;margin-bottom:8px;">📭</div>
+                    <div>回收站为空</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <button class="btn btn-secondary" onclick="restoreAllTrash()" style="flex:1;">♻️ 全部恢复</button>
+                <button class="btn btn-secondary" onclick="emptyTrash()" style="flex:1;color:var(--danger);">💀 彻底清空</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 首次使用提示 -->
     <div class="onboarding-modal hidden" id="onboarding">
         <div class="onboarding-icon">💙</div>
@@ -1069,14 +1091,12 @@
     </div>
 
     <div class="app">
-        <!-- 页面1：总览 -->
+        <!-- 页面1：首页 -->
         <div class="page active" id="page-dashboard">
             <div class="header">
                 <div class="header-actions">
                     <button class="header-btn" onclick="toggleTheme()" title="切换主题" id="themeToggle">🌙</button>
-                    <button class="header-btn" onclick="exportData()" title="导出数据">📤</button>
-                    <button class="header-btn" onclick="triggerImport()" title="导入数据">📥</button>
-                    <button class="header-btn" onclick="clearAllData()" title="清空">🗑️</button>
+                    <button class="header-btn" onclick="clearAllData()" title="清空数据">🗑️</button>
                 </div>
                 <div class="header-title">周柯宇爱意正值炽夏</div>
                 <div class="header-subtitle">抽抽乐记录器</div>
@@ -1181,8 +1201,8 @@
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
                 <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">54466</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 19:52）</div>
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">54523</span> 个</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 20:06）</div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -1369,9 +1389,11 @@
                 <div class="header-subtitle">所有录入记录</div>
             </div>
 
-            <div style="display:flex;gap:8px;margin-bottom:16px;">
-                <button class="btn btn-secondary" onclick="document.getElementById('importInput').click()">📥 导入数据</button>
-                <button class="btn btn-primary" onclick="exportData()">📤 导出记录</button>
+            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+                <button class="btn btn-secondary" onclick="document.getElementById('importInput').click()" style="flex:1;min-width:100px;">📥 导入</button>
+                <button class="btn btn-primary" onclick="exportData()" style="flex:1;min-width:100px;">📤 导出</button>
+                <button class="btn btn-secondary" onclick="showTrashModal()" style="flex:1;min-width:100px;">🗑️ 回收站</button>
+                <button class="btn btn-secondary" onclick="clearAllHistory()" style="flex:1;min-width:100px;color:var(--danger);">🧹 清空</button>
             </div>
 
             <ul class="history-list" id="historyList">
@@ -1464,6 +1486,7 @@
         let state = {
             cardCounts: {},
             history: [],
+            trash: [],
             settings: {
                 firstOrderTime: null,
                 globalTotalDraws: 0,
@@ -2766,6 +2789,209 @@
                 });
         }
 
+        function deleteHistoryRecord(index) {
+            const record = state.history[index];
+            if (!record) return;
+
+            showConfirm('删除记录', '确定要删除这条记录吗？删除后可在回收站恢复。', '删除', '取消')
+                .then(confirmed => {
+                    if (confirmed) {
+                        record.entries.forEach(e => {
+                            const cards = generateCards();
+                            const card = cards.find(c => c.id === e.cardId);
+                            if (card) {
+                                if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
+                                state.cardCounts[card.rarity][e.cardId] = Math.max(0, (state.cardCounts[card.rarity][e.cardId] || 0) - e.count);
+                            }
+                        });
+
+                        record.deletedAt = Date.now();
+                        state.trash.unshift(record);
+                        state.history.splice(index, 1);
+                        
+                        saveData();
+                        renderDashboard();
+                        renderCollection();
+                        renderHistory();
+                        showToast('✅ 已移到回收站');
+                    }
+                });
+        }
+
+        function clearAllHistory() {
+            if (state.history.length === 0) {
+                showToast('暂无记录可清空');
+                return;
+            }
+
+            showConfirm('清空记录', `确定要清空全部 ${state.history.length} 条记录吗？删除后可在回收站恢复。`, '全部删除', '取消')
+                .then(confirmed => {
+                    if (confirmed) {
+                        state.history.forEach(record => {
+                            record.entries.forEach(e => {
+                                const cards = generateCards();
+                                const card = cards.find(c => c.id === e.cardId);
+                                if (card) {
+                                    if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
+                                    state.cardCounts[card.rarity][e.cardId] = Math.max(0, (state.cardCounts[card.rarity][e.cardId] || 0) - e.count);
+                                }
+                            });
+                            record.deletedAt = Date.now();
+                            state.trash.unshift(record);
+                        });
+
+                        state.history = [];
+                        saveData();
+                        renderDashboard();
+                        renderCollection();
+                        renderHistory();
+                        showToast('✅ 已全部移到回收站');
+                    }
+                });
+        }
+
+        function showTrashModal() {
+            renderTrashList();
+            document.getElementById('trashModal').classList.add('active');
+        }
+
+        function renderTrashList() {
+            const container = document.getElementById('trashList');
+
+            if (state.trash.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center;padding:40px;color:var(--text-secondary);">
+                        <div style="font-size:48px;margin-bottom:8px;">📭</div>
+                        <div>回收站为空</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            state.trash.forEach((record, index) => {
+                const time = new Date(record.timestamp);
+                const timeStr = `${time.getMonth() + 1}/${time.getDate()} ${time.getHours()}:${String(time.getMinutes()).padStart(2, '0')}`;
+                const delTime = new Date(record.deletedAt);
+                const delTimeStr = `${delTime.getMonth() + 1}/${delTime.getDate()} ${delTime.getHours()}:${String(delTime.getMinutes()).padStart(2, '0')}`;
+
+                let cardsHtml = '';
+                record.entries.forEach(e => {
+                    cardsHtml += `<span style="display:inline-block;padding:2px 6px;margin:2px;background:var(--bg);border-radius:4px;font-size:11px;">${e.cardId}</span>`;
+                });
+
+                html += `
+                    <div style="padding:12px;background:var(--bg);border-radius:8px;margin-bottom:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                            <span style="font-size:12px;color:var(--text-secondary);">${timeStr}</span>
+                            <span style="font-size:11px;color:var(--danger);">删除于 ${delTimeStr}</span>
+                        </div>
+                        <div style="margin-bottom:8px;">${cardsHtml}</div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:12px;color:var(--text-secondary);">${record.totalCount}张 · ¥${record.totalCost.toFixed(2)}</span>
+                            <div style="display:flex;gap:6px;">
+                                <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="restoreTrashRecord(${index})">♻️ 恢复</button>
+                                <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;color:var(--danger);" onclick="permanentlyDeleteTrash(${index})">💀 删除</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function restoreTrashRecord(index) {
+            const record = state.trash[index];
+            if (!record) return;
+
+            record.entries.forEach(e => {
+                const cards = generateCards();
+                const card = cards.find(c => c.id === e.cardId);
+                if (card) {
+                    if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
+                    state.cardCounts[card.rarity][e.cardId] = (state.cardCounts[card.rarity][e.cardId] || 0) + e.count;
+                }
+            });
+
+            delete record.deletedAt;
+            state.history.unshift(record);
+            state.trash.splice(index, 1);
+            
+            state.history.sort((a, b) => b.timestamp - a.timestamp);
+            
+            saveData();
+            renderDashboard();
+            renderCollection();
+            renderHistory();
+            renderTrashList();
+            showToast('✅ 已恢复记录');
+        }
+
+        function permanentlyDeleteTrash(index) {
+            showConfirm('彻底删除', '确定要彻底删除这条记录吗？此操作不可恢复！', '彻底删除', '取消')
+                .then(confirmed => {
+                    if (confirmed) {
+                        state.trash.splice(index, 1);
+                        saveData();
+                        renderTrashList();
+                        showToast('✅ 已彻底删除');
+                    }
+                });
+        }
+
+        function restoreAllTrash() {
+            if (state.trash.length === 0) {
+                showToast('回收站为空');
+                return;
+            }
+
+            showConfirm('全部恢复', `确定要恢复回收站中全部 ${state.trash.length} 条记录吗？`, '全部恢复', '取消')
+                .then(confirmed => {
+                    if (confirmed) {
+                        state.trash.forEach(record => {
+                            record.entries.forEach(e => {
+                                const cards = generateCards();
+                                const card = cards.find(c => c.id === e.cardId);
+                                if (card) {
+                                    if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
+                                    state.cardCounts[card.rarity][e.cardId] = (state.cardCounts[card.rarity][e.cardId] || 0) + e.count;
+                                }
+                            });
+                            delete record.deletedAt;
+                            state.history.push(record);
+                        });
+
+                        state.trash = [];
+                        state.history.sort((a, b) => b.timestamp - a.timestamp);
+                        
+                        saveData();
+                        renderDashboard();
+                        renderCollection();
+                        renderHistory();
+                        renderTrashList();
+                        showToast('✅ 已全部恢复');
+                    }
+                });
+        }
+
+        function emptyTrash() {
+            if (state.trash.length === 0) {
+                showToast('回收站为空');
+                return;
+            }
+
+            showConfirm('彻底清空', `确定要彻底清空回收站中全部 ${state.trash.length} 条记录吗？此操作不可恢复！`, '彻底清空', '取消')
+                .then(confirmed => {
+                    if (confirmed) {
+                        state.trash = [];
+                        saveData();
+                        renderTrashList();
+                        showToast('✅ 回收站已清空');
+                    }
+                });
+        }
+
         function renderHistory() {
             const list = document.getElementById('historyList');
 
@@ -2781,7 +3007,7 @@
 
             let html = '';
 
-            state.history.forEach(record => {
+            state.history.forEach((record, index) => {
                 const time = new Date(record.timestamp);
                 const timeStr = `${time.getMonth() + 1}/${time.getDate()} ${time.getHours()}:${String(time.getMinutes()).padStart(2, '0')}`;
 
@@ -2794,7 +3020,10 @@
                     <li class="history-item">
                         <div class="history-header">
                             <span class="history-time">${timeStr}</span>
-                            <span class="history-source">${record.source === 'manual' ? '手动' : '截图识别'}</span>
+                            <div style="display:flex;gap:6px;align-items:center;">
+                                <span class="history-source">${record.source === 'manual' ? '手动' : '截图识别'}</span>
+                                <button class="btn btn-secondary" style="width:24px;height:24px;padding:0;font-size:12px;line-height:1;color:var(--danger);" onclick="deleteHistoryRecord(${index})" title="删除此记录">🗑️</button>
+                            </div>
                         </div>
                         <div class="history-cards">${cardsHtml}</div>
                         <div class="history-summary">
