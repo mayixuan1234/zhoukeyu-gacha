@@ -870,6 +870,28 @@
     </style>
 </head>
 <body>
+    <!-- file:// 协议警告 -->
+    <div id="fileProtocolWarning" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;">
+        <div style="background:var(--bg-card);border-radius:16px;padding:24px;max-width:400px;width:100%;text-align:center;">
+            <div style="font-size:48px;margin-bottom:12px;">⚠️</div>
+            <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;">无法使用截图识别</div>
+            <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;text-align:left;">
+                <p style="margin:8px 0;"><strong>原因：</strong>你是直接双击打开的文件（file:// 协议）</p>
+                <p style="margin:8px 0;">浏览器安全策略会阻止 OCR 识别功能运行。</p>
+                <p style="margin:8px 0;"><strong>解决方法（选一个即可）：</strong></p>
+                <div style="background:var(--bg);padding:10px;border-radius:8px;margin:8px 0;">
+                    <p style="margin:4px 0;font-weight:600;">方案1：用在线网站 ✅</p>
+                    <p style="margin:4px 0;font-size:12px;">直接访问 <a href="https://zhoukeyu-gacha.pages.dev/" target="_blank" style="color:var(--accent);">zhoukeyu-gacha.pages.dev</a></p>
+                </div>
+                <div style="background:var(--bg);padding:10px;border-radius:8px;margin:8px 0;">
+                    <p style="margin:4px 0;font-weight:600;">方案2：启动本地服务器</p>
+                    <p style="margin:4px 0;font-size:12px;">在文件夹里开一个简易服务器，用 http://localhost 访问</p>
+                </div>
+            </div>
+            <button onclick="document.getElementById('fileProtocolWarning').style.display='none'" style="padding:10px 20px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;">我知道了（基础功能仍可用）</button>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <!-- 确认弹窗 -->
@@ -1201,8 +1223,8 @@
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
                 <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">54523</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 20:06）</div>
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">54671</span> 个</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 20:26）</div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -1532,62 +1554,72 @@
                 return cleaned;
             }
             
-            let bestMatch = null;
-            let bestScore = Infinity;
-            
-            for (const card of validCards) {
-                const distance = levenshteinDistance(cleaned, card);
-                const maxLen = Math.max(cleaned.length, card.length);
-                const similarity = 1 - distance / maxLen;
+            if (/^[RS]+\d+$/.test(cleaned) || /^\d+[RS]+$/.test(cleaned)) {
+                let bestMatch = null;
+                let bestScore = Infinity;
                 
-                if (similarity >= 0.6 && distance < bestScore) {
-                    bestScore = distance;
-                    bestMatch = card;
+                for (const card of validCards) {
+                    const distance = levenshteinDistance(cleaned, card);
+                    const maxLen = Math.max(cleaned.length, card.length);
+                    const similarity = 1 - distance / maxLen;
+                    
+                    if (similarity >= 0.5 && distance < bestScore) {
+                        bestScore = distance;
+                        bestMatch = card;
+                    }
                 }
+                
+                return bestMatch;
             }
             
-            return bestMatch;
+            return null;
         }
 
         function extractCardIdsFromLine(line, validCards) {
             const results = [];
-            const cleanedLine = line.toUpperCase().replace(/[：:]/g, ' ').replace(/\s+/g, ' ');
+            let cleanedLine = line.toUpperCase();
             
-            const patterns = [
-                /[Ss]{2}[Rr]\s*\d+/gi,
-                /[Ss][Rr]\s*\d+/gi,
-                /[Rr]\s*\d+/gi
-            ];
+            cleanedLine = cleanedLine.replace(/[：:]/g, ' ');
+            cleanedLine = cleanedLine.replace(/月/g, ' ');
+            cleanedLine = cleanedLine.replace(/日/g, ' ');
+            cleanedLine = cleanedLine.replace(/订单/g, ' ');
+            cleanedLine = cleanedLine.replace(/详情/g, ' ');
+            cleanedLine = cleanedLine.replace(/记录/g, ' ');
+            cleanedLine = cleanedLine.replace(/我的/g, ' ');
+            cleanedLine = cleanedLine.replace(/\d{1,2}[:：]\d{2}/g, ' ');
+            cleanedLine = cleanedLine.replace(/\d{4}/g, ' ');
+            cleanedLine = cleanedLine.replace(/\s+/g, ' ');
             
-            const allMatches = [];
-            patterns.forEach(pattern => {
-                pattern.lastIndex = 0;
-                let match;
-                while ((match = pattern.exec(cleanedLine)) !== null) {
-                    allMatches.push({
-                        text: match[0].replace(/\s/g, ''),
-                        start: match.index,
-                        end: match.index + match[0].length
-                    });
-                }
-            });
+            const tokens = cleanedLine.split(/[\s,，。、；;]+/).filter(t => t.trim().length > 0);
             
-            allMatches.sort((a, b) => a.start - b.start || b.end - a.end);
-            
-            const matchedRanges = [];
-            allMatches.forEach(match => {
-                const isOverlapping = matchedRanges.some(range => 
-                    match.start < range.end && match.end > range.start
-                );
+            for (const token of tokens) {
+                const trimmed = token.trim();
                 
-                if (!isOverlapping) {
-                    const matchedCard = fuzzyMatchCard(match.text, validCards);
-                    if (matchedCard) {
+                if (/^[RRS]{1,3}\d+$/i.test(trimmed)) {
+                    const matchedCard = fuzzyMatchCard(trimmed, validCards);
+                    if (matchedCard && !results.includes(matchedCard)) {
                         results.push(matchedCard);
-                        matchedRanges.push({ start: match.start, end: match.end });
+                    }
+                    continue;
+                }
+                
+                const patterns = [
+                    /[S]{2}R\d+/gi,
+                    /SR\d+/gi,
+                    /R\d+/gi
+                ];
+                
+                for (const pattern of patterns) {
+                    pattern.lastIndex = 0;
+                    let match;
+                    while ((match = pattern.exec(trimmed)) !== null) {
+                        const matchedCard = fuzzyMatchCard(match[0], validCards);
+                        if (matchedCard && !results.includes(matchedCard)) {
+                            results.push(matchedCard);
+                        }
                     }
                 }
-            });
+            }
             
             return results;
         }
@@ -1704,26 +1736,28 @@
                 const validCards = generateCards().map(c => c.id);
                 const ocrResults = {};
                 
-                if (text.includes('奖品')) {
-                    const lines = text.split('\n');
-                    lines.forEach(line => {
-                        const trimmedLine = line.trim();
-                        if (/奖品\s*\d+/.test(trimmedLine)) {
-                            const cardIds = extractCardIdsFromLine(trimmedLine, validCards);
+                const hasPrizeFormat = text.includes('奖品') || /奖品\s*\d+/.test(text);
+                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                
+                lines.forEach(line => {
+                    if (hasPrizeFormat) {
+                        if (/奖品\s*\d+/.test(line)) {
+                            const cardIds = extractCardIdsFromLine(line, validCards);
                             cardIds.forEach(id => {
                                 ocrResults[id] = (ocrResults[id] || 0) + 1;
                             });
                         }
-                    });
-                } else {
-                    const lines = text.split('\n');
-                    lines.forEach(line => {
-                        const cardIds = extractCardIdsFromLine(line, validCards);
-                        cardIds.forEach(id => {
-                            ocrResults[id] = (ocrResults[id] || 0) + 1;
-                        });
-                    });
-                }
+                    } else {
+                        const hasR = /R\d/i.test(line) || /SR\d/i.test(line) || /SSR\d/i.test(line);
+                        
+                        if (hasR) {
+                            const cardIds = extractCardIdsFromLine(line, validCards);
+                            cardIds.forEach(id => {
+                                ocrResults[id] = (ocrResults[id] || 0) + 1;
+                            });
+                        }
+                    }
+                });
                 
                 window.currentOCRResults = ocrResults;
                 
@@ -3099,26 +3133,29 @@
                         const validCards = generateCards().map(c => c.id);
                         const ocrResultsTemp = {};
                         
-                        if (text.includes('奖品')) {
-                            const lines = text.split('\n');
-                            lines.forEach(line => {
-                                const trimmedLine = line.trim();
-                                if (/奖品\s*\d+/.test(trimmedLine)) {
-                                    const cardIds = extractCardIdsFromLine(trimmedLine, validCards);
+                        const hasPrizeFormat = text.includes('奖品') || /奖品\s*\d+/.test(text);
+                        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                        
+                        lines.forEach(line => {
+                            if (hasPrizeFormat) {
+                                if (/奖品\s*\d+/.test(line)) {
+                                    const cardIds = extractCardIdsFromLine(line, validCards);
                                     cardIds.forEach(id => {
                                         ocrResultsTemp[id] = (ocrResultsTemp[id] || 0) + 1;
                                     });
                                 }
-                            });
-                        } else {
-                            const lines = text.split('\n');
-                            lines.forEach(line => {
-                                const cardIds = extractCardIdsFromLine(line, validCards);
-                                cardIds.forEach(id => {
-                                    ocrResultsTemp[id] = (ocrResultsTemp[id] || 0) + 1;
-                                });
-                            });
-                        }
+                            } else {
+                                const hasR = /R\d/i.test(line) || /SR\d/i.test(line) || /SSR\d/i.test(line);
+                                const hasDateLike = /\d{1,2}月\d{1,2}日/.test(line) || /\d{1,2}[:：]\d{2}/.test(line);
+                                
+                                if (hasR) {
+                                    const cardIds = extractCardIdsFromLine(line, validCards);
+                                    cardIds.forEach(id => {
+                                        ocrResultsTemp[id] = (ocrResultsTemp[id] || 0) + 1;
+                                    });
+                                }
+                            }
+                        });
                         
                         for (const id in ocrResultsTemp) {
                             ocrResults[id] = (ocrResults[id] || 0) + ocrResultsTemp[id];
@@ -3341,6 +3378,11 @@
         }
 
         function init() {
+            if (location.protocol === 'file:') {
+                const warning = document.getElementById('fileProtocolWarning');
+                if (warning) warning.style.display = 'flex';
+            }
+            
             loadData();
             applyTheme();
             initCategories();
