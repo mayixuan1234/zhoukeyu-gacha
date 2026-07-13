@@ -1662,6 +1662,68 @@
             }
         }
 
+        async function preprocessImage(file) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    const scale = Math.max(2, 2000 / Math.max(img.width, img.height));
+                    canvas.width = Math.floor(img.width * scale);
+                    canvas.height = Math.floor(img.height * scale);
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+                    
+                    let totalBrightness = 0;
+                    for (let i = 0; i < data.length; i += 4) {
+                        const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                        totalBrightness += brightness;
+                    }
+                    const avgBrightness = totalBrightness / (data.length / 4);
+                    
+                    const isDarkBackground = avgBrightness < 128;
+                    
+                    for (let i = 0; i < data.length; i += 4) {
+                        let r = data[i];
+                        let g = data[i + 1];
+                        let b = data[i + 2];
+                        
+                        if (isDarkBackground) {
+                            r = 255 - r;
+                            g = 255 - g;
+                            b = 255 - b;
+                        }
+                        
+                        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                        
+                        const contrast = 1.5;
+                        const factor = (259 * (contrast * 255 + 255)) / (255 * (259 - contrast * 255));
+                        let contrasted = factor * (gray - 128) + 128;
+                        contrasted = Math.max(0, Math.min(255, contrasted));
+                        
+                        const threshold = 128;
+                        const binary = contrasted > threshold ? 255 : 0;
+                        
+                        data[i] = binary;
+                        data[i + 1] = binary;
+                        data[i + 2] = binary;
+                    }
+                    
+                    ctx.putImageData(imageData, 0, 0);
+                    
+                    canvas.toBlob((blob) => {
+                        resolve(new File([blob], 'processed.png', { type: 'image/png' }));
+                    }, 'image/png');
+                };
+                img.onerror = reject;
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
         function initDefaultCardCounts() {
             const cards = generateCards();
             cards.forEach(c => {
@@ -1731,7 +1793,8 @@
                     return;
                 }
                 
-                const { data: { text } } = await window.worker.recognize(file);
+                const processedFile = await preprocessImage(file);
+                const { data: { text } } = await window.worker.recognize(processedFile);
                 
                 const validCards = generateCards().map(c => c.id);
                 const ocrResults = {};
@@ -3128,7 +3191,8 @@
                     progressFill.style.width = `${progress}%`;
 
                     try {
-                        const { data: { text } } = await worker.recognize(file);
+                        const processedFile = await preprocessImage(file);
+                        const { data: { text } } = await worker.recognize(processedFile);
                         
                         const validCards = generateCards().map(c => c.id);
                         const ocrResultsTemp = {};
