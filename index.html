@@ -54,7 +54,8 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 70px;
+            font-size: 16px;
         }
         .app { max-width: 520px; margin: 0 auto; padding: 16px 12px; }
 
@@ -66,7 +67,9 @@
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-around;
-            padding: 6px 0 10px;
+            padding: 8px 0;
+            height: 60px;
+            box-sizing: border-box;
             z-index: 1000;
             backdrop-filter: blur(10px);
         }
@@ -111,7 +114,7 @@
             pointer-events: none;
         }
         .header-title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 800;
             color: #fff;
             margin-bottom: 4px;
@@ -569,7 +572,7 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 6px;
             margin-bottom: 8px;
-            max-height: 320px;
+            max-height: calc(100vh - 320px);
             overflow-y: auto;
         }
         .entry-card-grid::-webkit-scrollbar { width: 4px; }
@@ -620,12 +623,12 @@
         /* 底部操作栏 */
         .entry-footer {
             position: fixed;
-            bottom: 50px;
+            bottom: 60px;
             left: 0;
             right: 0;
             background: var(--bg-card);
             border-top: 1px solid var(--border);
-            padding: 8px 16px;
+            padding: 6px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -915,11 +918,18 @@
     </div>
 
     <!-- 图片放大弹窗 -->
-    <div class="modal-overlay" id="imageZoomModal">
-        <div style="position:relative;max-width:95vw;max-height:95vh;width:auto;">
+    <div class="modal-overlay" id="imageZoomModal" onclick="closeZoomModal()">
+        <div style="position:relative;max-width:95vw;max-height:95vh;width:auto;overflow:hidden;" onclick="event.stopPropagation()">
             <button class="btn btn-secondary" onclick="closeZoomModal()" style="position:absolute;top:-40px;right:0;z-index:10;padding:6px 12px;font-size:12px;">✕ 关闭</button>
-            <img id="zoomImage" src="" style="max-width:100%;max-height:80vh;object-fit:contain;border-radius:12px;cursor:zoom-in;" onclick="zoomImageScale()" />
-            <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-secondary);">点击图片放大/缩小</div>
+            <div id="zoomImageContainer" style="width:100%;height:80vh;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;">
+                <img id="zoomImage" src="" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;transform-origin:center center;transition:transform 0.1s ease-out;" />
+            </div>
+            <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-secondary);">双指缩放 · 拖动查看 · 点击空白关闭</div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;">
+                <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px;" onclick="zoomIn()">+ 放大</button>
+                <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px;" onclick="zoomOut()">− 缩小</button>
+                <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px;" onclick="resetZoom()">↺ 还原</button>
+            </div>
         </div>
     </div>
 
@@ -1137,8 +1147,8 @@
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
                 <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">52318</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 16:16）</div>
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">54128</span> 个</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 19:22）</div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -1260,10 +1270,15 @@
                 <div style="margin-top:12px;">
                     <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">📦 盲盒奖品示例</div>
                     <img src="https://raw.githubusercontent.com/mayixuan1234/zhoukeyu-gacha/refs/heads/main/1111111.jpg" style="width:100%;border-radius:8px;max-height:180px;object-fit:contain;" />
+                    <div style="margin-top:8px;font-size:11px;color:var(--text-secondary);line-height:1.5;">
+                        点击此链接
+                        <a href="https://www.91ruyu.com/gaia/85014/bad3126a.html?share_relation=fb4e1b89f71f2875_1552552965_1&spider_token=631f&wfr=BuyercopyURL" target="_blank" style="color:var(--primary);">进入活动页面</a>
+                        ，点击左上角我的记录查询
+                    </div>
                 </div>
 
                 <div style="margin-top:12px;text-align:center;">
-                    <button class="btn btn-secondary" onclick="window.open('https://weidian.com/s/xxxxxx', '_blank')" style="font-size:12px;padding:6px 16px;">🔗 查看微店订单</button>
+                    <button class="btn btn-secondary" onclick="window.open('https://www.91ruyu.com/gaia/85014/bad3126a.html?share_relation=fb4e1b89f71f2875_1552552965_1&spider_token=631f&wfr=BuyercopyURL', '_blank')" style="font-size:12px;padding:6px 16px;">🎁 抽抽乐入口</button>
                 </div>
 
                 <div class="ocr-results" id="ocrResults"></div>
@@ -1537,24 +1552,43 @@
                 const ocrResults = {};
                 
                 if (text.includes('奖品')) {
-                    const prizeLines = text.split('\n').filter(line => line.includes('奖品'));
-                    prizeLines.forEach(line => {
-                        const patterns = [
-                            /[Ss][Ss][Rr]\d+/g,
-                            /[Ss][Rr]\d+/g,
-                            /[Rr]\d+/g
-                        ];
-                        
-                        patterns.forEach(pattern => {
-                            pattern.lastIndex = 0;
-                            let match;
-                            while ((match = pattern.exec(line)) !== null) {
-                                const id = match[0].toUpperCase();
-                                if (validCards.includes(id)) {
-                                    ocrResults[id] = (ocrResults[id] || 0) + 1;
+                    const lines = text.split('\n');
+                    lines.forEach(line => {
+                        const trimmedLine = line.trim();
+                        if (/奖品\s*\d+/.test(trimmedLine)) {
+                            const cardPatterns = [
+                                /[Ss][Ss][Rr]\d+/g,
+                                /[Ss][Rr]\d+/g,
+                                /[Rr]\d+/g
+                            ];
+                            
+                            const lineMatches = [];
+                            cardPatterns.forEach(pattern => {
+                                pattern.lastIndex = 0;
+                                let match;
+                                while ((match = pattern.exec(trimmedLine)) !== null) {
+                                    lineMatches.push({
+                                        id: match[0].toUpperCase(),
+                                        start: match.index,
+                                        end: match.index + match[0].length
+                                    });
                                 }
-                            }
-                        });
+                            });
+                            
+                            lineMatches.sort((a, b) => a.start - b.start || b.end - a.end);
+                            
+                            const matchedRanges = [];
+                            lineMatches.forEach(match => {
+                                const isOverlapping = matchedRanges.some(range => 
+                                    match.start < range.end && match.end > range.start
+                                );
+                                
+                                if (!isOverlapping && validCards.includes(match.id)) {
+                                    ocrResults[match.id] = (ocrResults[match.id] || 0) + 1;
+                                    matchedRanges.push({ start: match.start, end: match.end });
+                                }
+                            });
+                        }
                     });
                 } else {
                     const patterns = [
@@ -1611,8 +1645,7 @@
                         </div>
                     `;
                     total += count;
-                    entrySelections[id] = (entrySelections[id] || 0) + count;
-                    lastEntrySource = 'ocr';
+                    entrySelections[id] = count;
                 }
                 
                 const resultsContainer = document.getElementById('ocrResults');
@@ -1621,6 +1654,7 @@
                 resultsContainer.innerHTML = html || '<div style="text-align:center;color:var(--text-secondary);">未识别到卡牌</div>';
                 footerInfo.textContent = `共识别 ${total} 张`;
                 updateEntryFooter();
+                lastEntrySource = 'ocr';
                 
                 showToast(`识别完成！共识别 ${total} 张卡片`);
             } catch (e) {
@@ -2041,28 +2075,106 @@
         }
 
         let imageScale = 1;
+        let imageTranslateX = 0;
+        let imageTranslateY = 0;
+        let lastTouchDistance = 0;
+        let lastTouchX = 0;
+        let lastTouchY = 0;
+        let isDragging = false;
 
         function zoomImage(src) {
             imageScale = 1;
+            imageTranslateX = 0;
+            imageTranslateY = 0;
             const img = document.getElementById('zoomImage');
             img.src = src;
-            img.style.transform = 'scale(1)';
-            img.style.maxWidth = '100%';
-            img.style.maxHeight = '80vh';
+            updateImageTransform();
             document.getElementById('imageZoomModal').classList.add('active');
+            setupZoomGestures();
         }
 
-        function zoomImageScale() {
+        function updateImageTransform() {
             const img = document.getElementById('zoomImage');
-            imageScale = imageScale === 1 ? 2 : 1;
-            img.style.transform = `scale(${imageScale})`;
-            if (imageScale === 2) {
-                img.style.maxWidth = '200%';
-                img.style.maxHeight = '160vh';
-            } else {
-                img.style.maxWidth = '100%';
-                img.style.maxHeight = '80vh';
+            img.style.transform = `translate(${imageTranslateX}px, ${imageTranslateY}px) scale(${imageScale})`;
+        }
+
+        function zoomIn() {
+            imageScale = Math.min(imageScale * 1.3, 5);
+            updateImageTransform();
+        }
+
+        function zoomOut() {
+            imageScale = Math.max(imageScale / 1.3, 0.5);
+            if (imageScale <= 1) {
+                imageTranslateX = 0;
+                imageTranslateY = 0;
             }
+            updateImageTransform();
+        }
+
+        function resetZoom() {
+            imageScale = 1;
+            imageTranslateX = 0;
+            imageTranslateY = 0;
+            updateImageTransform();
+        }
+
+        function setupZoomGestures() {
+            const container = document.getElementById('zoomImageContainer');
+            const img = document.getElementById('zoomImage');
+            
+            container.addEventListener('touchstart', handleTouchStart, { passive: false });
+            container.addEventListener('touchmove', handleTouchMove, { passive: false });
+            container.addEventListener('touchend', handleTouchEnd);
+        }
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            if (e.touches.length === 2) {
+                const touchDistance = getDistance(e.touches[0], e.touches[1]);
+                lastTouchDistance = touchDistance;
+                isDragging = false;
+            } else if (e.touches.length === 1 && imageScale > 1) {
+                isDragging = true;
+                lastTouchX = e.touches[0].clientX;
+                lastTouchY = e.touches[0].clientY;
+            }
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (e.touches.length === 2) {
+                const currentDistance = getDistance(e.touches[0], e.touches[1]);
+                if (lastTouchDistance > 0) {
+                    const scale = currentDistance / lastTouchDistance;
+                    imageScale = Math.max(0.5, Math.min(5, imageScale * scale));
+                    if (imageScale <= 1) {
+                        imageTranslateX = 0;
+                        imageTranslateY = 0;
+                    }
+                    updateImageTransform();
+                }
+                lastTouchDistance = currentDistance;
+            } else if (e.touches.length === 1 && isDragging && imageScale > 1) {
+                const deltaX = e.touches[0].clientX - lastTouchX;
+                const deltaY = e.touches[0].clientY - lastTouchY;
+                imageTranslateX += deltaX;
+                imageTranslateY += deltaY;
+                updateImageTransform();
+                lastTouchX = e.touches[0].clientX;
+                lastTouchY = e.touches[0].clientY;
+            }
+        }
+
+        function handleTouchEnd() {
+            lastTouchDistance = 0;
+            isDragging = false;
+        }
+
+        function getDistance(touch1, touch2) {
+            const dx = touch1.clientX - touch2.clientX;
+            const dy = touch1.clientY - touch2.clientY;
+            return Math.sqrt(dx * dx + dy * dy);
         }
 
         function markFullSet() {
@@ -2378,6 +2490,46 @@
             filterEntryCards();
         }
 
+        function adjustOCRCount(cardId, delta) {
+            if (!window.currentOCRResults) return;
+            
+            if (!window.currentOCRResults[cardId]) window.currentOCRResults[cardId] = 0;
+            window.currentOCRResults[cardId] = Math.max(0, window.currentOCRResults[cardId] + delta);
+
+            if (window.currentOCRResults[cardId] === 0) {
+                delete window.currentOCRResults[cardId];
+                if (entrySelections[cardId]) delete entrySelections[cardId];
+            } else {
+                entrySelections[cardId] = window.currentOCRResults[cardId];
+            }
+
+            const resultsContainer = document.getElementById('ocrResults');
+            const footerInfo = document.getElementById('ocrFooterInfo');
+            
+            let html = '';
+            let total = 0;
+            for (const id in window.currentOCRResults) {
+                const images = getCardImages(id);
+                const imgHtml = images.front ? `<img src="${images.front}" style="width:40px;height:50px;object-fit:cover;border-radius:4px;margin-right:8px;" />` : '';
+                html += `
+                    <div class="ocr-result-item">
+                        ${imgHtml}
+                        <span>${id}</span>
+                        <div style="display:flex;align-items:center;gap:4px;">
+                            <button class="btn btn-secondary" style="width:24px;height:24px;padding:0;font-size:14px;line-height:1;" onclick="adjustOCRCount('${id}', -1)">-</button>
+                            <span style="color:var(--accent);font-weight:700;width:30px;text-align:center;">${window.currentOCRResults[id]}</span>
+                            <button class="btn btn-primary" style="width:24px;height:24px;padding:0;font-size:14px;line-height:1;" onclick="adjustOCRCount('${id}', 1)">+</button>
+                        </div>
+                    </div>
+                `;
+                total += window.currentOCRResults[id];
+            }
+            
+            resultsContainer.innerHTML = html || '<div style="text-align:center;color:var(--text-secondary);">未识别到卡牌</div>';
+            footerInfo.textContent = `共识别 ${total} 张`;
+            updateEntryFooter();
+        }
+
         function updateEntryFooter() {
             let total = 0;
             for (const id in entrySelections) {
@@ -2566,24 +2718,43 @@
                         const ocrResultsTemp = {};
                         
                         if (text.includes('奖品')) {
-                            const prizeLines = text.split('\n').filter(line => line.includes('奖品'));
-                            prizeLines.forEach(line => {
-                                const patterns = [
-                                    /[Ss][Ss][Rr]\d+/g,
-                                    /[Ss][Rr]\d+/g,
-                                    /[Rr]\d+/g
-                                ];
-                                
-                                patterns.forEach(pattern => {
-                                    pattern.lastIndex = 0;
-                                    let match;
-                                    while ((match = pattern.exec(line)) !== null) {
-                                        const id = match[0].toUpperCase();
-                                        if (validCards.includes(id)) {
-                                            ocrResultsTemp[id] = (ocrResultsTemp[id] || 0) + 1;
+                            const lines = text.split('\n');
+                            lines.forEach(line => {
+                                const trimmedLine = line.trim();
+                                if (/奖品\s*\d+/.test(trimmedLine)) {
+                                    const cardPatterns = [
+                                        /[Ss][Ss][Rr]\d+/g,
+                                        /[Ss][Rr]\d+/g,
+                                        /[Rr]\d+/g
+                                    ];
+                                    
+                                    const lineMatches = [];
+                                    cardPatterns.forEach(pattern => {
+                                        pattern.lastIndex = 0;
+                                        let match;
+                                        while ((match = pattern.exec(trimmedLine)) !== null) {
+                                            lineMatches.push({
+                                                id: match[0].toUpperCase(),
+                                                start: match.index,
+                                                end: match.index + match[0].length
+                                            });
                                         }
-                                    }
-                                });
+                                    });
+                                    
+                                    lineMatches.sort((a, b) => a.start - b.start || b.end - a.end);
+                                    
+                                    const matchedRanges = [];
+                                    lineMatches.forEach(match => {
+                                        const isOverlapping = matchedRanges.some(range => 
+                                            match.start < range.end && match.end > range.start
+                                        );
+                                        
+                                        if (!isOverlapping && validCards.includes(match.id)) {
+                                            ocrResultsTemp[match.id] = (ocrResultsTemp[match.id] || 0) + 1;
+                                            matchedRanges.push({ start: match.start, end: match.end });
+                                        }
+                                    });
+                                }
                             });
                         } else {
                             const patterns = [
@@ -2649,11 +2820,11 @@
                         </div>
                     `;
                     total += ocrResults[id];
-                    entrySelections[id] = (entrySelections[id] || 0) + ocrResults[id];
-                    lastEntrySource = 'ocr';
+                    entrySelections[id] = ocrResults[id];
                 }
                 
                 window.currentOCRResults = ocrResults;
+                lastEntrySource = 'ocr';
 
                 setTimeout(() => {
                     progressFill.style.width = '0%';
