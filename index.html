@@ -1292,9 +1292,9 @@
 
             <!-- 限时小卡 -->
             <div class="card">
-                <div class="card-title">⏰ 限时小卡</div>
+                <div class="card-title">⏰ 本次抽抽乐活动时间为2026年7月11日17:20-7月31日17:17</div>
                 <div style="font-size:11px;color:var(--text-secondary);margin-bottom:10px;line-height:1.5;">
-                    <div>• 下单后24小时内满10抽获得限时小卡</div>
+                    <div>• 活动开始后24小时内下单累计满10抽获得限时小卡</div>
                     <div>• 端盒下单直接满足条件</div>
                 </div>
                 <div class="input-group">
@@ -1306,14 +1306,39 @@
                 </div>
             </div>
 
+            <!-- 活动公告 -->
+            <div class="card">
+                <div class="card-title">📢 活动公告</div>
+                <div style="padding:0 15px 15px;">
+                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
+                        <p style="margin:8px 0;color:var(--text);font-weight:600;">💬 客服回复相关</p>
+                        <p style="margin:4px 0 8px;">满十抽包U，包U后续有确认地址环节；以确认地址/补邮为准，盲盒地址错了没事；宣传兑奖等待后续兑换方案发布。</p>
+                        <a href="https://weibo.com/1851141241/5319937126305726" target="_blank" style="font-size:11px;color:var(--accent);display:block;margin-bottom:8px;">📱 查看原文</a>
+                        
+                        <p style="margin:8px 0;color:var(--text);font-weight:600;">🎨 卡面征集</p>
+                        <p style="margin:4px 0 8px;">前3个里程碑限时加赠卡面征集在plq投稿，24小时内获赞前3的图片入选。投稿格式：高清原图+原图链接/授权，一评一图且必须附素材链接或图片授权证明。</p>
+                        <a href="https://weibo.com/1851141241/5319908680270378" target="_blank" style="font-size:11px;color:var(--accent);display:block;margin-bottom:8px;">📱 查看原文</a>
+                        
+                        <p style="margin:8px 0;color:var(--text);font-weight:600;">✨ 卡面征集结果</p>
+                        <p style="margin:4px 0 8px;">前3个里程碑限时加赠卡面征集已结束，入选卡面已公布。p4因已入选卡册set内容顺延一位，卡册set将于近日释出。</p>
+                        <a href="https://weibo.com/1851141241/5320281396614580" target="_blank" style="font-size:11px;color:var(--accent);display:block;margin-bottom:8px;">📱 查看原文</a>
+                        
+                        <div style="border-top:1px dashed var(--border);padding-top:8px;margin-top:8px;">
+                            <p style="font-size:11px;color:var(--text-secondary);">一切具体信息以活动官方微博为准</p>
+                            <a href="https://weibo.com/u/1851141241" target="_blank" style="font-size:11px;color:var(--accent);display:block;margin-top:2px;">Liid·宇航员巡游卫星</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 碎卡兑换机制 -->
             <div class="card">  
                 <div class="card-title">🔄 碎卡兑换机制</div>
                 <div style="padding:0 15px 15px;">
                     <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
-                        <p style="margin:8px 0;">同一下单账号，每满36抽可使用6张R卡兑换涨SR卡</p>
+                        <p style="margin:8px 0;">同一下单账号，每满36抽可使用6张R卡兑换1张SR卡</p>
                         <p style="margin:8px 0;">每满72抽，可使用6张R卡或者SR卡兑换1张任意卡面</p>
-                        <p style="margin:8px 0;">兑换方式及时间另行通知，请关注活动官方微博：</p>
+                        <p style="margin:8px 0;">具体兑换方式及时间另行通知，请关注活动官方微博：</p>
                         <a href="https://weibo.com/u/1851141241" target="_blank" style="font-size:12px;color:var(--accent);display:block;margin-top:4px;">Liid·宇航员巡游卫星</a>
                     </div>
                 </div>
@@ -1563,15 +1588,15 @@
         };
 
         const PERSONAL_MILESTONES = [
-            { count: 10, label: '满10抽', reward: '包邮', icon: '📦' },
-            { count: 20, label: '满20抽', reward: '光栅小卡×1', icon: '✨' },
-            { count: 30, label: '满30抽', reward: '光栅小卡×1', icon: '✨' },
-            { count: 40, label: '满40抽', reward: '特定赠品', icon: '🎁' },
-            { count: 50, label: '满50抽', reward: '白瓷工艺小卡', icon: '⚱️' },
-            { count: 66, label: '满66抽', reward: '特定赠品', icon: '🎁' },
+            { count: 10, label: '满10抽', reward: '包邮，”等比例长大“小卡x2', icon: '📦' },
+            { count: 20, label: '满20抽', reward: '陆西骁卡通贴纸', icon: '✨' },
+            { count: 30, label: '满30抽', reward: '光栅小卡×1，(每满30抽获得光棚小卡1张共6张不重复)', icon: '✨' },
+            { count: 40, label: '满40抽', reward: '白瓷工艺小卡', icon: '🎁' },
+            { count: 50, label: '满50抽', reward: '烫色签名拍立得', icon: '⚱️' },
+            { count: 66, label: '满66抽', reward: '陆西骁淋浴反转胶片', icon: '🎁' },
             { count: 88, label: '满88抽', reward: '亚克力A5卡册', icon: '📖' },
-            { count: 100, label: '满100抽', reward: '特定赠品', icon: '🎁' },
-            { count: 120, label: '满120抽', reward: '随机特定赠品', icon: '🎲' },
+            { count: 100, label: '满100抽', reward: '可拆卸MNI PB', icon: '🎁' },
+            { count: 120, label: '满120抽', reward: '陆西骁金属徽章，满120抽随机一枚，满240抽获得两个不重复', icon: '🎲' },
         ];
 
         const GLOBAL_MILESTONES = [
@@ -1584,11 +1609,25 @@
             { count: 125170, label: '满125,170抽', reward: '特典（公开征集设计）', bonus: '48小时内破纪录加赠1张小卡' },
         ];
 
-        const TIME_BONUS = [
-            { maxHours: 1, reward: '1号+2号+3号小卡', label: '极速档' },
-            { maxHours: 6, reward: '2号+3号小卡', label: '快速档' },
-            { maxHours: 24, reward: '3号小卡', label: '常规档' },
+        const ACTIVITY_BONUS = [
+            { maxHours: 1, reward: '1号+2号+3号小卡', label: '活动开始1小时内' },
+            { maxHours: 6, reward: '2号+3号小卡', label: '活动开始1-6小时内' },
+            { maxHours: 24, reward: '3号小卡', label: '活动开始6-24小时内' },
         ];
+        
+        const ROMANTIC_ACTIVITY = {
+            name: '浪漫疯子限时小卡（7.13 12:00～7.15 18:00）',
+            startTime: new Date('2026-07-13T12:00:00').getTime(),
+            endTime: new Date('2026-07-15T18:00:00').getTime(),
+            existingUserRules: [
+                { minDraws: 6, reward: '1张小卡（随机）', label: '6抽' },
+                { minDraws: 10, reward: '2张小卡（不重复）', label: '10抽' },
+            ],
+            newUserRules: [
+                { minDraws: 12, reward: '1张小卡（随机）', label: '首次12抽' },
+                { minDraws: 20, reward: '2张小卡（不重复）', label: '首次20抽' },
+            ]
+        };
 
         let state = {
             cardCounts: {},
@@ -2110,66 +2149,97 @@
 
             const orderTime = new Date(orderTimeStr);
             const now = new Date();
-            const hoursSince = (now - orderTime) / (1000 * 60 * 60);
             const totalDraws = getTotalDraws();
-            const meetsCondition = totalDraws >= 10;
-
-            const endboxRecord = state.history.find(h => h.type === 'endbox');
-            const within24Hours = hoursSince <= 24;
-            const hasEndbox = !!endboxRecord;
-
-            let bonus = null;
-            for (const b of TIME_BONUS) {
-                if (hoursSince <= b.maxHours) {
-                    bonus = b;
-                    break;
-                }
-            }
-
-            let drawsWithin24Hours = 0;
-            if (meetsCondition) {
+            
+            const activity1Start = new Date('2026-07-11T17:20:00').getTime();
+            const activity1End = new Date('2026-07-12T17:20:00').getTime();
+            const orderTimeMs = orderTime.getTime();
+            
+            let html = '';
+            
+            if (orderTimeMs >= activity1Start && orderTimeMs <= activity1End) {
+                const hoursSince = (now - orderTime) / (1000 * 60 * 60);
+                const endboxRecord = state.history.find(h => h.type === 'endbox');
+                const hasEndbox = !!endboxRecord;
+                
+                let drawsWithin24Hours = 0;
                 const deadline = orderTime.getTime() + 24 * 60 * 60 * 1000;
                 state.history.forEach(record => {
-                    if (record.orderTime && record.orderTime <= deadline && !record.type) {
+                    if (record.orderTime && record.orderTime <= deadline) {
                         drawsWithin24Hours += record.totalCount || 0;
                     }
                 });
-                if (hasEndbox && endboxRecord.orderTime && endboxRecord.orderTime <= deadline) {
-                    drawsWithin24Hours += endboxRecord.totalCount || 0;
+                
+                const qualified = hasEndbox || drawsWithin24Hours >= 10;
+                
+                html += `<div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:6px;">⏱️ 24小时内下单限时小卡</div>`;
+                
+                for (const b of ACTIVITY_BONUS) {
+                    const achieved = qualified && hoursSince <= b.maxHours;
+                    html += `
+                        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:4px;">
+                            <span style="color:${achieved ? 'var(--accent)' : 'var(--text-secondary)'}">${b.label}</span>
+                            <span style="color:${achieved ? 'var(--accent)' : 'var(--text-secondary)'};font-weight:${achieved ? '700' : '400'}">${achieved ? '✓ ' : ''}${b.reward}</span>
+                        </div>
+                    `;
                 }
-            }
-
-            const qualifiedWithin24Hours = drawsWithin24Hours >= 10;
-
-            if (hasEndbox && meetsCondition) {
-                container.innerHTML = `
-                    <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">🎉 恭喜获得限时小卡</div>
-                    <div style="font-size:13px;color:var(--text);">端盒下单，满足满10抽条件</div>
-                    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">下单时间：${formatDate(orderTime)} · 已抽 ${totalDraws} 抽</div>
-                `;
-            } else if (bonus && qualifiedWithin24Hours) {
-                container.innerHTML = `
-                    <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">当前档位：${bonus.label}</div>
-                    <div style="font-size:13px;color:var(--text);">可获得：${bonus.reward}</div>
-                    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">已过 ${hoursSince.toFixed(1)} 小时 · 24小时内抽 ${drawsWithin24Hours} 抽</div>
-                `;
-            } else if (within24Hours && !qualifiedWithin24Hours) {
-                container.innerHTML = `
-                    <div style="font-size:13px;color:var(--text-secondary);">24小时内还需 ${Math.max(0, 10 - drawsWithin24Hours)} 抽才能获得限时小卡</div>
-                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">剩余时间：${(24 - hoursSince).toFixed(1)} 小时</div>
-                `;
-            } else if (!within24Hours && qualifiedWithin24Hours) {
-                container.innerHTML = `
-                    <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">🎉 恭喜获得限时小卡</div>
-                    <div style="font-size:13px;color:var(--text);">24小时内完成满10抽条件</div>
-                    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">下单时间：${formatDate(orderTime)} · 24小时内抽 ${drawsWithin24Hours} 抽</div>
-                `;
+                
+                if (hasEndbox) {
+                    html += `<div style="font-size:11px;color:var(--text-secondary);margin-top:6px;">端盒下单，满足条件 · 下单时间：${formatDate(orderTime)}</div>`;
+                } else if (drawsWithin24Hours >= 10) {
+                    html += `<div style="font-size:11px;color:var(--text-secondary);margin-top:6px;">下单后 ${hoursSince.toFixed(1)} 小时达成 · 24小时内抽 ${drawsWithin24Hours} 抽</div>`;
+                } else {
+                    const remaining = Math.max(0, 10 - drawsWithin24Hours);
+                    const remainingHours = Math.max(0, 24 - hoursSince);
+                    html += `<div style="font-size:11px;color:var(--text-secondary);margin-top:6px;">还需 ${remaining} 抽 · 剩余 ${remainingHours.toFixed(1)} 小时</div>`;
+                }
             } else {
-                container.innerHTML = `
-                    <div style="font-size:13px;color:var(--text-secondary);">已超过24小时，无法获得限时小卡</div>
-                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">24小时内抽 ${drawsWithin24Hours} 抽（需10抽）</div>
+                html += `
+                    <div style="font-size:13px;color:var(--text-secondary);">⏱️ 限时小卡</div>
+                    <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">下单时间不在活动期内（7月11日17:20-7月12日17:20）</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">无法获得限时小卡</div>
                 `;
             }
+            
+            html += `<div style="height:12px;"></div>`;
+            
+            const romanticNow = now.getTime();
+            if (romanticNow >= ROMANTIC_ACTIVITY.startTime && romanticNow <= ROMANTIC_ACTIVITY.endTime) {
+                const isExistingUser = orderTimeMs < ROMANTIC_ACTIVITY.startTime;
+                const rules = isExistingUser ? ROMANTIC_ACTIVITY.existingUserRules : ROMANTIC_ACTIVITY.newUserRules;
+                
+                html += `
+                    <div style="border-top:1px dashed var(--border);padding-top:12px;">
+                        <div style="font-size:13px;font-weight:700;color:#ec4899;margin-bottom:6px;">💞 ${ROMANTIC_ACTIVITY.name}</div>
+                        <div style="font-size:11px;color:#ec4899;margin-bottom:6px;">${isExistingUser ? '非首次下单用户' : '首次下单用户'}</div>
+                `;
+                
+                for (const rule of rules) {
+                    const achieved = totalDraws >= rule.minDraws;
+                    html += `
+                        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:4px;">
+                            <span style="color:${achieved ? '#ec4899' : 'var(--text-secondary)'}">${rule.label}</span>
+                            <span style="color:${achieved ? 'var(--accent)' : 'var(--text-secondary)'};font-weight:${achieved ? '700' : '400'}">${achieved ? '✓ ' : ''}${rule.reward}</span>
+                        </div>
+                    `;
+                }
+                
+                const remainingSeconds = ROMANTIC_ACTIVITY.endTime - romanticNow;
+                const remainingHours = (remainingSeconds / (1000 * 60 * 60)).toFixed(1);
+                html += `
+                        <div style="font-size:10px;color:var(--text-secondary);margin-top:6px;">活动剩余：${remainingHours} 小时</div>
+                    </div>
+                `;
+            } else if (romanticNow > ROMANTIC_ACTIVITY.endTime) {
+                html += `
+                    <div style="border-top:1px dashed var(--border);padding-top:12px;">
+                        <div style="font-size:13px;color:var(--text-secondary);">💞 ${ROMANTIC_ACTIVITY.name} 已结束</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">活动时间：7月13日12:00 - 7月15日18:00</div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
         }
 
         function updateFirstOrderTime(value) {
