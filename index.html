@@ -1066,6 +1066,20 @@
         </div>
     </div>
 
+    <!-- 导入导出弹窗 -->
+    <div class="modal-overlay" id="dataModal">
+        <div class="modal-box" style="max-width:90vw;width:360px;max-height:85vh;display:flex;flex-direction:column;">
+            <div class="modal-header">
+                <div class="modal-title" id="dataModalTitle">📤 导出数据</div>
+                <button class="btn btn-secondary" onclick="closeDataModal()" style="padding:4px 8px;font-size:14px;">✕</button>
+            </div>
+            <div id="dataModalContent" style="flex:1;overflow-y:auto;">
+            </div>
+            <div id="dataModalActions" style="display:flex;gap:8px;margin-top:12px;">
+            </div>
+        </div>
+    </div>
+
     <!-- 首次使用提示 -->
     <div class="onboarding-modal hidden" id="onboarding">
         <div class="onboarding-icon">💙</div>
@@ -1200,8 +1214,8 @@
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
                 <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">57609</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-14 09:13）</div>
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">57640</span> 个</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-14 09:28）</div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -1402,8 +1416,8 @@
             </div>
 
             <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-                <button class="btn btn-secondary" onclick="showImportOptions()" style="flex:1;min-width:100px;">📥 导入</button>
-                <button class="btn btn-primary" onclick="exportData()" style="flex:1;min-width:100px;">📤 导出</button>
+                <button class="btn btn-secondary" onclick="showExportModal()" style="flex:1;min-width:100px;">📤 导出</button>
+                <button class="btn btn-primary" onclick="showImportModal()" style="flex:1;min-width:100px;">📥 导入</button>
                 <button class="btn btn-secondary" onclick="showTrashModal()" style="flex:1;min-width:100px;">🗑️ 回收站</button>
                 <button class="btn btn-secondary" onclick="clearAllHistory()" style="flex:1;min-width:100px;color:var(--danger);">🧹 清空</button>
             </div>
@@ -3346,125 +3360,173 @@
             }
         }
 
-        function exportData() {
-            try {
-                const dateStr = new Date().toISOString().slice(0, 10);
-                
-                const exportData = {
-                    version: '1.2',
-                    exportTime: new Date().toLocaleString(),
-                    cardCounts: state.cardCounts,
-                    history: state.history,
-                    settings: state.settings
-                };
-                
-                const jsonStr = JSON.stringify(exportData, null, 2);
-                
-                const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-                
-                if (isWeChat) {
-                    navigator.clipboard.writeText(jsonStr).then(() => {
-                        showToast('📋 数据已复制到剪贴板！请在系统浏览器中打开网址后粘贴导入');
-                    }).catch(() => {
-                        showToast('❌ 复制失败，请长按页面选择复制');
-                    });
-                } else {
-                    const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.download = `周柯宇抽抽乐记录_${dateStr}.json`;
-                    a.href = url;
-                    document.body.appendChild(a);
-                    a.click();
-                    setTimeout(() => {
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    }, 500);
-                    showToast('📤 导出成功');
-                }
-            } catch (e) {
-                console.error('Export error:', e);
-                showToast('❌ 导出失败，请重试');
-            }
+        function closeDataModal() {
+            document.getElementById('dataModal').classList.remove('active');
         }
 
-        function triggerImport() {
-            try {
-                const input = document.getElementById('importInput');
-                if (input) {
-                    input.click();
-                } else {
-                    showToast('❌ 导入控件未找到');
-                }
-            } catch (e) {
-                console.error('Import trigger error:', e);
-                showToast('❌ 导入失败，请重试');
-            }
+        function showExportModal() {
+            const modal = document.getElementById('dataModal');
+            const title = document.getElementById('dataModalTitle');
+            const content = document.getElementById('dataModalContent');
+            const actions = document.getElementById('dataModalActions');
+            
+            title.textContent = '📤 导出数据';
+            
+            const exportData = {
+                version: '1.2',
+                exportTime: new Date().toLocaleString(),
+                cardCounts: state.cardCounts,
+                history: state.history,
+                settings: state.settings
+            };
+            
+            const jsonStr = JSON.stringify(exportData, null, 2);
+            const preview = jsonStr.length > 500 ? jsonStr.substring(0, 500) + '...' : jsonStr;
+            
+            content.innerHTML = `
+                <div style="padding:8px;">
+                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:8px;">更新于 ${new Date().toLocaleString()}</div>
+                    <div style="background:var(--bg-secondary);border-radius:8px;padding:12px;font-size:11px;color:var(--text-secondary);font-family:monospace;word-break:break-all;max-height:200px;overflow-y:auto;">
+                        ${preview}
+                    </div>
+                    <div style="font-size:10px;color:var(--text-secondary);text-align:right;margin-top:6px;">共 ${jsonStr.length} 字符</div>
+                </div>
+            `;
+            
+            actions.innerHTML = `
+                <button class="btn btn-secondary" onclick="downloadJsonFile()" style="flex:1;">⬇️ 下载文件</button>
+                <button class="btn btn-primary" onclick="copyJsonData()" style="flex:1;">📋 复制数据</button>
+            `;
+            
+            modal.classList.add('active');
+            window.currentExportJson = jsonStr;
         }
 
-        function pasteImport() {
-            showConfirm('粘贴导入', '从剪贴板粘贴数据，导入后将覆盖现有数据，确定继续吗？', '粘贴导入', '取消')
+        function downloadJsonFile() {
+            const jsonStr = window.currentExportJson;
+            if (!jsonStr) return;
+            
+            const dateStr = new Date().toISOString().slice(0, 10);
+            const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.download = `周柯宇抽抽乐记录_${dateStr}.json`;
+            a.href = url;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 500);
+            showToast('📤 导出成功');
+            closeDataModal();
+        }
+
+        function copyJsonData() {
+            const jsonStr = window.currentExportJson;
+            if (!jsonStr) return;
+            
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                showToast('📋 数据已复制到剪贴板！');
+            }).catch(() => {
+                showToast('❌ 复制失败，请手动复制');
+            });
+        }
+
+        function showImportModal() {
+            const modal = document.getElementById('dataModal');
+            const title = document.getElementById('dataModalTitle');
+            const content = document.getElementById('dataModalContent');
+            const actions = document.getElementById('dataModalActions');
+            
+            title.textContent = '📥 导入数据';
+            
+            content.innerHTML = `
+                <div style="padding:8px;">
+                    <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:12px;">
+                        <button id="importTabFile" class="btn btn-primary" onclick="switchImportTab('file')" style="flex:1;border-radius:0;border-bottom:2px solid var(--accent);">📁 上传文件</button>
+                        <button id="importTabText" class="btn btn-secondary" onclick="switchImportTab('text')" style="flex:1;border-radius:0;">📋 粘贴文本</button>
+                    </div>
+                    
+                    <div id="importFilePanel">
+                        <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;" onclick="document.getElementById('importInput').click()">
+                            <div style="font-size:32px;margin-bottom:8px;">📂</div>
+                            <div style="font-size:13px;color:var(--text);">点击选择 JSON 文件</div>
+                            <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">支持 .json 格式的备份文件</div>
+                        </div>
+                        <input type="file" id="importInput" accept=".json" onchange="handleFileImport(event)" style="display:none;">
+                    </div>
+                    
+                    <div id="importTextPanel" style="display:none;">
+                        <textarea id="importTextarea" placeholder="粘贴备份的 JSON 文本..." style="width:100%;height:200px;border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;font-family:monospace;background:var(--bg-secondary);color:var(--text);resize:none;"></textarea>
+                    </div>
+                </div>
+            `;
+            
+            actions.innerHTML = `
+                <button class="btn btn-secondary" onclick="closeDataModal()" style="flex:1;">取消</button>
+                <button class="btn btn-primary" onclick="doImport()" style="flex:1;">✅ 确认导入</button>
+            `;
+            
+            modal.classList.add('active');
+            window.currentImportMode = 'file';
+        }
+
+        function switchImportTab(mode) {
+            window.currentImportMode = mode;
+            document.getElementById('importTabFile').className = mode === 'file' ? 'btn btn-primary' : 'btn btn-secondary';
+            document.getElementById('importTabText').className = mode === 'text' ? 'btn btn-primary' : 'btn btn-secondary';
+            document.getElementById('importFilePanel').style.display = mode === 'file' ? 'block' : 'none';
+            document.getElementById('importTextPanel').style.display = mode === 'text' ? 'block' : 'none';
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                window.currentImportData = e.target.result;
+                showToast(`📁 已选择文件：${file.name}`);
+            };
+            reader.readAsText(file);
+        }
+
+        function doImport() {
+            let dataStr = '';
+            
+            if (window.currentImportMode === 'file') {
+                dataStr = window.currentImportData || '';
+            } else {
+                dataStr = document.getElementById('importTextarea').value || '';
+            }
+            
+            if (!dataStr.trim()) {
+                showToast('❌ 请先选择文件或粘贴数据');
+                return;
+            }
+            
+            showConfirm('导入数据', '导入后将覆盖现有数据，确定继续吗？', '覆盖导入', '取消')
                 .then(confirmed => {
                     if (!confirmed) return;
                     
-                    navigator.clipboard.readText().then(text => {
-                        try {
-                            const data = JSON.parse(text);
-                            state = { ...state, ...data };
-                            saveData();
-                            renderDashboard();
-                            renderCollection();
-                            renderHistory();
-                            showToast('✅ 粘贴导入成功');
-                        } catch {
-                            showToast('❌ 粘贴内容解析失败，请确保是正确的导出数据');
-                        }
-                    }).catch(() => {
-                        showToast('❌ 读取剪贴板失败，请手动粘贴');
-                    });
-                });
-        }
-
-        function showImportOptions() {
-            showConfirm('选择导入方式', '📁 上传文件：选择JSON文件导入<br/>📋 粘贴数据：从剪贴板粘贴（适合微信导入）', '上传文件', '粘贴数据')
-                .then(confirmed => {
-                    if (confirmed) {
-                        document.getElementById('importInput').click();
-                    } else {
-                        pasteImport();
+                    try {
+                        const data = JSON.parse(dataStr);
+                        state = { ...state, ...data };
+                        saveData();
+                        renderDashboard();
+                        renderCollection();
+                        renderHistory();
+                        showToast('✅ 导入成功');
+                        closeDataModal();
+                        window.currentImportData = null;
+                    } catch {
+                        showToast('❌ 数据解析失败，请确保是正确的JSON格式');
                     }
                 });
         }
 
-        function importData(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            showConfirm('导入数据', '导入后将覆盖现有数据，确定继续吗？', '覆盖导入', '取消')
-                .then(confirmed => {
-                    if (!confirmed) {
-                        input.value = '';
-                        return;
-                    }
-
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        try {
-                            const data = JSON.parse(e.target.result);
-                            state = { ...state, ...data };
-                            saveData();
-                            renderDashboard();
-                            renderCollection();
-                            renderHistory();
-                            showToast('✅ 导入成功');
-                        } catch {
-                            showToast('❌ 文件解析失败，请确保是JSON格式');
-                        }
-                    };
-                    reader.readAsText(file);
-                    input.value = '';
-                });
-        }
+        
 
         function clearAllData() {
             showConfirm('清空数据', `确定要清空全部 ${state.history.length} 条记录吗？删除后可在回收站恢复。`, '全部删除', '取消')
