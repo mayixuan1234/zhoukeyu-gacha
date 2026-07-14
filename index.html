@@ -197,6 +197,10 @@
         }
         .stat-card .value.accent { color: var(--accent); }
         .stat-card .value.primary { color: var(--primary-light); }
+        .stat-card.wide { width: 110px; }
+        .stat-card.mini { width: 70px; padding: 8px 6px; }
+        .stat-card.mini .label { font-size: 10px; margin-bottom: 4px; }
+        .stat-card.mini .value { font-size: 16px; }
 
         /* 稀有度统计 */
         .rarity-bar {
@@ -501,10 +505,6 @@
         }
         .card-item .card-emoji { font-size: 24px; }
         .card-item .card-id { font-size: 12px; font-weight: 700; color: var(--text); }
-        .rarity-bar.rarity-r { background: #9ca3af; }
-        .rarity-bar.rarity-sr { background: #10b981; }
-        .rarity-bar.rarity-ssr { background: #3b82f6; }
-        .rarity-bar.rarity-ssssr { background: #f59e0b; }
         .card-item .card-count {
             position: absolute;
             top: 2px;
@@ -1153,38 +1153,32 @@
             <!-- 通知公告 -->
             <div class="card" id="notificationCard">
                 <div class="card-title">📢 公告</div>
-                <div id="notificationContent">
+                <div id="notificationContent" style="padding:0 10px;">
                     <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
-                        <div style="font-size:13px;color:var(--accent);font-weight:600;">⚠️ 重要提醒</div>
-                        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.6;">
-                            <div>✅ 本网站无需登录，打开即可使用</div>
-                            <div>💾 数据自动保存在浏览器本地</div>
-                            <div>❌ 清除浏览器缓存会丢失全部记录！</div>
-                            <div>📤 建议定期使用记录的导出功能备份</div>
-                        </div>
+                        <div style="font-size:13px;color:var(--accent);font-weight:700;">🎉 欢迎使用周柯宇抽抽乐记录器</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">记录你的每一次抽卡🚀</div>
                     </div>
                     <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
-                        <div style="font-size:13px;color:var(--text);font-weight:600;">🎉 欢迎使用周柯宇抽抽乐记录器</div>
-                        <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">记录你的每一次抽卡！</div>
-                    </div>
-                    <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
-                        <div style="font-size:13px;color:var(--warning);font-weight:600;">🌐 使用建议</div>
+                        <div style="font-size:13px;color:var(--warning);font-weight:700;">⚠️ 重要提醒</div>
                         <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.5;">
-                            <div>• 📱 微信内打开：可正常记录抽卡，导出为复制数据，非文件</div>
-                            <div>• 🌍 建议使用系统浏览器，获得最佳体验，支持下载JSON文件备份，功能完整</div>
-                            <div>• 💡 因使用电脑开发部分功能可能与手机实际使用不一致，欢迎反馈问题💙非常感谢</div>
+                            <div>• <strong>本网站无需登录</strong>，打开即可使用</div>
+                            <div>• <strong>数据自动保存在浏览器本地</strong>，清除浏览器缓存会丢失全部记录！</div>
+                            <div>• <strong>定期备份</strong>，建议使用“记录”左上角的导出功能</div>
                         </div>
                     </div>
                     <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
-                        <div style="font-size:13px;color:var(--text);font-weight:600;">🚀 最新活动资讯</div>
-                        <a href="https://weibo.com/u/1851141241" target="_blank" style="font-size:11px;color:var(--accent);margin-top:2px;display:block;">请关注官方微博：Liid·宇航员巡游卫星</a>
+                        <div style="font-size:13px;color:var(--primary-light);font-weight:700;">🌐 使用建议</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.5;">
+                            <div>• <strong>建议复制到系统浏览器打开并收藏</strong>，导出支持下载JSON文件在浏览器备份</div>
+                            <div>• <strong>微信内打开</strong>，可记录，导出为复制数据，建议粘贴到备忘录更方便后续粘贴导入</div>
+                        </div>
                     </div>
                     <div style="padding:10px 0;">
-                        <div style="font-size:13px;color:var(--text);font-weight:600;">📝 更新信息 v1.2</div>
+                        <div style="font-size:13px;color:var(--text);font-weight:700;">📝 更新 v1.2</div>
                         <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.5;">
-                            <div>• 优化端盒记录展示功能</div>
+                            <div>• 优化端盒记录展示</div>
                             <div>• 优化图鉴图片查看</div>
-                            <div>• 优化导入导出功能在不同设备与打开方式的兼容性</div>
+                            <div>• 优化导入导出功能兼容性</div>
                         </div>
                     </div>
                 </div>
@@ -1194,36 +1188,44 @@
             <!-- 核心数据 -->
             <div class="card">
                 <div class="card-title">📊 核心数据</div>
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <div class="label">总抽数</div>
-                        <div class="value" id="statTotalDraws">0</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div style="background:var(--bg);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border);">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">总抽数</div>
+                        <div style="font-size:24px;font-weight:900;color:var(--text);" id="statTotalDraws">0</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="label">总花费</div>
-                        <div class="value primary" id="statTotalCost">¥0.00</div>
+                    <div style="background:var(--bg);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border);">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">总花费</div>
+                        <div style="font-size:24px;font-weight:900;color:var(--primary-light);" id="statTotalCost">¥0.00</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="label">图鉴进度</div>
-                        <div class="value accent" id="statCollection">0/86</div>
+                    <div style="background:var(--bg);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border);">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">图鉴进度</div>
+                        <div style="font-size:24px;font-weight:900;color:var(--accent);" id="statCollection">0/86</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="label">已收集</div>
-                        <div class="value" id="statCollected">0</div>
+                    <div style="background:var(--bg);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border);">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">已收集</div>
+                        <div style="font-size:24px;font-weight:900;color:var(--text);" id="statCollected">0</div>
                     </div>
                 </div>
-                <div class="rarity-bar">
-                    <div class="rarity-chip r">
-                        <span>R</span><span id="statR">0</span>
+                <div style="display:flex;justify-content:center;gap:10px;margin-top:12px;">
+                    <div class="rarity-chip r"><span>R</span><span id="statR">0</span></div>
+                    <div class="rarity-chip sr"><span>SR</span><span id="statSR">0</span></div>
+                    <div class="rarity-chip ssr"><span>SSR</span><span id="statSSRChip">0</span></div>
+                    <div class="rarity-chip sssr"><span>SSSR</span><span id="statSSSR">0</span></div>
+                </div>
+                <div style="display:flex;justify-content:center;gap:12px;margin-top:12px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:10px;color:var(--text-secondary);">平均每日</div>
+                        <div style="font-size:18px;font-weight:800;color:#10b981;" id="trendAvg">0</div>
                     </div>
-                    <div class="rarity-chip sr">
-                        <span>SR</span><span id="statSR">0</span>
+                    <div style="width:1px;background:var(--border);"></div>
+                    <div style="text-align:center;">
+                        <div style="font-size:10px;color:var(--text-secondary);">最高单日</div>
+                        <div style="font-size:18px;font-weight:800;color:#3b82f6;" id="trendMax">0</div>
                     </div>
-                    <div class="rarity-chip ssr">
-                        <span>SSR</span><span id="statSSRChip">0</span>
-                    </div>
-                    <div class="rarity-chip sssr">
-                        <span>SSSR</span><span id="statSSSR">0</span>
+                    <div style="width:1px;background:var(--border);"></div>
+                    <div style="text-align:center;">
+                        <div style="font-size:10px;color:var(--text-secondary);">记录天数</div>
+                        <div style="font-size:18px;font-weight:800;color:#f59e0b;" id="trendDays">0</div>
                     </div>
                 </div>
             </div>
@@ -1247,14 +1249,14 @@
             <!-- 全员满赠 -->
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
-                <div style="padding:15px;background:var(--bg);border-radius:12px;">
-                    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
-                        <div style="font-size:24px;font-weight:900;color:var(--accent);">🔥 已抽</div>
-                        <span style="width:120px;font-size:24px;font-weight:900;color:var(--accent);text-align:center;" id="globalDrawsDisplay">58159</span>
-                        <div style="font-size:24px;font-weight:900;color:var(--accent);">个</div>
+                <div style="padding:12px;background:var(--bg);border-radius:12px;">
+                    <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
+                        <div style="font-size:20px;font-weight:900;color:var(--accent);">🔥 已抽</div>
+                        <span style="font-size:24px;font-weight:900;color:var(--accent);" id="globalDrawsDisplay">58159</span>
+                        <div style="font-size:20px;font-weight:900;color:var(--accent);">个</div>
                     </div>
-                    <div style="font-size:11px;color:var(--text-secondary);text-align:center;" id="lastUpdateDisplay">更新于 2026-07-14 12:00</div>
-                    <div style="font-size:10px;color:var(--text-secondary);text-align:center;margin-top:8px;line-height:1.5;">
+                    <div style="font-size:11px;color:var(--text-secondary);text-align:center;margin-top:6px;" id="lastUpdateDisplay">更新于 2026-07-14 12:00</div>
+                    <div style="font-size:10px;color:var(--text-secondary);text-align:center;margin-top:4px;line-height:1.4;">
                         <div>⏱️ 抽数每12小时更新一次</div>
                         <div>🌐 <a href="https://www.91ruyu.com/gaia/85014/bad3126a.html?share_relation=fb4e1b89f71f2875_1552552965_1&spider_token=631f&wfr=BuyercopyURL" target="_blank" style="color:var(--accent);">实时抽数请查看官方页面</a></div>
                     </div>
@@ -1275,63 +1277,6 @@
                 </div>
                 <div id="timeBonusResult" style="margin-top:12px;padding:12px;background:var(--bg);border-radius:10px;">
                     <div style="font-size:13px;color:var(--text-secondary);">请设置首次下单时间</div>
-                </div>
-            </div>
-
-            <!-- 数据统计 -->
-            <div class="card">
-                <div class="card-title">📊 数据统计</div>
-                <div style="padding:15px;">
-                    <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px;">🎯 稀有度分布</div>
-                    <div id="rarityStats" style="display:flex;flex-direction:column;gap:8px;">
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="width:20px;text-align:center;color:#9ca3af;">R</span>
-                            <div style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;">
-                                <div class="rarity-bar rarity-r" style="height:100%;border-radius:4px;"></div>
-                            </div>
-                            <span style="width:40px;text-align:right;font-size:12px;color:var(--text-secondary);" id="statRCount">0</span>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="width:20px;text-align:center;color:#10b981;">SR</span>
-                            <div style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;">
-                                <div class="rarity-bar rarity-sr" style="height:100%;border-radius:4px;"></div>
-                            </div>
-                            <span style="width:40px;text-align:right;font-size:12px;color:var(--text-secondary);" id="statSRCount">0</span>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="width:20px;text-align:center;color:#3b82f6;">SSR</span>
-                            <div style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;">
-                                <div class="rarity-bar rarity-ssr" style="height:100%;border-radius:4px;"></div>
-                            </div>
-                            <span style="width:40px;text-align:right;font-size:12px;color:var(--text-secondary);" id="statSSRCount">0</span>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="width:20px;text-align:center;color:#f59e0b;">SSSR</span>
-                            <div style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;">
-                                <div class="rarity-bar rarity-ssssr" style="height:100%;border-radius:4px;"></div>
-                            </div>
-                            <span style="width:40px;text-align:right;font-size:12px;color:var(--text-secondary);" id="statSSSRCount">0</span>
-                        </div>
-                    </div>
-                    <div style="font-size:12px;font-weight:600;color:var(--text);margin-top:15px;margin-bottom:10px;">📈 抽卡趋势</div>
-                    <div id="trendStats" style="display:flex;flex-direction:column;gap:6px;">
-                        <div style="display:flex;justify-content:space-between;font-size:12px;">
-                            <span style="color:var(--text-secondary);">总抽数</span>
-                            <span style="color:var(--accent);font-weight:700;" id="trendTotal">0</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;font-size:12px;">
-                            <span style="color:var(--text-secondary);">平均每日</span>
-                            <span style="color:var(--accent);font-weight:700;" id="trendAvg">0</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;font-size:12px;">
-                            <span style="color:var(--text-secondary);">最高单日</span>
-                            <span style="color:var(--accent);font-weight:700;" id="trendMax">0</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;font-size:12px;">
-                            <span style="color:var(--text-secondary);">记录天数</span>
-                            <span style="color:var(--accent);font-weight:700;" id="trendDays">0</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -2101,21 +2046,6 @@
         }
 
         function renderStats() {
-            const rarityCounts = getRarityCounts();
-            const total = rarityCounts.R + rarityCounts.SR + rarityCounts.SSR + (rarityCounts.SSSR || 0);
-            
-            document.getElementById('statRCount').textContent = rarityCounts.R;
-            document.getElementById('statSRCount').textContent = rarityCounts.SR;
-            document.getElementById('statSSRCount').textContent = rarityCounts.SSR;
-            document.getElementById('statSSSRCount').textContent = rarityCounts.SSSR || 0;
-            
-            if (total > 0) {
-                document.querySelector('.rarity-r').style.width = `${(rarityCounts.R / total) * 100}%`;
-                document.querySelector('.rarity-sr').style.width = `${(rarityCounts.SR / total) * 100}%`;
-                document.querySelector('.rarity-ssr').style.width = `${(rarityCounts.SSR / total) * 100}%`;
-                document.querySelector('.rarity-ssssr').style.width = `${((rarityCounts.SSSR || 0) / total) * 100}%`;
-            }
-            
             const dailyData = {};
             state.history.forEach(record => {
                 const date = new Date(record.orderTime || record.timestamp);
@@ -2128,10 +2058,13 @@
             const maxDraws = days > 0 ? Math.max(...Object.values(dailyData)) : 0;
             const avgDraws = days > 0 ? Math.round(totalDraws / days) : 0;
             
-            document.getElementById('trendTotal').textContent = totalDraws;
-            document.getElementById('trendAvg').textContent = avgDraws;
-            document.getElementById('trendMax').textContent = maxDraws;
-            document.getElementById('trendDays').textContent = days;
+            const elAvg = document.getElementById('trendAvg');
+            const elMax = document.getElementById('trendMax');
+            const elDays = document.getElementById('trendDays');
+            
+            if (elAvg) elAvg.textContent = avgDraws;
+            if (elMax) elMax.textContent = maxDraws;
+            if (elDays) elDays.textContent = days;
         }
 
         function formatDate(date) {
@@ -2598,6 +2531,7 @@
                         
                         saveData();
                         renderDashboard();
+                        renderStats();
                         renderCollection();
                         renderHistory();
                         
@@ -3093,6 +3027,7 @@
                         window.currentOCRResults = {};
                         filterEntryCards();
                         renderDashboard();
+                        renderStats();
                         renderCollection();
                         renderHistory();
                         renderOCRResults();
@@ -3323,6 +3258,7 @@
                         
                         saveData();
                         renderDashboard();
+                        renderStats();
                         renderCollection();
                         renderHistory();
                         renderTrashList();
@@ -3785,6 +3721,7 @@
                         initDefaultCardCounts();
                         saveData();
                         renderDashboard();
+                        renderStats();
                         renderCollection();
                         renderHistory();
                         document.getElementById('promoPosted').checked = false;
@@ -3792,6 +3729,9 @@
                         document.getElementById('promoReached10').checked = false;
                         document.getElementById('promoRedeemed').checked = false;
                         renderPromoStatus();
+                        document.getElementById('dCardCount').value = '0';
+                        document.getElementById('sdCardCount').value = '0';
+                        calculateExchange();
                         showToast('✅ 已全部移到回收站');
                     }
                 });
