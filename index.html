@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>周柯宇爱意正值炽夏抽抽乐记录器</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@6.5.0/dist/tesseract.min.js"></script>
     <script>
         const OCR_SPACE_API_KEY = 'K85774251888957';
         const OCR_SPACE_API_URL = 'https://api.ocr.space/parse/image';
@@ -502,6 +501,10 @@
         }
         .card-item .card-emoji { font-size: 24px; }
         .card-item .card-id { font-size: 12px; font-weight: 700; color: var(--text); }
+        .rarity-bar.rarity-r { background: #9ca3af; }
+        .rarity-bar.rarity-sr { background: #10b981; }
+        .rarity-bar.rarity-ssr { background: #3b82f6; }
+        .rarity-bar.rarity-ssssr { background: #f59e0b; }
         .card-item .card-count {
             position: absolute;
             top: 2px;
@@ -1244,9 +1247,17 @@
             <!-- 全员满赠 -->
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
-                <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">57829</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-14 10:37）</div>
+                <div style="padding:15px;background:var(--bg);border-radius:12px;">
+                    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
+                        <div style="font-size:24px;font-weight:900;color:var(--accent);">🔥 已抽</div>
+                        <span style="width:120px;font-size:24px;font-weight:900;color:var(--accent);text-align:center;" id="globalDrawsDisplay">58159</span>
+                        <div style="font-size:24px;font-weight:900;color:var(--accent);">个</div>
+                    </div>
+                    <div style="font-size:11px;color:var(--text-secondary);text-align:center;" id="lastUpdateDisplay">更新于 2026-07-14 12:00</div>
+                    <div style="font-size:10px;color:var(--text-secondary);text-align:center;margin-top:8px;line-height:1.5;">
+                        <div>⏱️ 抽数每12小时更新一次</div>
+                        <div>🌐 <a href="https://www.91ruyu.com/gaia/85014/bad3126a.html?share_relation=fb4e1b89f71f2875_1552552965_1&spider_token=631f&wfr=BuyercopyURL" target="_blank" style="color:var(--accent);">实时抽数请查看官方页面</a></div>
+                    </div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -1254,12 +1265,73 @@
             <!-- 限时小卡 -->
             <div class="card">
                 <div class="card-title">⏰ 限时小卡</div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-bottom:10px;line-height:1.5;">
+                    <div>• 下单后24小时内满10抽获得限时小卡</div>
+                    <div>• 端盒下单直接满足条件</div>
+                </div>
                 <div class="input-group">
                     <label>首次下单时间</label>
                     <input type="datetime-local" id="firstOrderTime" onchange="updateFirstOrderTime(this.value)" />
                 </div>
                 <div id="timeBonusResult" style="margin-top:12px;padding:12px;background:var(--bg);border-radius:10px;">
                     <div style="font-size:13px;color:var(--text-secondary);">请设置首次下单时间</div>
+                </div>
+            </div>
+
+            <!-- 数据统计 -->
+            <div class="card">
+                <div class="card-title">📊 数据统计</div>
+                <div style="padding:15px;">
+                    <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px;">🎯 稀有度分布</div>
+                    <div id="rarityStats" style="display:flex;flex-direction:column;gap:8px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="width:20px;text-align:center;color:#9ca3af;">R</span>
+                            <div style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;">
+                                <div class="rarity-bar rarity-r" style="height:100%;border-radius:4px;"></div>
+                            </div>
+                            <span style="width:40px;text-align:right;font-size:12px;color:var(--text-secondary);" id="statRCount">0</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="width:20px;text-align:center;color:#10b981;">SR</span>
+                            <div style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;">
+                                <div class="rarity-bar rarity-sr" style="height:100%;border-radius:4px;"></div>
+                            </div>
+                            <span style="width:40px;text-align:right;font-size:12px;color:var(--text-secondary);" id="statSRCount">0</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="width:20px;text-align:center;color:#3b82f6;">SSR</span>
+                            <div style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;">
+                                <div class="rarity-bar rarity-ssr" style="height:100%;border-radius:4px;"></div>
+                            </div>
+                            <span style="width:40px;text-align:right;font-size:12px;color:var(--text-secondary);" id="statSSRCount">0</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="width:20px;text-align:center;color:#f59e0b;">SSSR</span>
+                            <div style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;">
+                                <div class="rarity-bar rarity-ssssr" style="height:100%;border-radius:4px;"></div>
+                            </div>
+                            <span style="width:40px;text-align:right;font-size:12px;color:var(--text-secondary);" id="statSSSRCount">0</span>
+                        </div>
+                    </div>
+                    <div style="font-size:12px;font-weight:600;color:var(--text);margin-top:15px;margin-bottom:10px;">📈 抽卡趋势</div>
+                    <div id="trendStats" style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;font-size:12px;">
+                            <span style="color:var(--text-secondary);">总抽数</span>
+                            <span style="color:var(--accent);font-weight:700;" id="trendTotal">0</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:12px;">
+                            <span style="color:var(--text-secondary);">平均每日</span>
+                            <span style="color:var(--accent);font-weight:700;" id="trendAvg">0</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:12px;">
+                            <span style="color:var(--text-secondary);">最高单日</span>
+                            <span style="color:var(--accent);font-weight:700;" id="trendMax">0</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:12px;">
+                            <span style="color:var(--text-secondary);">记录天数</span>
+                            <span style="color:var(--accent);font-weight:700;" id="trendDays">0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1399,6 +1471,12 @@
 
                 <div class="ocr-results" id="ocrResults"></div>
                 <div class="entry-footer-info" id="ocrFooterInfo">共识别 0 张</div>
+            </div>
+
+            <!-- 下单时间选择 -->
+            <div style="padding:12px 16px;border-top:1px solid var(--border);">
+                <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">📅 下单时间（默认当前时间）</div>
+                <input type="datetime-local" id="entryOrderTime" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--btn-radius);background:var(--bg);color:var(--text);font-size:14px;" />
             </div>
 
             <!-- 底部操作栏 -->
@@ -1924,6 +2002,7 @@
             renderPromoStatus();
             calculateExchange();
             renderFullSetButton();
+            renderStats();
         }
 
         function renderPersonalMilestones(totalDraws) {
@@ -1970,11 +2049,11 @@
             const container = document.getElementById('globalMilestones');
             let total = state.settings.globalTotalDraws;
             if (total === 0) {
-                const display = document.getElementById('globalDrawsDisplay');
-                if (display) {
-                    total = parseInt(display.textContent.replace(/[^\d]/g, '')) || 45005;
+                const input = document.getElementById('globalDrawsInput');
+                if (input) {
+                    total = parseInt(input.value) || 57829;
                 } else {
-                    total = 45005;
+                    total = 57829;
                 }
             }
             let html = '';
@@ -2007,30 +2086,69 @@
 
         function updateGlobalDrawsDisplay() {
             const display = document.getElementById('globalDrawsDisplay');
-            const timeEl = document.getElementById('lastUpdateContainer');
+            const timeEl = document.getElementById('lastUpdateDisplay');
             if (display) {
                 const value = state.settings.globalTotalDraws > 0 
                     ? state.settings.globalTotalDraws 
-                    : parseInt(display.textContent.replace(/[^\d]/g, '')) || 50306;
-                display.textContent = value.toLocaleString();
+                    : 57829;
+                display.textContent = value;
             }
             if (timeEl) {
                 if (state.settings.lastUpdateTime && state.settings.lastUpdateTime !== '2026-07-13 00:00:00') {
-                    timeEl.textContent = `更新时间: ${state.settings.lastUpdateTime}`;
+                    timeEl.textContent = `更新于 ${state.settings.lastUpdateTime}`;
                 }
             }
         }
 
+        function renderStats() {
+            const rarityCounts = getRarityCounts();
+            const total = rarityCounts.R + rarityCounts.SR + rarityCounts.SSR + (rarityCounts.SSSR || 0);
+            
+            document.getElementById('statRCount').textContent = rarityCounts.R;
+            document.getElementById('statSRCount').textContent = rarityCounts.SR;
+            document.getElementById('statSSRCount').textContent = rarityCounts.SSR;
+            document.getElementById('statSSSRCount').textContent = rarityCounts.SSSR || 0;
+            
+            if (total > 0) {
+                document.querySelector('.rarity-r').style.width = `${(rarityCounts.R / total) * 100}%`;
+                document.querySelector('.rarity-sr').style.width = `${(rarityCounts.SR / total) * 100}%`;
+                document.querySelector('.rarity-ssr').style.width = `${(rarityCounts.SSR / total) * 100}%`;
+                document.querySelector('.rarity-ssssr').style.width = `${((rarityCounts.SSSR || 0) / total) * 100}%`;
+            }
+            
+            const dailyData = {};
+            state.history.forEach(record => {
+                const date = new Date(record.orderTime || record.timestamp);
+                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                dailyData[dateStr] = (dailyData[dateStr] || 0) + (record.totalCount || 0);
+            });
+            
+            const days = Object.keys(dailyData).length;
+            const totalDraws = Object.values(dailyData).reduce((sum, val) => sum + val, 0);
+            const maxDraws = days > 0 ? Math.max(...Object.values(dailyData)) : 0;
+            const avgDraws = days > 0 ? Math.round(totalDraws / days) : 0;
+            
+            document.getElementById('trendTotal').textContent = totalDraws;
+            document.getElementById('trendAvg').textContent = avgDraws;
+            document.getElementById('trendMax').textContent = maxDraws;
+            document.getElementById('trendDays').textContent = days;
+        }
+
+        function formatDate(date) {
+            if (!(date instanceof Date)) date = new Date(date);
+            return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+
         function renderTimeBonus() {
-            const time = state.settings.firstOrderTime;
             const container = document.getElementById('timeBonusResult');
             
-            if (!time) {
+            const orderTimeStr = state.settings.firstOrderTime;
+            if (!orderTimeStr) {
                 container.innerHTML = `<div style="font-size:13px;color:var(--text-secondary);">请设置首次下单时间</div>`;
                 return;
             }
 
-            const orderTime = new Date(time);
+            const orderTime = new Date(orderTimeStr);
             const now = new Date();
             const hoursSince = (now - orderTime) / (1000 * 60 * 60);
             const totalDraws = getTotalDraws();
@@ -2048,32 +2166,48 @@
                 }
             }
 
+            let drawsWithin24Hours = 0;
+            if (meetsCondition) {
+                const deadline = orderTime.getTime() + 24 * 60 * 60 * 1000;
+                state.history.forEach(record => {
+                    if (record.orderTime && record.orderTime <= deadline && !record.type) {
+                        drawsWithin24Hours += record.totalCount || 0;
+                    }
+                });
+                if (hasEndbox && endboxRecord.orderTime && endboxRecord.orderTime <= deadline) {
+                    drawsWithin24Hours += endboxRecord.totalCount || 0;
+                }
+            }
+
+            const qualifiedWithin24Hours = drawsWithin24Hours >= 10;
+
             if (hasEndbox && meetsCondition) {
                 container.innerHTML = `
                     <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">🎉 恭喜获得限时小卡</div>
                     <div style="font-size:13px;color:var(--text);">端盒下单，满足满10抽条件</div>
                     <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">下单时间：${formatDate(orderTime)} · 已抽 ${totalDraws} 抽</div>
                 `;
-            } else if (bonus && meetsCondition) {
+            } else if (bonus && qualifiedWithin24Hours) {
                 container.innerHTML = `
                     <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">当前档位：${bonus.label}</div>
                     <div style="font-size:13px;color:var(--text);">可获得：${bonus.reward}</div>
-                    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">已过 ${hoursSince.toFixed(1)} 小时 · 已抽 ${totalDraws} 抽</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">已过 ${hoursSince.toFixed(1)} 小时 · 24小时内抽 ${drawsWithin24Hours} 抽</div>
                 `;
-            } else if (!meetsCondition && within24Hours) {
+            } else if (within24Hours && !qualifiedWithin24Hours) {
                 container.innerHTML = `
-                    <div style="font-size:13px;color:var(--text-secondary);">还需 ${Math.max(0, 10 - totalDraws)} 抽才能获得限时小卡</div>
+                    <div style="font-size:13px;color:var(--text-secondary);">24小时内还需 ${Math.max(0, 10 - drawsWithin24Hours)} 抽才能获得限时小卡</div>
                     <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">剩余时间：${(24 - hoursSince).toFixed(1)} 小时</div>
                 `;
-            } else if (!meetsCondition && !within24Hours) {
+            } else if (!within24Hours && qualifiedWithin24Hours) {
                 container.innerHTML = `
-                    <div style="font-size:13px;color:var(--text-secondary);">已超过24小时，无法获得限时小卡</div>
-                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">已抽 ${totalDraws} 抽（需10抽）</div>
+                    <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">🎉 恭喜获得限时小卡</div>
+                    <div style="font-size:13px;color:var(--text);">24小时内完成满10抽条件</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">下单时间：${formatDate(orderTime)} · 24小时内抽 ${drawsWithin24Hours} 抽</div>
                 `;
             } else {
                 container.innerHTML = `
                     <div style="font-size:13px;color:var(--text-secondary);">已超过24小时，无法获得限时小卡</div>
-                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">已抽 ${totalDraws} 抽</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">24小时内抽 ${drawsWithin24Hours} 抽（需10抽）</div>
                 `;
             }
         }
@@ -2120,7 +2254,7 @@
             
             if (postedEl) postedEl.checked = promo.posted;
             if (likedEl) likedEl.checked = promo.liked52;
-            if (reached10El) reached10El.checked = promo.reached10;
+            if (reached10El) reached10El.checked = promo.reached10 || totalDraws >= 10;
             if (redeemedEl) redeemedEl.checked = promo.redeemed;
 
             let statusClass = 'bad';
@@ -2940,9 +3074,14 @@
                             }
                         }
 
+                        const orderTimeInput = document.getElementById('entryOrderTime');
+                        const orderTimeStr = orderTimeInput.value;
+                        const orderTime = orderTimeStr ? new Date(orderTimeStr).getTime() : Date.now();
+                        
                         state.history.unshift({
                             id: Date.now().toString(36),
                             timestamp: Date.now(),
+                            orderTime: orderTime,
                             entries,
                             totalCount: total,
                             totalCost: total * PRICE_PER_DRAW,
@@ -3237,10 +3376,6 @@
                 if (record.type === 'endbox') {
                     cardsHtml = `<div style="color:var(--accent);font-size:12px;">🎁 端盒订单（¥2517，${record.totalCount}抽）</div>`;
                     sourceLabel = '端盒';
-                    if (record.orderTime) {
-                        const orderTime = new Date(record.orderTime);
-                        orderTimeStr = `<div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">下单时间：${orderTime.getMonth() + 1}/${orderTime.getDate()} ${orderTime.getHours()}:${String(orderTime.getMinutes()).padStart(2, '0')}</div>`;
-                    }
                 } else if (record.type === 'markall') {
                     cardsHtml = '<div style="color:var(--accent);font-size:12px;">✨ 一键点亮全部卡片</div>';
                     sourceLabel = '点亮';
@@ -3248,6 +3383,11 @@
                     record.entries.forEach(e => {
                         cardsHtml += `<div class="history-card-chip">${e.cardId} ×${e.count}</div>`;
                     });
+                }
+
+                if (record.orderTime) {
+                    const orderTime = new Date(record.orderTime);
+                    orderTimeStr = `<div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">下单时间：${orderTime.getMonth() + 1}/${orderTime.getDate()} ${orderTime.getHours()}:${String(orderTime.getMinutes()).padStart(2, '0')}</div>`;
                 }
 
                 html += `
@@ -3405,9 +3545,27 @@
             });
         }
 
+        async function loadTesseract() {
+            if (window.Tesseract) return;
+            
+            const progressFill = document.getElementById('ocrProgressFill');
+            if (progressFill) progressFill.style.width = '30%';
+            
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@6.5.0/dist/tesseract.min.js';
+                script.onload = () => {
+                    if (progressFill) progressFill.style.width = '60%';
+                    resolve();
+                };
+                script.onerror = () => reject(new Error('Tesseract加载失败'));
+                document.head.appendChild(script);
+            });
+        }
+
         async function recognizeWithTesseract(file) {
             if (!window.Tesseract) {
-                throw new Error('Tesseract not loaded');
+                await loadTesseract();
             }
             
             const worker = await Tesseract.createWorker('eng', 1, {
@@ -3718,6 +3876,11 @@
             renderDashboard();
             if (state.settings.firstOrderTime) {
                 document.getElementById('firstOrderTime').value = state.settings.firstOrderTime;
+            }
+            
+            const onboardingShown = localStorage.getItem('onboarding_shown');
+            if (!onboardingShown) {
+                document.getElementById('onboarding').classList.remove('hidden');
             }
         }
 
