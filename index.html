@@ -1088,13 +1088,14 @@
             <div style="font-size:14px;color:var(--accent);font-weight:700;margin-bottom:8px;">⚠️ 重要提醒</div>
             <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">
                 <div>本应用的数据存储在浏览器本地，清除浏览器缓存/数据会丢失全部记录！</div>
-                <div style="margin-top:8px;font-weight:600;color:var(--text);">建议定期使用右上角功能备份：</div>
+                <div>建议使用浏览器访问💙点击导出能够正常下载文件，使用微信导出文件功能实际为自动复制代码到剪贴板</div>
+                <div style="margin-top:8px;font-weight:600;color:var(--text);">建议定期使用记录右上角的导出功能备份：</div>
                 <div>• 导出：把所有数据生成JSON，可复制保存到备忘录/文件</div>
                 <div>• 导入：支持上传文件或粘贴JSON恢复数据</div>
                 <div style="margin-top:8px;color:var(--warning);">换手机或清缓存前，请务必先导出备份！</div>
-                <div style="margin-top:12px;font-weight:600;color:var(--text);">📝 更新信息 v1.2</div>
-                <div>• 一键端盒模式：点亮所有卡片</div>
-                <div>• 添加盲盒奖品示例展示</div>
+                <div style="margin-top:12px;font-weight:600;color:var(--text);">📝 更新信息 v6.1</div>
+                <div>• 修复端盒记录展示功能</div>
+                <div>• 完善导入导出功能</div>
             </div>
         </div>
         <button class="onboarding-btn primary" onclick="closeOnboarding()">我知道了</button>
@@ -1140,6 +1141,14 @@
                     <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
                         <div style="font-size:13px;color:var(--text);font-weight:600;">🎉 欢迎使用周柯宇抽抽乐记录器</div>
                         <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">记录你的每一次抽卡！</div>
+                    </div>
+                    <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
+                        <div style="font-size:13px;color:var(--warning);font-weight:600;">🌐 使用建议</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.5;">
+                            <div>• 📱 微信内打开：可正常记录抽卡，导出为复制数据</div>
+                            <div>• 🌍 系统浏览器：支持下载JSON文件备份，功能完整</div>
+                            <div>• 💡 建议使用系统浏览器（Safari/Chrome等）获得最佳体验</div>
+                        </div>
                     </div>
                     <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
                         <div style="font-size:13px;color:var(--text);font-weight:600;">🚀 最新活动资讯</div>
@@ -1214,8 +1223,8 @@
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
                 <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">57640</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-14 09:28）</div>
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">57681</span> 个</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-14 09:42）</div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -3406,6 +3415,13 @@
             const jsonStr = window.currentExportJson;
             if (!jsonStr) return;
             
+            const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+            
+            if (isWeChat) {
+                showToast('⚠️ 微信浏览器不支持文件下载，请在系统浏览器中打开网址后导出');
+                return;
+            }
+            
             const dateStr = new Date().toISOString().slice(0, 10);
             const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
             const url = URL.createObjectURL(blob);
@@ -3426,10 +3442,16 @@
             const jsonStr = window.currentExportJson;
             if (!jsonStr) return;
             
+            const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+            
             navigator.clipboard.writeText(jsonStr).then(() => {
-                showToast('📋 数据已复制到剪贴板！');
+                if (isWeChat) {
+                    showToast('📋 数据已复制！请粘贴到备忘录保存，或在系统浏览器打开网址下载文件');
+                } else {
+                    showToast('📋 数据已复制到剪贴板！');
+                }
             }).catch(() => {
-                showToast('❌ 复制失败，请手动复制');
+                showToast('❌ 复制失败，请长按页面选择复制');
             });
         }
 
@@ -3506,6 +3528,8 @@
                 return;
             }
             
+            closeDataModal();
+            
             showConfirm('导入数据', '导入后将覆盖现有数据，确定继续吗？', '覆盖导入', '取消')
                 .then(confirmed => {
                     if (!confirmed) return;
@@ -3518,7 +3542,6 @@
                         renderCollection();
                         renderHistory();
                         showToast('✅ 导入成功');
-                        closeDataModal();
                         window.currentImportData = null;
                     } catch {
                         showToast('❌ 数据解析失败，请确保是正确的JSON格式');
