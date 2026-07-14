@@ -1629,6 +1629,10 @@
             ]
         };
 
+        const DEFAULT_GLOBAL_DRAWS = 60121;
+        const DEFAULT_LAST_UPDATE = '2026-07-14 22:12';
+        const CURRENT_VERSION = 2;
+
         let state = {
             cardCounts: {},
             history: [],
@@ -1636,10 +1640,11 @@
             settings: {
                 firstOrderTime: null,
                 globalTotalDraws: 0,
+                lastUpdateTime: null,
                 isEndbox: false,
                 promoStatus: { posted: false, liked52: false, reached10: false, redeemed: false },
             },
-            version: 1,
+            version: CURRENT_VERSION,
         };
 
         let entrySelections = {};
@@ -1787,11 +1792,22 @@
                 if (data) {
                     const parsed = JSON.parse(data);
                     state = { ...state, ...parsed };
+                    
+                    if (state.version !== CURRENT_VERSION) {
+                        state.version = CURRENT_VERSION;
+                        state.settings.globalTotalDraws = DEFAULT_GLOBAL_DRAWS;
+                        state.settings.lastUpdateTime = DEFAULT_LAST_UPDATE;
+                        saveData();
+                    }
                 } else {
                     initDefaultCardCounts();
+                    state.settings.globalTotalDraws = DEFAULT_GLOBAL_DRAWS;
+                    state.settings.lastUpdateTime = DEFAULT_LAST_UPDATE;
                 }
             } catch {
                 initDefaultCardCounts();
+                state.settings.globalTotalDraws = DEFAULT_GLOBAL_DRAWS;
+                state.settings.lastUpdateTime = DEFAULT_LAST_UPDATE;
             }
 
             const shown = localStorage.getItem('onboarding_shown');
@@ -2062,9 +2078,9 @@
             if (total === 0) {
                 const input = document.getElementById('globalDrawsInput');
                 if (input) {
-                    total = parseInt(input.value) || 60068;
+                    total = parseInt(input.value) || DEFAULT_GLOBAL_DRAWS;
                 } else {
-                    total = 60068;
+                    total = DEFAULT_GLOBAL_DRAWS;
                 }
             }
             let html = '';
@@ -2101,12 +2117,14 @@
             if (display) {
                 const value = state.settings.globalTotalDraws > 0 
                     ? state.settings.globalTotalDraws 
-                    : 60068;
+                    : DEFAULT_GLOBAL_DRAWS;
                 display.textContent = value;
             }
             if (timeEl) {
-                if (state.settings.lastUpdateTime && state.settings.lastUpdateTime !== '2026-07-13 00:00:00') {
+                if (state.settings.lastUpdateTime) {
                     timeEl.textContent = `更新于 ${state.settings.lastUpdateTime}`;
+                } else {
+                    timeEl.textContent = `更新于 ${DEFAULT_LAST_UPDATE}`;
                 }
             }
         }
