@@ -919,7 +919,7 @@
     <!-- 图片放大弹窗 -->
     <div class="modal-overlay" id="imageZoomModal" onclick="closeZoomModal()">
         <div style="position:relative;max-width:95vw;max-height:95vh;width:auto;overflow:hidden;" onclick="event.stopPropagation()">
-            <button class="btn btn-secondary" onclick="closeZoomModal()" style="position:absolute;top:-40px;right:0;z-index:10;padding:6px 12px;font-size:12px;">✕ 关闭</button>
+            <button class="btn btn-secondary" onclick="closeZoomModal()" style="position:absolute;top:12px;right:12px;z-index:10;padding:8px 16px;font-size:14px;background:rgba(0,0,0,0.7);color:white;border-radius:20px;">✕ 关闭</button>
             <div id="zoomImageContainer" style="width:100%;height:80vh;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;">
                 <img id="zoomImage" src="" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;transform-origin:center center;transition:transform 0.1s ease-out;" />
             </div>
@@ -1189,8 +1189,10 @@
                     <div class="progress-text" id="personalProgressText">再抽0抽解锁下一档</div>
                 </div>
                 
-                <div style="margin-top:12px;">
-                    <button class="btn btn-secondary" onclick="markFullSet()" style="width:100%;font-size:12px;padding:8px;">🎁 已端盒一键点亮（¥2517 · 点亮所有卡片）</button>
+                <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;">
+                    <button id="fullSetBtn" class="btn btn-secondary" onclick="markFullSet()" style="width:100%;font-size:12px;padding:8px;">🎁 端盒下单 ¥2517（382抽）</button>
+                    <button id="markAllBtn" class="btn btn-secondary" onclick="markAllCards()" style="width:100%;font-size:12px;padding:8px;">✨ 一键点亮全部卡片</button>
+                    <div style="text-align:center;font-size:10px;color:var(--text-secondary);margin-top:4px;">端盒赠品周边详见首页最后的长图</div>
                 </div>
             </div>
 
@@ -1198,8 +1200,8 @@
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
                 <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">55689</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-13 22:07）</div>
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">57609</span> 个</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-14 09:13）</div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -1213,6 +1215,19 @@
                 </div>
                 <div id="timeBonusResult" style="margin-top:12px;padding:12px;background:var(--bg);border-radius:10px;">
                     <div style="font-size:13px;color:var(--text-secondary);">请设置首次下单时间</div>
+                </div>
+            </div>
+
+            <!-- 碎卡兑换机制 -->
+            <div class="card">  
+                <div class="card-title">🔄 碎卡兑换机制</div>
+                <div style="padding:0 15px 15px;">
+                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
+                        <p style="margin:8px 0;">同一下单账号，每满36抽可使用6张R卡兑换涨SR卡</p>
+                        <p style="margin:8px 0;">每满72抽，可使用6张R卡或者SR卡兑换1张任意卡面</p>
+                        <p style="margin:8px 0;">兑换方式及时间另行通知，请关注活动官方微博：</p>
+                        <a href="https://weibo.com/u/1851141241" target="_blank" style="font-size:12px;color:var(--accent);display:block;margin-top:4px;">Liid·宇航员巡游卫星</a>
+                    </div>
                 </div>
             </div>
 
@@ -1230,10 +1245,6 @@
                     </div>
                 </div>
                 <div class="exchange-result" id="exchangeResult"></div>
-            </div>
-            <div class="card">  
-                <div class="card-title">🔄 碎卡兑换机制：
-同一下单账号，每满36抽可使用6张R卡兑换涨SR卡，每满72抽，可使用6张或者S2兑换1涨任意卡面，兑换方式及时间另行通知，关注活动官方微博Lild·宇航员巡游卫星。</div>
             </div>
 
             <!-- 特殊卡池 -->
@@ -1391,7 +1402,7 @@
             </div>
 
             <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-                <button class="btn btn-secondary" onclick="document.getElementById('importInput').click()" style="flex:1;min-width:100px;">📥 导入</button>
+                <button class="btn btn-secondary" onclick="showImportOptions()" style="flex:1;min-width:100px;">📥 导入</button>
                 <button class="btn btn-primary" onclick="exportData()" style="flex:1;min-width:100px;">📤 导出</button>
                 <button class="btn btn-secondary" onclick="showTrashModal()" style="flex:1;min-width:100px;">🗑️ 回收站</button>
                 <button class="btn btn-secondary" onclick="clearAllHistory()" style="flex:1;min-width:100px;color:var(--danger);">🧹 清空</button>
@@ -1678,12 +1689,11 @@
         }
 
         function initDefaultCardCounts() {
+            state.cardCounts = {};
             const cards = generateCards();
             cards.forEach(c => {
                 if (!state.cardCounts[c.rarity]) state.cardCounts[c.rarity] = {};
-                if (state.cardCounts[c.rarity][c.id] === undefined) {
-                    state.cardCounts[c.rarity][c.id] = 0;
-                }
+                state.cardCounts[c.rarity][c.id] = 0;
             });
         }
 
@@ -1692,6 +1702,10 @@
         }
 
         function getTotalDraws() {
+            if (state.settings.isEndbox) {
+                const endboxRecord = state.history.find(r => r.type === 'endbox');
+                return endboxRecord ? (endboxRecord.totalCount || 0) : 0;
+            }
             let total = 0;
             for (const rarity in state.cardCounts) {
                 for (const id in state.cardCounts[rarity]) {
@@ -1702,7 +1716,17 @@
         }
 
         function getTotalCost() {
-            return getTotalDraws() * PRICE_PER_DRAW;
+            if (state.settings.isEndbox) {
+                const endboxRecord = state.history.find(r => r.type === 'endbox');
+                return endboxRecord ? (endboxRecord.totalCost || 0) : 0;
+            }
+            let cost = 0;
+            for (const rarity in state.cardCounts) {
+                for (const id in state.cardCounts[rarity]) {
+                    cost += (state.cardCounts[rarity][id] || 0) * PRICE_PER_DRAW;
+                }
+            }
+            return cost;
         }
 
         function getCollectionProgress() {
@@ -1715,10 +1739,12 @@
         }
 
         function getRarityCounts() {
-            const counts = { R: 0, SR: 0, SSR: 0 };
-            for (const rarity of ['R', 'SR', 'SSR']) {
+            const counts = { R: 0, SR: 0, SSR: 0, SSSR: 0 };
+            for (const rarity of ['R', 'SR', 'SSR', 'SSSR']) {
                 for (const id in state.cardCounts[rarity]) {
-                    counts[rarity] += state.cardCounts[rarity][id] || 0;
+                    if ((state.cardCounts[rarity][id] || 0) > 0) {
+                        counts[rarity]++;
+                    }
                 }
             }
             return counts;
@@ -1852,6 +1878,7 @@
             renderTimeBonus();
             renderPromoStatus();
             calculateExchange();
+            renderFullSetButton();
         }
 
         function renderPersonalMilestones(totalDraws) {
@@ -2305,12 +2332,79 @@
             return Math.sqrt(dx * dx + dy * dy);
         }
 
+        function renderFullSetButton() {
+            const fullSetBtn = document.getElementById('fullSetBtn');
+            const markAllBtn = document.getElementById('markAllBtn');
+            if (!fullSetBtn || !markAllBtn) return;
+
+            if (state.settings.isEndbox) {
+                fullSetBtn.innerHTML = '✅ 已端盒（¥2517，382抽）';
+                fullSetBtn.style.backgroundColor = 'var(--success)';
+                fullSetBtn.style.color = 'white';
+                fullSetBtn.onclick = null;
+            } else {
+                fullSetBtn.innerHTML = '🎁 端盒下单 ¥2517（382抽）';
+                fullSetBtn.style.backgroundColor = '';
+                fullSetBtn.style.color = '';
+                fullSetBtn.onclick = markFullSet;
+            }
+
+            const cards = generateCards();
+            const allGot = cards.every(c => (state.cardCounts[c.rarity]?.[c.id] || 0) > 0);
+            if (allGot) {
+                markAllBtn.innerHTML = '✅ 已点亮全部卡片';
+                markAllBtn.style.backgroundColor = 'var(--success)';
+                markAllBtn.style.color = 'white';
+                markAllBtn.onclick = null;
+            } else {
+                markAllBtn.innerHTML = '✨ 一键点亮全部卡片';
+                markAllBtn.style.backgroundColor = '';
+                markAllBtn.style.color = '';
+                markAllBtn.onclick = markAllCards;
+            }
+        }
+
         function markFullSet() {
-            showConfirm('已端盒一键点亮', '确认点亮所有卡片吗？这将把所有卡片设为至少拥有1张，并记录端盒订单（¥2517）。', '确认点亮', '取消')
+            showConfirm('端盒下单', '确认端盒下单吗？这将记录 ¥2517 金额和 382 抽数，并点亮所有卡片。', '确认', '取消')
+                .then(confirmed => {
+                    if (confirmed) {
+                        state.settings.isEndbox = true;
+                        
+                        const cards = generateCards();
+                        const baseCount = Math.floor(382 / cards.length);
+                        const remainder = 382 % cards.length;
+                        
+                        cards.forEach((card, idx) => {
+                            if (!state.cardCounts[card.rarity]) {
+                                state.cardCounts[card.rarity] = {};
+                            }
+                            state.cardCounts[card.rarity][card.id] = baseCount + (idx < remainder ? 1 : 0);
+                        });
+                        
+                        state.history.unshift({
+                            timestamp: Date.now(),
+                            source: 'manual',
+                            entries: [],
+                            totalCount: 382,
+                            totalCost: 2517,
+                            type: 'endbox'
+                        });
+                        
+                        saveData();
+                        renderDashboard();
+                        renderCollection();
+                        renderHistory();
+                        
+                        showToast('🎉 端盒下单成功！金额 ¥2517，抽数 382');
+                    }
+                });
+        }
+
+        function markAllCards() {
+            showConfirm('点亮全部卡片', '确认点亮所有卡片吗？这将把所有卡片设为至少拥有1张。', '确认点亮', '取消')
                 .then(confirmed => {
                     if (confirmed) {
                         const cards = generateCards();
-                        const entries = [];
                         cards.forEach(card => {
                             if (!state.cardCounts[card.rarity]) {
                                 state.cardCounts[card.rarity] = {};
@@ -2318,22 +2412,13 @@
                             if (!state.cardCounts[card.rarity][card.id]) {
                                 state.cardCounts[card.rarity][card.id] = 1;
                             }
-                            entries.push({ cardId: card.id, count: 1 });
-                        });
-                        
-                        state.history.unshift({
-                            timestamp: Date.now(),
-                            source: 'manual',
-                            entries: entries,
-                            totalCount: 2517,
-                            totalCost: 2517 * 6
                         });
                         
                         saveData();
                         renderDashboard();
                         renderCollection();
-                        renderHistory();
-                        showToast('🎉 所有卡片已点亮！抽卡记录已更新');
+                        
+                        showToast('🎉 所有卡片已点亮！');
                     }
                 });
         }
@@ -2841,14 +2926,19 @@
             showConfirm('删除记录', '确定要删除这条记录吗？删除后可在回收站恢复。', '删除', '取消')
                 .then(confirmed => {
                     if (confirmed) {
-                        record.entries.forEach(e => {
-                            const cards = generateCards();
-                            const card = cards.find(c => c.id === e.cardId);
-                            if (card) {
-                                if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
-                                state.cardCounts[card.rarity][e.cardId] = Math.max(0, (state.cardCounts[card.rarity][e.cardId] || 0) - e.count);
-                            }
-                        });
+                        if (record.type === 'endbox') {
+                            state.settings.isEndbox = false;
+                            initDefaultCardCounts();
+                        } else {
+                            record.entries.forEach(e => {
+                                const cards = generateCards();
+                                const card = cards.find(c => c.id === e.cardId);
+                                if (card) {
+                                    if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
+                                    state.cardCounts[card.rarity][e.cardId] = Math.max(0, (state.cardCounts[card.rarity][e.cardId] || 0) - e.count);
+                                }
+                            });
+                        }
 
                         record.deletedAt = Date.now();
                         state.trash.unshift(record);
@@ -2886,6 +2976,8 @@
                         });
 
                         state.history = [];
+                        state.settings.isEndbox = false;
+                        initDefaultCardCounts();
                         saveData();
                         renderDashboard();
                         renderCollection();
@@ -2950,14 +3042,18 @@
             const record = state.trash[index];
             if (!record) return;
 
-            record.entries.forEach(e => {
-                const cards = generateCards();
-                const card = cards.find(c => c.id === e.cardId);
-                if (card) {
-                    if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
-                    state.cardCounts[card.rarity][e.cardId] = (state.cardCounts[card.rarity][e.cardId] || 0) + e.count;
-                }
-            });
+            if (record.type === 'endbox') {
+                state.settings.isEndbox = true;
+            } else {
+                record.entries.forEach(e => {
+                    const cards = generateCards();
+                    const card = cards.find(c => c.id === e.cardId);
+                    if (card) {
+                        if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
+                        state.cardCounts[card.rarity][e.cardId] = (state.cardCounts[card.rarity][e.cardId] || 0) + e.count;
+                    }
+                });
+            }
 
             delete record.deletedAt;
             state.history.unshift(record);
@@ -2995,14 +3091,18 @@
                 .then(confirmed => {
                     if (confirmed) {
                         state.trash.forEach(record => {
-                            record.entries.forEach(e => {
-                                const cards = generateCards();
-                                const card = cards.find(c => c.id === e.cardId);
-                                if (card) {
-                                    if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
-                                    state.cardCounts[card.rarity][e.cardId] = (state.cardCounts[card.rarity][e.cardId] || 0) + e.count;
-                                }
-                            });
+                            if (record.type === 'endbox') {
+                                state.settings.isEndbox = true;
+                            } else {
+                                record.entries.forEach(e => {
+                                    const cards = generateCards();
+                                    const card = cards.find(c => c.id === e.cardId);
+                                    if (card) {
+                                        if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
+                                        state.cardCounts[card.rarity][e.cardId] = (state.cardCounts[card.rarity][e.cardId] || 0) + e.count;
+                                    }
+                                });
+                            }
                             delete record.deletedAt;
                             state.history.push(record);
                         });
@@ -3026,6 +3126,8 @@
                 return;
             }
 
+            document.getElementById('trashModal').classList.remove('active');
+            
             showConfirm('彻底清空', `确定要彻底清空回收站中全部 ${state.trash.length} 条记录吗？此操作不可恢复！`, '彻底清空', '取消')
                 .then(confirmed => {
                     if (confirmed) {
@@ -3057,16 +3159,26 @@
                 const timeStr = `${time.getMonth() + 1}/${time.getDate()} ${time.getHours()}:${String(time.getMinutes()).padStart(2, '0')}`;
 
                 let cardsHtml = '';
-                record.entries.forEach(e => {
-                    cardsHtml += `<div class="history-card-chip">${e.cardId} ×${e.count}</div>`;
-                });
+                let sourceLabel = record.source === 'manual' ? '手动' : '截图识别';
+                
+                if (record.type === 'endbox') {
+                    cardsHtml = `<div style="color:var(--accent);font-size:12px;">🎁 端盒订单（¥2517，${record.totalCount}抽）</div>`;
+                    sourceLabel = '端盒';
+                } else if (record.type === 'markall') {
+                    cardsHtml = '<div style="color:var(--accent);font-size:12px;">✨ 一键点亮全部卡片</div>';
+                    sourceLabel = '点亮';
+                } else {
+                    record.entries.forEach(e => {
+                        cardsHtml += `<div class="history-card-chip">${e.cardId} ×${e.count}</div>`;
+                    });
+                }
 
                 html += `
                     <li class="history-item">
                         <div class="history-header">
                             <span class="history-time">${timeStr}</span>
                             <div style="display:flex;gap:6px;align-items:center;">
-                                <span class="history-source">${record.source === 'manual' ? '手动' : '截图识别'}</span>
+                                <span class="history-source">${sourceLabel}</span>
                                 <button class="btn btn-secondary" style="width:24px;height:24px;padding:0;font-size:12px;line-height:1;color:var(--danger);" onclick="deleteHistoryRecord(${index})" title="删除此记录">🗑️</button>
                             </div>
                         </div>
@@ -3247,18 +3359,29 @@
                 };
                 
                 const jsonStr = JSON.stringify(exportData, null, 2);
-                const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.download = `周柯宇抽抽乐记录_${dateStr}.json`;
-                a.href = url;
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }, 500);
-                showToast('📤 导出成功');
+                
+                const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+                
+                if (isWeChat) {
+                    navigator.clipboard.writeText(jsonStr).then(() => {
+                        showToast('📋 数据已复制到剪贴板！请在系统浏览器中打开网址后粘贴导入');
+                    }).catch(() => {
+                        showToast('❌ 复制失败，请长按页面选择复制');
+                    });
+                } else {
+                    const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.download = `周柯宇抽抽乐记录_${dateStr}.json`;
+                    a.href = url;
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    }, 500);
+                    showToast('📤 导出成功');
+                }
             } catch (e) {
                 console.error('Export error:', e);
                 showToast('❌ 导出失败，请重试');
@@ -3277,6 +3400,40 @@
                 console.error('Import trigger error:', e);
                 showToast('❌ 导入失败，请重试');
             }
+        }
+
+        function pasteImport() {
+            showConfirm('粘贴导入', '从剪贴板粘贴数据，导入后将覆盖现有数据，确定继续吗？', '粘贴导入', '取消')
+                .then(confirmed => {
+                    if (!confirmed) return;
+                    
+                    navigator.clipboard.readText().then(text => {
+                        try {
+                            const data = JSON.parse(text);
+                            state = { ...state, ...data };
+                            saveData();
+                            renderDashboard();
+                            renderCollection();
+                            renderHistory();
+                            showToast('✅ 粘贴导入成功');
+                        } catch {
+                            showToast('❌ 粘贴内容解析失败，请确保是正确的导出数据');
+                        }
+                    }).catch(() => {
+                        showToast('❌ 读取剪贴板失败，请手动粘贴');
+                    });
+                });
+        }
+
+        function showImportOptions() {
+            showConfirm('选择导入方式', '📁 上传文件：选择JSON文件导入<br/>📋 粘贴数据：从剪贴板粘贴（适合微信导入）', '上传文件', '粘贴数据')
+                .then(confirmed => {
+                    if (confirmed) {
+                        document.getElementById('importInput').click();
+                    } else {
+                        pasteImport();
+                    }
+                });
         }
 
         function importData(input) {
@@ -3310,18 +3467,24 @@
         }
 
         function clearAllData() {
-            showConfirm('清空数据', '此操作将清空所有记录和收集进度，不可恢复！', '清空', '取消')
+            showConfirm('清空数据', `确定要清空全部 ${state.history.length} 条记录吗？删除后可在回收站恢复。`, '全部删除', '取消')
                 .then(confirmed => {
                     if (confirmed) {
-                        state.cardCounts = {};
+                        state.history.forEach(record => {
+                            record.entries.forEach(e => {
+                                const cards = generateCards();
+                                const card = cards.find(c => c.id === e.cardId);
+                                if (card) {
+                                    if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
+                                    state.cardCounts[card.rarity][e.cardId] = Math.max(0, (state.cardCounts[card.rarity][e.cardId] || 0) - e.count);
+                                }
+                            });
+                            record.deletedAt = Date.now();
+                            state.trash.unshift(record);
+                        });
+
                         state.history = [];
-                        state.settings.globalTotalDraws = 0;
-                        state.settings.promoStatus = {
-                            posted: false,
-                            liked52: false,
-                            reached10: false,
-                            redeemed: false
-                        };
+                        state.settings.isEndbox = false;
                         initDefaultCardCounts();
                         saveData();
                         renderDashboard();
@@ -3332,7 +3495,7 @@
                         document.getElementById('promoReached10').checked = false;
                         document.getElementById('promoRedeemed').checked = false;
                         renderPromoStatus();
-                        showToast('✅ 已清空全部数据');
+                        showToast('✅ 已全部移到回收站');
                     }
                 });
         }
