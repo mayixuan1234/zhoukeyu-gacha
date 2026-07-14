@@ -50,7 +50,7 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            padding-bottom: 70px;
+            padding-bottom: 160px;
             font-size: 16px;
         }
         .app { max-width: 520px; margin: 0 auto; padding: 16px 12px; }
@@ -630,7 +630,7 @@
             right: 0;
             background: var(--bg-card);
             border-top: 1px solid var(--border);
-            padding: 6px 16px;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1418,18 +1418,18 @@
                 <div class="entry-footer-info" id="ocrFooterInfo">共识别 0 张</div>
             </div>
 
-            <!-- 下单时间选择 -->
-            <div style="padding:12px 16px;border-top:1px solid var(--border);">
-                <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">📅 下单时间（默认当前时间）</div>
-                <input type="datetime-local" id="entryOrderTime" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--btn-radius);background:var(--bg);color:var(--text);font-size:14px;" />
-            </div>
-
             <!-- 底部操作栏 -->
             <div class="entry-footer" id="entryFooter">
-                <div class="entry-footer-info" id="entryFooterInfo">已选择 0 张卡片</div>
-                <div style="display:flex;gap:8px;">
-                    <button class="btn btn-secondary" onclick="undoLastRecord()">↩ 撤销</button>
-                    <button class="btn btn-primary" onclick="confirmAddRecords()">✓ 确认添加</button>
+                <div style="flex:1;">
+                    <div class="entry-footer-info" id="entryFooterInfo">已选择 0 张卡片</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+                        <span style="font-size:11px;color:var(--text-secondary);">📅</span>
+                        <input type="datetime-local" id="entryOrderTime" style="flex:1;max-width:160px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:11px;" />
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                    <button class="btn btn-secondary" onclick="undoLastRecord()" style="padding:6px 12px;font-size:12px;">↩ 撤销</button>
+                    <button class="btn btn-primary" onclick="confirmAddRecords()" style="padding:6px 12px;font-size:12px;">✓ 确认</button>
                 </div>
             </div>
         </div>
