@@ -801,23 +801,42 @@
         .onboarding-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--bg);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 4000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 32px;
+            padding: 24px;
             text-align: center;
         }
-        .onboarding-icon { font-size: 48px; margin-bottom: 16px; }
-        .onboarding-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-        .onboarding-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px; }
+        .onboarding-modal:not(.hidden) {
+            display: flex;
+        }
+        .onboarding-modal.hidden {
+            display: none;
+        }
+        .onboarding-box {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 28px;
+            max-width: 90vw;
+            width: 340px;
+            max-height: 85vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .onboarding-icon { font-size: 40px; margin-bottom: 12px; }
+        .onboarding-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .onboarding-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; text-align: left; }
         .onboarding-btn {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border-radius: var(--btn-radius);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
@@ -826,11 +845,11 @@
         .onboarding-btn.primary {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: #fff;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .onboarding-btn.secondary {
-            background: var(--bg-card);
-            color: var(--text);
+            background: var(--bg);
+            color: var(--text-secondary);
             border: 1px solid var(--border);
         }
 
@@ -1082,25 +1101,27 @@
 
     <!-- 首次使用提示 -->
     <div class="onboarding-modal hidden" id="onboarding">
-        <div class="onboarding-icon">💙</div>
-        <div class="onboarding-title">周柯宇抽抽乐记录器</div>
-        <div class="onboarding-desc" style="text-align:left;max-width:320px;">
-            <div style="font-size:14px;color:var(--accent);font-weight:700;margin-bottom:8px;">⚠️ 重要提醒</div>
-            <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">
-                <div>本应用的数据存储在浏览器本地，清除浏览器缓存/数据会丢失全部记录！</div>
-                <div>建议使用浏览器访问💙导出可正常下载文件</div>
-                <div>微信内导出实际为复制代码到剪贴板</div>
-                <div style="margin-top:8px;font-weight:600;color:var(--text);">建议定期使用记录右上角的导出功能备份：</div>
-                <div>• 导出：把所有数据生成JSON，可复制保存到备忘录/文件</div>
-                <div>• 导入：支持上传文件或粘贴JSON恢复数据</div>
-                <div style="margin-top:8px;color:var(--warning);">换手机或清缓存前，请务必先导出备份！</div>
-                <div style="margin-top:12px;font-weight:600;color:var(--text);">📝 更新信息 v6.1</div>
-                <div>• 修复端盒记录展示功能</div>
-                <div>• 完善导入导出功能</div>
+        <div class="onboarding-box">
+            <div class="onboarding-icon">💙</div>
+            <div class="onboarding-title">周柯宇抽抽乐记录器</div>
+            <div class="onboarding-desc">
+                <div style="font-size:14px;color:var(--accent);font-weight:700;margin-bottom:8px;">⚠️ 重要提醒</div>
+                <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">
+                    <div>本应用的数据存储在浏览器本地，清除浏览器缓存/数据会丢失全部记录！</div>
+                    <div>建议使用浏览器访问💙导出可正常下载文件</div>
+                    <div>微信内导出实际为复制代码到剪贴板</div>
+                    <div style="margin-top:8px;font-weight:600;color:var(--text);">建议定期使用“记录“左上角的导出功能备份：</div>
+                    <div>• 导出：把所有数据生成JSON，可复制保存到备忘录/文件</div>
+                    <div>• 导入：支持上传文件或粘贴JSON恢复数据</div>
+                    <div style="margin-top:8px;color:var(--warning);">换手机或清缓存前，请务必先导出备份！</div>
+                    <div style="margin-top:12px;font-weight:600;color:var(--text);">📝 更新信息 v6.1</div>
+                    <div>• 修复端盒记录展示功能</div>
+                    <div>• 完善导入导出功能</div>
+                </div>
             </div>
+            <button class="onboarding-btn primary" onclick="closeOnboarding()">我知道了</button>
+            <button class="onboarding-btn secondary" onclick="skipOnboarding()">下次不再提醒</button>
         </div>
-        <button class="onboarding-btn primary" onclick="closeOnboarding()">我知道了</button>
-        <button class="onboarding-btn secondary" onclick="skipOnboarding()">下次不再提醒</button>
     </div>
 
     <div class="app">
