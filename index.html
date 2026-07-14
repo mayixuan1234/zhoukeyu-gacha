@@ -682,8 +682,34 @@
         }
         .ocr-results {
             margin-top: 12px;
-            max-height: 200px;
+            max-height: 380px;
             overflow-y: auto;
+        }
+        .ocr-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding-bottom: 8px;
+        }
+        .ocr-page-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ocr-page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
         .ocr-result-item {
             display: flex;
@@ -1415,6 +1441,7 @@
                 </div>
 
                 <div class="ocr-results" id="ocrResults"></div>
+                <div class="ocr-pagination" id="ocrPagination" style="display:none;"></div>
                 <div class="entry-footer-info" id="ocrFooterInfo">共识别 0 张</div>
             </div>
 
@@ -2938,33 +2965,67 @@
             showToast(`✅ 已添加 ${currentAddCardId} x${currentAddCardCount}`);
         }
 
+        let currentOCRPage = 1;
+        const OCR_PAGE_SIZE = 10;
+
         function renderOCRResults() {
             const resultsContainer = document.getElementById('ocrResults');
             const footerInfo = document.getElementById('ocrFooterInfo');
+            const paginationContainer = document.getElementById('ocrPagination');
             
-            let html = '';
+            const resultsArray = [];
             let total = 0;
             for (const id in window.currentOCRResults) {
-                const images = getCardImages(id);
+                resultsArray.push({ id, count: window.currentOCRResults[id] });
+                total += window.currentOCRResults[id];
+            }
+            
+            const totalPages = Math.ceil(resultsArray.length / OCR_PAGE_SIZE);
+            const start = (currentOCRPage - 1) * OCR_PAGE_SIZE;
+            const end = start + OCR_PAGE_SIZE;
+            const pageResults = resultsArray.slice(start, end);
+            
+            let html = '';
+            for (const item of pageResults) {
+                const images = getCardImages(item.id);
                 const imgHtml = images.front ? `<img src="${images.front}" style="width:40px;height:50px;object-fit:cover;border-radius:4px;margin-right:8px;" />` : '';
                 html += `
                     <div class="ocr-result-item">
                         ${imgHtml}
-                        <span>${id}</span>
+                        <span>${item.id}</span>
                         <div style="display:flex;align-items:center;gap:4px;">
-                            <button class="btn btn-secondary" style="width:24px;height:24px;padding:0;font-size:14px;line-height:1;" onclick="adjustOCRCount('${id}', -1)">-</button>
-                            <span style="color:var(--accent);font-weight:700;width:30px;text-align:center;">${window.currentOCRResults[id]}</span>
-                            <button class="btn btn-primary" style="width:24px;height:24px;padding:0;font-size:14px;line-height:1;" onclick="adjustOCRCount('${id}', 1)">+</button>
-                            <button class="btn btn-secondary" style="width:24px;height:24px;padding:0;font-size:12px;line-height:1;color:var(--danger);" onclick="removeOCRCard('${id}')">✕</button>
+                            <button class="btn btn-secondary" style="width:24px;height:24px;padding:0;font-size:14px;line-height:1;" onclick="adjustOCRCount('${item.id}', -1)">-</button>
+                            <span style="color:var(--accent);font-weight:700;width:30px;text-align:center;">${item.count}</span>
+                            <button class="btn btn-primary" style="width:24px;height:24px;padding:0;font-size:14px;line-height:1;" onclick="adjustOCRCount('${item.id}', 1)">+</button>
+                            <button class="btn btn-secondary" style="width:24px;height:24px;padding:0;font-size:12px;line-height:1;color:var(--danger);" onclick="removeOCRCard('${item.id}')">✕</button>
                         </div>
                     </div>
                 `;
-                total += window.currentOCRResults[id];
             }
             
             resultsContainer.innerHTML = html || '<div style="text-align:center;color:var(--text-secondary);">未识别到卡牌</div>';
             footerInfo.textContent = `共识别 ${total} 张`;
+            
+            let paginationHtml = '';
+            if (totalPages > 1) {
+                paginationHtml += `<button class="ocr-page-btn" onclick="changeOCRPage(${currentOCRPage - 1})" ${currentOCRPage === 1 ? 'style="opacity:0.5;"' : ''}>‹</button>`;
+                for (let i = 1; i <= totalPages; i++) {
+                    paginationHtml += `<button class="ocr-page-btn ${i === currentOCRPage ? 'active' : ''}" onclick="changeOCRPage(${i})">${i}</button>`;
+                }
+                paginationHtml += `<button class="ocr-page-btn" onclick="changeOCRPage(${currentOCRPage + 1})" ${currentOCRPage === totalPages ? 'style="opacity:0.5;"' : ''}>›</button>`;
+            }
+            paginationContainer.innerHTML = paginationHtml;
+            paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
+            
             updateEntryFooter();
+        }
+
+        function changeOCRPage(page) {
+            const resultsArray = Object.keys(window.currentOCRResults || {});
+            const totalPages = Math.ceil(resultsArray.length / OCR_PAGE_SIZE);
+            if (page < 1 || page > totalPages) return;
+            currentOCRPage = page;
+            renderOCRResults();
         }
 
         function removeOCRCard(cardId) {
