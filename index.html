@@ -1278,10 +1278,10 @@
                 <div style="padding:12px;background:var(--bg);border-radius:12px;">
                     <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
                         <div style="font-size:20px;font-weight:900;color:var(--accent);">🔥 已抽</div>
-                        <span style="font-size:24px;font-weight:900;color:var(--accent);" id="globalDrawsDisplay">60020</span>
+                        <span style="font-size:24px;font-weight:900;color:var(--accent);" id="globalDrawsDisplay">60068</span>
                         <div style="font-size:20px;font-weight:900;color:var(--accent);">个</div>
                     </div>
-                    <div style="font-size:11px;color:var(--text-secondary);text-align:center;margin-top:6px;" id="lastUpdateDisplay">更新于 2026-07-14 21:50</div>
+                    <div style="font-size:11px;color:var(--text-secondary);text-align:center;margin-top:6px;" id="lastUpdateDisplay">更新于 2026-07-14 22:00</div>
                     <div style="font-size:10px;color:var(--text-secondary);text-align:center;margin-top:4px;line-height:1.4;">
                         <div>⏱️ 总抽数随缘更新</div>
                         <div>🌐 <a href="https://www.91ruyu.com/gaia/85014/bad3126a.html?share_relation=fb4e1b89f71f2875_1552552965_1&spider_token=631f&wfr=BuyercopyURL" target="_blank" style="color:var(--accent);">实时抽数请查看官方页面</a></div>
@@ -2062,9 +2062,9 @@
             if (total === 0) {
                 const input = document.getElementById('globalDrawsInput');
                 if (input) {
-                    total = parseInt(input.value) || 57829;
+                    total = parseInt(input.value) || 60068;
                 } else {
-                    total = 57829;
+                    total = 60068;
                 }
             }
             let html = '';
@@ -2101,7 +2101,7 @@
             if (display) {
                 const value = state.settings.globalTotalDraws > 0 
                     ? state.settings.globalTotalDraws 
-                    : 57829;
+                    : 60068;
                 display.textContent = value;
             }
             if (timeEl) {
