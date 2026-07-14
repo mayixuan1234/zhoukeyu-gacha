@@ -1245,8 +1245,8 @@
             <div class="card">
                 <div class="card-title">🌟 全员满赠</div>
                 <div style="padding:15px;background:var(--bg);border-radius:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">57681</span> 个</div>
-                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-14 09:42）</div>
+                    <div style="font-size:24px;font-weight:900;color:var(--accent);margin-bottom:6px;">🔥 已抽 <span id="globalDrawsDisplay">57829</span> 个</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">（不包含端盒抽数 · 更新于 2026-07-14 10:37）</div>
                 </div>
                 <div class="milestone-list" id="globalMilestones"></div>
             </div>
@@ -2033,6 +2033,12 @@
             const orderTime = new Date(time);
             const now = new Date();
             const hoursSince = (now - orderTime) / (1000 * 60 * 60);
+            const totalDraws = getTotalDraws();
+            const meetsCondition = totalDraws >= 10;
+
+            const endboxRecord = state.history.find(h => h.type === 'endbox');
+            const within24Hours = hoursSince <= 24;
+            const hasEndbox = !!endboxRecord;
 
             let bonus = null;
             for (const b of TIME_BONUS) {
@@ -2042,15 +2048,32 @@
                 }
             }
 
-            if (bonus) {
+            if (hasEndbox && meetsCondition) {
+                container.innerHTML = `
+                    <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">🎉 恭喜获得限时小卡</div>
+                    <div style="font-size:13px;color:var(--text);">端盒下单，满足满10抽条件</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">下单时间：${formatDate(orderTime)} · 已抽 ${totalDraws} 抽</div>
+                `;
+            } else if (bonus && meetsCondition) {
                 container.innerHTML = `
                     <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">当前档位：${bonus.label}</div>
                     <div style="font-size:13px;color:var(--text);">可获得：${bonus.reward}</div>
-                    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">已过 ${hoursSince.toFixed(1)} 小时</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">已过 ${hoursSince.toFixed(1)} 小时 · 已抽 ${totalDraws} 抽</div>
+                `;
+            } else if (!meetsCondition && within24Hours) {
+                container.innerHTML = `
+                    <div style="font-size:13px;color:var(--text-secondary);">还需 ${Math.max(0, 10 - totalDraws)} 抽才能获得限时小卡</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">剩余时间：${(24 - hoursSince).toFixed(1)} 小时</div>
+                `;
+            } else if (!meetsCondition && !within24Hours) {
+                container.innerHTML = `
+                    <div style="font-size:13px;color:var(--text-secondary);">已超过24小时，无法获得限时小卡</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">已抽 ${totalDraws} 抽（需10抽）</div>
                 `;
             } else {
                 container.innerHTML = `
                     <div style="font-size:13px;color:var(--text-secondary);">已超过24小时，无法获得限时小卡</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">已抽 ${totalDraws} 抽</div>
                 `;
             }
         }
@@ -2426,8 +2449,12 @@
                             state.cardCounts[card.rarity][card.id] = baseCount + (idx < remainder ? 1 : 0);
                         });
                         
+                        const orderTimeStr = state.settings.firstOrderTime || new Date().toISOString();
+                        const orderTime = new Date(orderTimeStr).getTime();
+                        
                         state.history.unshift({
                             timestamp: Date.now(),
+                            orderTime: orderTime,
                             source: 'manual',
                             entries: [],
                             totalCount: 382,
@@ -3205,10 +3232,15 @@
 
                 let cardsHtml = '';
                 let sourceLabel = record.source === 'manual' ? '手动' : '截图识别';
+                let orderTimeStr = '';
                 
                 if (record.type === 'endbox') {
                     cardsHtml = `<div style="color:var(--accent);font-size:12px;">🎁 端盒订单（¥2517，${record.totalCount}抽）</div>`;
                     sourceLabel = '端盒';
+                    if (record.orderTime) {
+                        const orderTime = new Date(record.orderTime);
+                        orderTimeStr = `<div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">下单时间：${orderTime.getMonth() + 1}/${orderTime.getDate()} ${orderTime.getHours()}:${String(orderTime.getMinutes()).padStart(2, '0')}</div>`;
+                    }
                 } else if (record.type === 'markall') {
                     cardsHtml = '<div style="color:var(--accent);font-size:12px;">✨ 一键点亮全部卡片</div>';
                     sourceLabel = '点亮';
@@ -3221,13 +3253,13 @@
                 html += `
                     <li class="history-item">
                         <div class="history-header">
-                            <span class="history-time">${timeStr}</span>
+                            <span class="history-time">${timeStr} <span style="font-size:10px;">(记录时间)</span></span>
                             <div style="display:flex;gap:6px;align-items:center;">
                                 <span class="history-source">${sourceLabel}</span>
                                 <button class="btn btn-secondary" style="width:24px;height:24px;padding:0;font-size:12px;line-height:1;color:var(--danger);" onclick="deleteHistoryRecord(${index})" title="删除此记录">🗑️</button>
                             </div>
                         </div>
-                        <div class="history-cards">${cardsHtml}</div>
+                        <div class="history-cards">${cardsHtml}${orderTimeStr}</div>
                         <div class="history-summary">
                             <span>总计 <span class="total">${record.totalCount}</span> 张</span>
                             <span>花费 <span class="cost">¥${record.totalCost.toFixed(2)}</span></span>
@@ -3672,7 +3704,6 @@
 
         function closeOnboarding() {
             document.getElementById('onboarding').classList.add('hidden');
-            localStorage.setItem('onboarding_shown', 'true');
         }
 
         function skipOnboarding() {
