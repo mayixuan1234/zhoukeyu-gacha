@@ -1,64 +1,68 @@
 export async function onRequestGet(context) {
-  try {
-    const response = await fetch('https://www.91ruyu.com/gaia/85014/bad3126a.html', {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-      }
-    })
-
-    const html = await response.text()
-
-    // 尝试多种匹配模式
-    let draws = null
-
-    // 模式1: 已抽XXXX个
-    const match1 = html.match(/已抽(\d+)个/)
-    if (match1) draws = parseInt(match1[1])
-
-    // 模式2: 总抽数 破 XXXXX
-    if (!draws) {
-      const match2 = html.match(/总抽数[\s\S]*?破\s*(\d+)/)
-      if (match2) draws = parseInt(match2[1])
-    }
-
-    // 模式3: 直接匹配 破 XXXXX
-    if (!draws) {
-      const match3 = html.match(/破\s*(\d{4,})/)
-      if (match3) draws = parseInt(match3[1])
-    }
-
-    if (draws) {
-      return new Response(JSON.stringify({
-        success: true,
-        draws,
-        timestamp: Date.now()
-      }), {
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Cache-Control': 'max-age=300'
-        }
-      })
-    }
-
-    return new Response(JSON.stringify({
-      success: false,
-      message: '未找到抽数信息'
-    }), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
-  } catch (error) {
-    return new Response(JSON.stringify({
-      success: false,
-      message: error.message
-    }), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
+  const headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Referer': 'https://www.91ruyu.com/gaia/85014/bad3126a.html'
   }
+
+  try {
+    // Step 1: Get the API endpoint URL
+    const step1Data = 'param=' + encodeURIComponent(JSON.stringify({ flow: 'mystery_box_main_page' }))
+    const step1Resp = await fetch('https://thor.weidian.com/pyxis/pyxis.mysteryBoxApi/1.0', {
+      method: 'POST',
+      headers,
+      body: step1Data
+    })
+    const step1Result = await step1Resp.json()
+
+    if (!step1Result.result || !step1Result.result.apiUrl) {
+      return jsonResponse(false, '无法获取API地址')
+    }
+
+    const apiUrl = step1Result.result.apiUrl
+
+    // Step 2: Call the actual lottery API
+    const step2Data = 'param=' + encodeURIComponent(JSON.stringify({
+      auth: 'bad3126a',
+      flowAction: 'mystery_box_main_page',
+      showSold: true
+    }))
+    const step2Resp = await fetch(`https://thor.weidian.com/${apiUrl}`, {
+      method: 'POST',
+      headers,
+      body: step2Data
+    })
+    const step2Result = await step2Resp.json()
+
+    if (step2Result.result && typeof step2Result.result.sold === 'number') {
+      return jsonResponse(true, null, step2Result.result.sold)
+    }
+
+    // Fallback: try GET method
+    const getResp = await fetch(`https://thor.weidian.com/${apiUrl}?${step2Data}`, {
+      headers: { ...headers, 'Content-Type': '' }
+    })
+    const getResult = await getResp.json()
+
+    if (getResult.result && typeof getResult.result.sold === 'number') {
+      return jsonResponse(true, null, getResult.result.sold)
+    }
+
+    return jsonResponse(false, step2Result.status?.message || '未找到抽数信息')
+  } catch (error) {
+    return jsonResponse(false, error.message)
+  }
+}
+
+function jsonResponse(success, message, draws) {
+  const body = success
+    ? { success: true, draws, timestamp: Date.now() }
+    : { success: false, message }
+  return new Response(JSON.stringify(body), {
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Cache-Control': 'max-age=300'
+    }
+  })
 }
