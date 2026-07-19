@@ -6,7 +6,7 @@
     <title>周柯宇爱意正值炽夏抽抽乐记录器</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        let OCR_SPACE_API_KEY = '';
+        const OCR_SPACE_API_KEY = 'K85774251888957';
         const OCR_SPACE_API_URL = 'https://api.ocr.space/parse/image';
         
         const OCR_WORKER_URL = 'https://ocr-proxy-worker.1274407702.workers.dev';
@@ -1409,6 +1409,7 @@
             <div class="entry-tabs">
                 <div class="entry-tab active" onclick="switchEntryTab('manual')">手动输入</div>
                 <div class="entry-tab" onclick="switchEntryTab('ocr')">截图识别</div>
+                <div class="entry-tab" onclick="switchEntryTab('text')">文本导入</div>
             </div>
 
             <!-- 手动录入 -->
@@ -1436,19 +1437,12 @@
                     </div>
                 </div>
 
-                <div style="margin-top:12px;">
-                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">📝 文本导入</div>
-                    <textarea id="textImportArea" placeholder="粘贴文本记录，支持多种格式：&#10;1. 每行一个卡号：R1、SR2、SSR3&#10;2. 逗号分隔：R1, R2, SR1, SSR1&#10;3. 混合格式：R1 SR2 SSR3&#10;4. 盲盒奖品格式：你获得了 [SSR1]" style="width:100%;height:100px;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text);background:var(--bg-card);resize:none;"></textarea>
-                    <button class="btn btn-primary" onclick="handleTextImport()" style="margin-top:8px;width:100%;font-size:13px;padding:8px;">解析文本记录</button>
-                </div>
-
                 <div style="margin-top:16px;">
                     <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">💡 识别技巧</div>
                     <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
                         <div>• 可一次选择多张截图，依次识别后结果累加</div>
                         <div>• 卡号格式：R1、R3、SR2、SSR6等</div>
                         <div>• 识别结果每张卡有 ± 按钮调整数量</div>
-                        <div>• 支持文本导入：直接粘贴记录本内容</div>
                     </div>
                 </div>
 
@@ -1474,6 +1468,33 @@
                 <div class="ocr-results" id="ocrResults"></div>
                 <div class="ocr-pagination" id="ocrPagination" style="display:none;"></div>
                 <div class="entry-footer-info" id="ocrFooterInfo">共识别 0 张</div>
+            </div>
+
+            <!-- 文本导入 -->
+            <div id="entryText" class="hidden">
+                <div style="margin-top:8px;">
+                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">📝 粘贴文本记录</div>
+                    <textarea id="textImportArea" placeholder="粘贴文本记录，支持多种格式：&#10;1. 每行一个卡号：R1、SR2、SSR3&#10;2. 逗号分隔：R1, R2, SR1, SSR1&#10;3. 混合格式：R1 SR2 SSR3&#10;4. 盲盒奖品格式：你获得了 [SSR1]&#10;5. 订单记录格式：R44、SR8、R25" style="width:100%;height:150px;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text);background:var(--bg-card);resize:none;"></textarea>
+                    <button class="btn btn-primary" onclick="handleTextImport()" style="margin-top:8px;width:100%;font-size:13px;padding:8px;">🔍 解析文本记录</button>
+                </div>
+
+                <div style="margin-top:16px;">
+                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">💡 文本格式示例</div>
+                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
+                        <div>• 每行一个：R1<br/>SR2<br/>SSR3</div>
+                        <div>• 逗号分隔：R1, R2, SR1, SSR1</div>
+                        <div>• 订单格式：R44、SR8、R25</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+                    <div style="font-size:13px;font-weight:600;color:var(--text);flex:1;">📋 解析结果</div>
+                    <button class="btn btn-secondary" onclick="showAddCardModal()" style="font-size:12px;padding:6px 12px;">+ 添加卡片</button>
+                </div>
+
+                <div class="ocr-results" id="textImportResults"></div>
+                <div class="ocr-pagination" id="textImportPagination" style="display:none;"></div>
+                <div class="entry-footer-info" id="textImportFooterInfo">共解析 0 张</div>
             </div>
 
             <!-- 底部操作栏 -->
@@ -1542,52 +1563,7 @@
             </ul>
         </div>
 
-        <div class="page" id="page-tools">
-            <div class="header">
-                <div class="header-title">🛠️ 工具</div>
-                <div class="header-subtitle">截图识别与文本解析</div>
-            </div>
-
-            <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
-                <button class="btn btn-primary" onclick="switchToolTab('ocr')" id="toolTabOcr" style="flex:1;min-width:100px;">📷 截图识别</button>
-                <button class="btn btn-secondary" onclick="switchToolTab('text')" id="toolTabText" style="flex:1;min-width:100px;">📝 文本解析</button>
-            </div>
-
-            <div id="toolOcrPanel">
-                <div class="ocr-area" id="toolOcrArea" onclick="document.getElementById('toolOcrInput').click()" style="min-height:200px;">
-                    <div class="ocr-icon">📷</div>
-                    <div class="ocr-text">点击上传截图进行OCR识别</div>
-                    <div class="ocr-progress" id="toolOcrProgress">
-                        <div class="ocr-progress-fill" id="toolOcrProgressFill" style="width:0%"></div>
-                    </div>
-                </div>
-                <input type="file" id="toolOcrInput" accept="image/*" multiple class="hidden" onchange="handleToolOcrUpload(this)" />
-                
-                <div style="margin-top:16px;">
-                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">📋 识别结果</div>
-                    <div class="ocr-results" id="toolOcrResults"></div>
-                    <div class="entry-footer-info" id="toolOcrFooterInfo" style="margin-top:8px;">共识别 0 张</div>
-                </div>
-                
-                <button class="btn btn-primary" onclick="applyToolOcrResults()" style="width:100%;margin-top:16px;">✅ 添加到记录</button>
-            </div>
-
-            <div id="toolTextPanel" style="display:none;">
-                <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">📝 文本解析</div>
-                <textarea id="toolTextArea" placeholder="粘贴文本记录，支持多种格式：&#10;1. 每行一个卡号：R1、SR2、SSR3&#10;2. 逗号分隔：R1, R2, SR1, SSR1&#10;3. 混合格式：R1 SR2 SSR3&#10;4. 盲盒奖品格式：你获得了 [SSR1]&#10;5. 订单记录格式：R44、SR8、R25" style="width:100%;height:150px;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text);background:var(--bg-card);resize:none;"></textarea>
-                
-                <button class="btn btn-primary" onclick="handleToolTextParse()" style="width:100%;margin-top:12px;">🔍 解析文本</button>
-                
-                <div style="margin-top:16px;">
-                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">📋 解析结果</div>
-                    <div class="ocr-results" id="toolTextResults"></div>
-                    <div class="entry-footer-info" id="toolTextFooterInfo" style="margin-top:8px;">共解析 0 张</div>
-                </div>
-                
-                <button class="btn btn-primary" onclick="applyToolTextResults()" style="width:100%;margin-top:16px;">✅ 添加到记录</button>
-            </div>
         </div>
-    </div>
 
     <!-- 隐藏输入 -->
     <input type="file" id="importInput" accept=".json" class="hidden" onchange="importData(this)" />
@@ -1610,10 +1586,6 @@
         <div class="tab-item" onclick="switchTab('history')">
             <span class="icon">📋</span>
             <span>记录</span>
-        </div>
-        <div class="tab-item" onclick="switchTab('tools')">
-            <span class="icon">🛠️</span>
-            <span>工具</span>
         </div>
     </div>
 
@@ -1685,8 +1657,8 @@
             ]
         };
 
-        const DEFAULT_GLOBAL_DRAWS = 73500;
-        const DEFAULT_LAST_UPDATE = '2026-07-19 09:36';
+        const DEFAULT_GLOBAL_DRAWS = 73578;
+        const DEFAULT_LAST_UPDATE = '2026-07-19 11:03';
         const CURRENT_VERSION = 2;
 
         let state = {
@@ -2061,312 +2033,6 @@
             } else {
                 document.getElementById('entryFooter').classList.add('hidden');
             }
-            if (tab === 'tools') {
-                switchToolTab('ocr');
-            }
-        }
-
-        function switchToolTab(tab) {
-            if (tab === 'ocr') {
-                document.getElementById('toolTabOcr').classList.add('btn-primary');
-                document.getElementById('toolTabOcr').classList.remove('btn-secondary');
-                document.getElementById('toolTabText').classList.add('btn-secondary');
-                document.getElementById('toolTabText').classList.remove('btn-primary');
-                document.getElementById('toolOcrPanel').style.display = 'block';
-                document.getElementById('toolTextPanel').style.display = 'none';
-            } else {
-                document.getElementById('toolTabText').classList.add('btn-primary');
-                document.getElementById('toolTabText').classList.remove('btn-secondary');
-                document.getElementById('toolTabOcr').classList.add('btn-secondary');
-                document.getElementById('toolTabOcr').classList.remove('btn-primary');
-                document.getElementById('toolTextPanel').style.display = 'block';
-                document.getElementById('toolOcrPanel').style.display = 'none';
-            }
-        }
-
-        let toolOcrResults = {};
-        let toolTextResults = {};
-
-        async function handleToolOcrUpload(input) {
-            const files = input.files;
-            if (!files || files.length === 0) return;
-
-            const progressFill = document.getElementById('toolOcrProgressFill');
-            const resultsContainer = document.getElementById('toolOcrResults');
-            const footerInfo = document.getElementById('toolOcrFooterInfo');
-
-            progressFill.style.width = '0%';
-            resultsContainer.innerHTML = '<div style="text-align:center;color:var(--text-secondary);font-size:12px;">正在识别图片...</div>';
-            footerInfo.textContent = '准备识别...';
-
-            try {
-                toolOcrResults = {};
-                
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    const progress = ((i + 1) / files.length) * 80;
-                    progressFill.style.width = `${progress}%`;
-                    footerInfo.textContent = `正在处理 ${i + 1}/${files.length}`;
-
-                    let text = '';
-                    let method = '';
-                    
-                    const methods = [
-                        { name: 'Tesseract.js', fn: () => recognizeWithTesseract(file), enabled: true },
-                        { name: '腾讯云OCR', fn: () => recognizeWithTencentOCR(file), enabled: OCR_WORKER_URL },
-                        { name: 'ocr.space', fn: () => recognizeWithOcrSpace(file), enabled: OCR_SPACE_API_KEY && OCR_SPACE_API_KEY !== 'K85774251888957' }
-                    ];
-                    
-                    for (const { name, fn, enabled } of methods) {
-                        if (!enabled) continue;
-                        try {
-                            text = await fn();
-                            method = name;
-                            console.log(`[Tool OCR] 使用 ${name} 识别成功`);
-                            break;
-                        } catch (e) {
-                            console.warn(`[Tool OCR] ${name} 失败，尝试下一个方法:`, e.message);
-                        }
-                    }
-                    
-                    if (!text) {
-                        console.error('[Tool OCR] 所有方法都失败了');
-                        continue;
-                    }
-                    
-                    footerInfo.textContent = `使用 ${method} 识别成功`;
-                    
-                    console.log('Tool OCR Raw Text:', text);
-                    
-                    const validCards = generateCards().map(c => c.id);
-                    const ocrResultsTemp = {};
-                    
-                    const upperText = text.toUpperCase();
-                    
-                    const sssrMatches = upperText.match(/SSSR\d+/g) || [];
-                    const ssrMatches = upperText.match(/SSR\d+/g) || [];
-                    const srMatches = upperText.match(/SR\d+/g) || [];
-                    const rMatches = upperText.match(/\bR\d+\b/g) || [];
-                    
-                    const allMatches = [...sssrMatches, ...ssrMatches, ...srMatches, ...rMatches];
-                    
-                    allMatches.forEach(match => {
-                        if (validCards.includes(match)) {
-                            ocrResultsTemp[match] = (ocrResultsTemp[match] || 0) + 1;
-                        } else {
-                            const cleaned = match.replace(/[^A-Z0-9]/g, '');
-                            if (validCards.includes(cleaned)) {
-                                ocrResultsTemp[cleaned] = (ocrResultsTemp[cleaned] || 0) + 1;
-                            }
-                        }
-                    });
-                    
-                    for (const id in ocrResultsTemp) {
-                        toolOcrResults[id] = (toolOcrResults[id] || 0) + ocrResultsTemp[id];
-                    }
-                }
-
-                progressFill.style.width = '100%';
-                setTimeout(() => {
-                    progressFill.style.width = '0%';
-                }, 500);
-
-                renderToolOcrResults();
-                
-                let total = 0;
-                for (const id in toolOcrResults) {
-                    total += toolOcrResults[id];
-                }
-                
-                if (total > 0) {
-                    showToast(`✅ 成功识别 ${total} 张卡牌`);
-                } else {
-                    showToast('⚠️ 未识别到卡牌');
-                }
-            } catch (e) {
-                console.error('Tool OCR error:', e);
-                progressFill.style.width = '0%';
-                
-                resultsContainer.innerHTML = `<div style="text-align:center;color:var(--danger);font-size:12px;">识别失败: ${e.message}<br/><span style="font-size:10px;">请检查网络连接后重试</span></div>`;
-                footerInfo.textContent = '识别失败';
-                showToast('❌ OCR识别失败，请检查网络');
-            }
-
-            input.value = '';
-        }
-
-        function renderToolOcrResults() {
-            const container = document.getElementById('toolOcrResults');
-            const footer = document.getElementById('toolOcrFooterInfo');
-            
-            let total = 0;
-            for (const id in toolOcrResults) {
-                total += toolOcrResults[id];
-            }
-            
-            if (total === 0) {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);">未识别到卡牌</div>';
-                footer.textContent = '共识别 0 张';
-                return;
-            }
-            
-            const sorted = Object.entries(toolOcrResults).sort((a, b) => {
-                const rarityOrder = { SSSR: 0, SSR: 1, SR: 2, R: 3 };
-                const rarityA = a[0].match(/^S*R/)[0];
-                const rarityB = b[0].match(/^S*R/)[0];
-                if (rarityOrder[rarityA] !== rarityOrder[rarityB]) {
-                    return rarityOrder[rarityA] - rarityOrder[rarityB];
-                }
-                return parseInt(a[0].replace(/[^0-9]/g, '')) - parseInt(b[0].replace(/[^0-9]/g, ''));
-            });
-            
-            let html = '';
-            sorted.forEach(([id, count]) => {
-                const cardInfo = getCardInfo(id);
-                html += `
-                    <div class="ocr-result-item">
-                        <div style="flex:1;font-size:13px;font-weight:600;color:${cardInfo.color};">${id}</div>
-                        <div style="font-size:12px;color:var(--text-secondary);">×${count}</div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-            footer.textContent = `共识别 ${total} 张`;
-        }
-
-        function getCardInfo(cardId) {
-            const cards = generateCards();
-            return cards.find(c => c.id === cardId);
-        }
-
-        function addEntry(cards, source) {
-            const entries = [];
-            let totalCount = 0;
-            let totalCost = 0;
-            
-            for (const cardId in cards) {
-                const count = cards[cardId];
-                if (count <= 0) continue;
-                
-                const card = getCardInfo(cardId);
-                if (!card) continue;
-                
-                if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
-                state.cardCounts[card.rarity][cardId] = (state.cardCounts[card.rarity][cardId] || 0) + count;
-                
-                entries.push({ cardId, count });
-                totalCount += count;
-                totalCost += count * PRICE_PER_DRAW;
-            }
-            
-            if (entries.length > 0) {
-                state.history.unshift({
-                    id: Date.now().toString(36),
-                    timestamp: Date.now(),
-                    entries: entries,
-                    totalCount: totalCount,
-                    totalCost: totalCost,
-                    source: source
-                });
-                
-                saveData();
-                renderDashboard();
-                renderCollection();
-                renderHistory();
-            }
-        }
-
-        function applyToolOcrResults() {
-            if (Object.keys(toolOcrResults).length === 0) {
-                showToast('请先识别图片！', true);
-                return;
-            }
-            
-            addEntry(toolOcrResults, 'ocr');
-            showToast('✅ 已添加到记录！');
-            
-            toolOcrResults = {};
-            renderToolOcrResults();
-        }
-
-        function handleToolTextParse() {
-            const textArea = document.getElementById('toolTextArea');
-            const text = textArea.value.trim();
-            
-            if (!text) {
-                showToast('请输入文本！', true);
-                return;
-            }
-            
-            toolTextResults = parseTextToCards(text);
-            
-            renderToolTextResults();
-            
-            let total = 0;
-            for (const id in toolTextResults) {
-                total += toolTextResults[id];
-            }
-            
-            if (total > 0) {
-                showToast(`✅ 成功解析 ${total} 张卡片！`);
-            } else {
-                showToast('⚠️ 未识别到有效卡号', true);
-            }
-        }
-
-        function renderToolTextResults() {
-            const container = document.getElementById('toolTextResults');
-            const footer = document.getElementById('toolTextFooterInfo');
-            
-            let total = 0;
-            for (const id in toolTextResults) {
-                total += toolTextResults[id];
-            }
-            
-            if (total === 0) {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);">未识别到卡牌</div>';
-                footer.textContent = '共解析 0 张';
-                return;
-            }
-            
-            const sorted = Object.entries(toolTextResults).sort((a, b) => {
-                const rarityOrder = { SSSR: 0, SSR: 1, SR: 2, R: 3 };
-                const rarityA = a[0].match(/^S*R/)[0];
-                const rarityB = b[0].match(/^S*R/)[0];
-                if (rarityOrder[rarityA] !== rarityOrder[rarityB]) {
-                    return rarityOrder[rarityA] - rarityOrder[rarityB];
-                }
-                return parseInt(a[0].replace(/[^0-9]/g, '')) - parseInt(b[0].replace(/[^0-9]/g, ''));
-            });
-            
-            let html = '';
-            sorted.forEach(([id, count]) => {
-                const cardInfo = getCardInfo(id);
-                html += `
-                    <div class="ocr-result-item">
-                        <div style="flex:1;font-size:13px;font-weight:600;color:${cardInfo.color};">${id}</div>
-                        <div style="font-size:12px;color:var(--text-secondary);">×${count}</div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-            footer.textContent = `共解析 ${total} 张`;
-        }
-
-        function applyToolTextResults() {
-            if (Object.keys(toolTextResults).length === 0) {
-                showToast('请先解析文本！', true);
-                return;
-            }
-            
-            addEntry(toolTextResults, 'manual');
-            showToast('✅ 已添加到记录！');
-            
-            toolTextResults = {};
-            document.getElementById('toolTextArea').value = '';
-            renderToolTextResults();
         }
 
         function renderDashboard() {
@@ -3353,6 +3019,7 @@
             document.querySelector(`[onclick="switchEntryTab('${tab}')"]`).classList.add('active');
             document.getElementById('entryManual').classList.add('hidden');
             document.getElementById('entryOcr').classList.add('hidden');
+            document.getElementById('entryText').classList.add('hidden');
             document.getElementById(`entry${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.remove('hidden');
             if (tab === 'manual') filterEntryCards();
         }
@@ -3511,11 +3178,21 @@
 
         let currentOCRPage = 1;
         const OCR_PAGE_SIZE = 10;
+        window.currentRenderTargets = { container: 'ocrResults', footer: 'ocrFooterInfo', pagination: 'ocrPagination' };
 
-        function renderOCRResults() {
-            const resultsContainer = document.getElementById('ocrResults');
-            const footerInfo = document.getElementById('ocrFooterInfo');
-            const paginationContainer = document.getElementById('ocrPagination');
+        function renderOCRResults(containerId, footerId, paginationId) {
+            const targets = window.currentRenderTargets;
+            const cId = containerId || targets.container;
+            const fId = footerId || targets.footer;
+            const pId = paginationId || targets.pagination;
+            const resultsContainer = document.getElementById(cId);
+            const footerInfo = document.getElementById(fId);
+            const paginationContainer = document.getElementById(pId);
+            
+            if (!resultsContainer || !footerInfo) {
+                console.error('renderOCRResults: 容器不存在');
+                return;
+            }
             
             const resultsArray = [];
             let total = 0;
@@ -3558,8 +3235,10 @@
                 }
                 paginationHtml += `<button class="ocr-page-btn" onclick="changeOCRPage(${currentOCRPage + 1})" ${currentOCRPage === totalPages ? 'style="opacity:0.5;"' : ''}>›</button>`;
             }
-            paginationContainer.innerHTML = paginationHtml;
-            paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
+            if (paginationContainer) {
+                paginationContainer.innerHTML = paginationHtml;
+                paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
+            }
             
             updateEntryFooter();
         }
@@ -3987,6 +3666,8 @@
 
             try {
                 const ocrResults = {};
+                let allRawText = '';
+                let ocrMethod = '';
                 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
@@ -3997,31 +3678,27 @@
                     let text = '';
                     let method = '';
                     
-                    const methods = [
-                        { name: 'Tesseract.js', fn: () => recognizeWithTesseract(file), enabled: true },
-                        { name: '腾讯云OCR', fn: () => recognizeWithTencentOCR(file), enabled: OCR_WORKER_URL },
-                        { name: 'ocr.space', fn: () => recognizeWithOcrSpace(file), enabled: OCR_SPACE_API_KEY && OCR_SPACE_API_KEY !== 'K85774251888957' }
-                    ];
-                    
-                    for (const { name, fn, enabled } of methods) {
-                        if (!enabled) continue;
+                    try {
+                        footerInfo.textContent = `正在调用 ocr.space API...`;
+                        text = await recognizeWithOcrSpace(file);
+                        method = 'ocr.space API';
+                        footerInfo.textContent = `ocr.space 识别成功`;
+                    } catch (e) {
+                        console.warn('ocr.space API failed, trying Tesseract:', e);
                         try {
-                            text = await fn();
-                            method = name;
-                            console.log(`[OCR] 使用 ${name} 识别成功`);
-                            break;
-                        } catch (e) {
-                            console.warn(`[OCR] ${name} 失败，尝试下一个方法:`, e.message);
+                            footerInfo.textContent = `正在加载 Tesseract...`;
+                            text = await recognizeWithTesseract(file);
+                            method = 'Tesseract.js';
+                            footerInfo.textContent = `Tesseract 识别成功`;
+                        } catch (e2) {
+                            console.error('Tesseract also failed:', e2);
+                            footerInfo.textContent = `图片 ${i + 1} 识别失败，跳过`;
+                            continue;
                         }
                     }
                     
-                    if (!text) {
-                        console.error('[OCR] 所有方法都失败了');
-                        continue;
-                    }
-                    
-                    footerInfo.textContent = `使用 ${method} 识别成功`;
-                    
+                    ocrMethod = method;
+                    allRawText += `=== 图片 ${i + 1} (${method}) ===\n${text}\n\n`;
                     console.log('OCR Raw Text:', text);
                     
                     const validCards = generateCards().map(c => c.id);
@@ -4029,19 +3706,38 @@
                     
                     const upperText = text.toUpperCase();
                     
-                    const ssrMatches = upperText.match(/SSR\d+/g) || [];
-                    const srMatches = upperText.match(/SR\d+/g) || [];
-                    const rMatches = upperText.match(/\bR\d+\b/g) || [];
+                    const patterns = [
+                        { regex: /SSSR\d+/g, prefix: 'SSSR' },
+                        { regex: /SSR\d+/g, prefix: 'SSR' },
+                        { regex: /SR\d+/g, prefix: 'SR' },
+                        { regex: /R\d+/g, prefix: 'R' }
+                    ];
                     
-                    const allMatches = [...ssrMatches, ...srMatches, ...rMatches];
+                    const matchedIndices = new Set();
                     
-                    allMatches.forEach(match => {
-                        if (validCards.includes(match)) {
-                            ocrResultsTemp[match] = (ocrResultsTemp[match] || 0) + 1;
-                        } else {
-                            const cleaned = match.replace(/[^A-Z0-9]/g, '');
-                            if (validCards.includes(cleaned)) {
-                                ocrResultsTemp[cleaned] = (ocrResultsTemp[cleaned] || 0) + 1;
+                    patterns.forEach(({ regex }) => {
+                        let match;
+                        while ((match = regex.exec(upperText)) !== null) {
+                            const start = match.index;
+                            const end = start + match[0].length;
+                            
+                            let isOverlapping = false;
+                            for (let idx = start; idx < end; idx++) {
+                                if (matchedIndices.has(idx)) {
+                                    isOverlapping = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!isOverlapping) {
+                                for (let idx = start; idx < end; idx++) {
+                                    matchedIndices.add(idx);
+                                }
+                                
+                                const cardId = match[0];
+                                if (validCards.includes(cardId)) {
+                                    ocrResultsTemp[cardId] = (ocrResultsTemp[cardId] || 0) + 1;
+                                }
                             }
                         }
                     });
@@ -4059,6 +3755,7 @@
                 
                 window.currentOCRResults = ocrResults;
                 lastEntrySource = 'ocr';
+                window.currentRenderTargets = { container: 'ocrResults', footer: 'ocrFooterInfo', pagination: 'ocrPagination' };
 
                 setTimeout(() => {
                     progressFill.style.width = '0%';
@@ -4146,37 +3843,47 @@
 
         async function recognizeWithOcrSpace(file) {
             return new Promise((resolve, reject) => {
-                const originalSize = (file.size / 1024).toFixed(1);
+                const controller = new AbortController();
+                const timeout = setTimeout(() => {
+                    controller.abort();
+                    reject(new Error('请求超时'));
+                }, 30000);
                 
-                compressImage(file)
-                .then(compressedFile => {
-                    const compressedSize = (compressedFile.size / 1024).toFixed(1);
-                    console.log(`[OCR] 图片压缩: ${originalSize}KB -> ${compressedSize}KB`);
-                    
-                    const formData = new FormData();
-                    formData.append('apikey', OCR_SPACE_API_KEY);
-                    formData.append('file', compressedFile);
-                    formData.append('language', 'chs');
-                    formData.append('isOverlayRequired', 'false');
-                    formData.append('OCREngine', '2');
-                    
-                    fetch(OCR_SPACE_API_URL, {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.IsErroredOnProcessing) {
-                            reject(new Error(data.ErrorMessage || 'OCR API error'));
-                        } else if (data.ParsedResults && data.ParsedResults[0]) {
-                            resolve(data.ParsedResults[0].ParsedText || '');
-                        } else {
-                            reject(new Error('No results returned'));
-                        }
-                    })
-                    .catch(reject);
+                const formData = new FormData();
+                formData.append('apikey', OCR_SPACE_API_KEY);
+                formData.append('file', file);
+                formData.append('language', 'chs');
+                formData.append('isOverlayRequired', 'false');
+                
+                fetch(OCR_SPACE_API_URL, {
+                    method: 'POST',
+                    body: formData,
+                    signal: controller.signal
                 })
-                .catch(reject);
+                .then(response => {
+                    clearTimeout(timeout);
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.IsErroredOnProcessing) {
+                        reject(new Error(data.ErrorMessage || 'OCR API error'));
+                    } else if (data.ParsedResults && data.ParsedResults[0]) {
+                        resolve(data.ParsedResults[0].ParsedText || '');
+                    } else {
+                        reject(new Error('No results returned'));
+                    }
+                })
+                .catch(err => {
+                    clearTimeout(timeout);
+                    if (err.name === 'AbortError') {
+                        reject(new Error('请求超时'));
+                    } else {
+                        reject(err);
+                    }
+                });
             });
         }
 
@@ -4187,13 +3894,21 @@
             if (progressFill) progressFill.style.width = '30%';
             
             return new Promise((resolve, reject) => {
+                const timeout = setTimeout(() => {
+                    reject(new Error('Tesseract脚本加载超时'));
+                }, 20000);
+                
                 const script = document.createElement('script');
                 script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@6.5.0/dist/tesseract.min.js';
                 script.onload = () => {
+                    clearTimeout(timeout);
                     if (progressFill) progressFill.style.width = '60%';
                     resolve();
                 };
-                script.onerror = () => reject(new Error('Tesseract加载失败'));
+                script.onerror = () => {
+                    clearTimeout(timeout);
+                    reject(new Error('Tesseract加载失败'));
+                };
                 document.head.appendChild(script);
             });
         }
@@ -4203,28 +3918,26 @@
                 await loadTesseract();
             }
             
-            const worker = await Tesseract.createWorker('chi_sim', 1, {
-                logger: (m) => console.log(`[Tesseract] ${m.status}: ${Math.round(m.progress * 100)}%`),
-                errorHandler: e => console.error(e),
-                workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@6.5.0/dist/worker.min.js',
-                langPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@6.5.0/dist/lang-data'
-            });
-            
-            await worker.setParameters({
-                tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-                tessedit_pageseg_mode: Tesseract.PSM.AUTO,
-                preserve_interword_spaces: '0',
-                load_system_dawg: '0',
-                load_freq_dawg: '0',
-                language_model_penalty_non_freq_word: '0',
-                language_model_penalty_non_dict_word: '0'
+            const worker = await Tesseract.createWorker('eng', 1, {
+                logger: () => {},
+                errorHandler: e => console.error(e)
             });
             
             try {
-                const { data: { text } } = await worker.recognize(file);
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Tesseract超时')), 60000)
+                );
+                
+                const recognizePromise = worker.recognize(file);
+                
+                const { data: { text } } = await Promise.race([recognizePromise, timeoutPromise]);
                 return text;
             } finally {
-                await worker.terminate();
+                try {
+                    await worker.terminate();
+                } catch (e) {
+                    console.warn('Worker terminate error:', e);
+                }
             }
         }
 
@@ -4256,49 +3969,49 @@
             const results = {};
             const validCards = generateCards().map(c => c.id);
             
+            const upperText = text.toUpperCase();
+            
             const patterns = [
-                /(SSSR?\d+)/gi,
-                /(SSR\d+)/gi,
-                /(SR\d+)/gi,
-                /\b(R\d+)\b/gi,
-                /\[([^\]]+)\]/g
+                { regex: /SSSR\d+/g, prefix: 'SSSR' },
+                { regex: /SSR\d+/g, prefix: 'SSR' },
+                { regex: /SR\d+/g, prefix: 'SR' },
+                { regex: /R\d+/g, prefix: 'R' }
             ];
             
-            patterns.forEach(pattern => {
+            const matchedIndices = new Set();
+            
+            patterns.forEach(({ regex, prefix }) => {
                 let match;
-                while ((match = pattern.exec(text)) !== null) {
-                    const cardId = match[1].toUpperCase().replace(/\s/g, '');
-                    if (validCards.includes(cardId)) {
-                        results[cardId] = (results[cardId] || 0) + 1;
+                while ((match = regex.exec(upperText)) !== null) {
+                    const start = match.index;
+                    const end = start + match[0].length;
+                    
+                    let isOverlapping = false;
+                    for (let i = start; i < end; i++) {
+                        if (matchedIndices.has(i)) {
+                            isOverlapping = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!isOverlapping) {
+                        for (let i = start; i < end; i++) {
+                            matchedIndices.add(i);
+                        }
+                        
+                        const cardId = match[0];
+                        if (validCards.includes(cardId)) {
+                            results[cardId] = (results[cardId] || 0) + 1;
+                        }
                     }
                 }
             });
             
-            const lines = text.split(/[\n\r]+/);
-            lines.forEach(line => {
-                const cleanLine = line.trim().toUpperCase();
-                const match = cleanLine.match(/^(S{0,3}R\d+)/);
-                if (match) {
-                    const cardId = match[1].replace(/\s/g, '');
-                    if (validCards.includes(cardId)) {
-                        results[cardId] = (results[cardId] || 0) + 1;
-                    }
-                }
-            });
-            
-            const fuzzyPatterns = [
-                /(S+R\d+)/gi,
-                /(R\s*\d+)/gi
-            ];
-            
-            fuzzyPatterns.forEach(pattern => {
-                let match;
-                while ((match = pattern.exec(text)) !== null) {
-                    const cleaned = match[1].toUpperCase().replace(/\s/g, '');
-                    const validMatch = validCards.find(c => c.toLowerCase().includes(cleaned.toLowerCase()) || cleaned.includes(c.toLowerCase()));
-                    if (validMatch) {
-                        results[validMatch] = (results[validMatch] || 0) + 1;
-                    }
+            const bracketMatches = upperText.match(/\[([^\]]+)\]/g) || [];
+            bracketMatches.forEach(match => {
+                const inside = match.slice(1, -1).toUpperCase().replace(/\s/g, '');
+                if (validCards.includes(inside)) {
+                    results[inside] = (results[inside] || 0) + 1;
                 }
             });
             
@@ -4327,15 +4040,18 @@
                 entrySelections[id] = (entrySelections[id] || 0) + ocrResults[id];
             }
             
+            lastEntrySource = 'ocr';
+            window.currentRenderTargets = { container: 'textImportResults', footer: 'textImportFooterInfo', pagination: 'textImportPagination' };
+            
+            renderOCRResults();
+            updateEntryFooter();
+            
             let total = 0;
             for (const id in ocrResults) {
                 total += ocrResults[id];
             }
             
-            renderOcrResults(ocrResults);
-            updateEntryFooter();
-            
-            showToast(`成功解析 ${total} 张卡片！`);
+            showToast(`✅ 成功解析 ${total} 张卡片！`);
             console.log('[Text Import] Parsed:', ocrResults);
         }
 
