@@ -1541,6 +1541,52 @@
                 </li>
             </ul>
         </div>
+
+        <div class="page" id="page-tools">
+            <div class="header">
+                <div class="header-title">🛠️ 工具</div>
+                <div class="header-subtitle">截图识别与文本解析</div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="switchToolTab('ocr')" id="toolTabOcr" style="flex:1;min-width:100px;">📷 截图识别</button>
+                <button class="btn btn-secondary" onclick="switchToolTab('text')" id="toolTabText" style="flex:1;min-width:100px;">📝 文本解析</button>
+            </div>
+
+            <div id="toolOcrPanel">
+                <div class="ocr-area" id="toolOcrArea" onclick="document.getElementById('toolOcrInput').click()" style="min-height:200px;">
+                    <div class="ocr-icon">📷</div>
+                    <div class="ocr-text">点击上传截图进行OCR识别</div>
+                    <div class="ocr-progress" id="toolOcrProgress">
+                        <div class="ocr-progress-fill" id="toolOcrProgressFill" style="width:0%"></div>
+                    </div>
+                </div>
+                <input type="file" id="toolOcrInput" accept="image/*" multiple class="hidden" onchange="handleToolOcrUpload(this)" />
+                
+                <div style="margin-top:16px;">
+                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">📋 识别结果</div>
+                    <div class="ocr-results" id="toolOcrResults"></div>
+                    <div class="entry-footer-info" id="toolOcrFooterInfo" style="margin-top:8px;">共识别 0 张</div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="applyToolOcrResults()" style="width:100%;margin-top:16px;">✅ 添加到记录</button>
+            </div>
+
+            <div id="toolTextPanel" style="display:none;">
+                <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">📝 文本解析</div>
+                <textarea id="toolTextArea" placeholder="粘贴文本记录，支持多种格式：&#10;1. 每行一个卡号：R1、SR2、SSR3&#10;2. 逗号分隔：R1, R2, SR1, SSR1&#10;3. 混合格式：R1 SR2 SSR3&#10;4. 盲盒奖品格式：你获得了 [SSR1]&#10;5. 订单记录格式：R44、SR8、R25" style="width:100%;height:150px;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text);background:var(--bg-card);resize:none;"></textarea>
+                
+                <button class="btn btn-primary" onclick="handleToolTextParse()" style="width:100%;margin-top:12px;">🔍 解析文本</button>
+                
+                <div style="margin-top:16px;">
+                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">📋 解析结果</div>
+                    <div class="ocr-results" id="toolTextResults"></div>
+                    <div class="entry-footer-info" id="toolTextFooterInfo" style="margin-top:8px;">共解析 0 张</div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="applyToolTextResults()" style="width:100%;margin-top:16px;">✅ 添加到记录</button>
+            </div>
+        </div>
     </div>
 
     <!-- 隐藏输入 -->
@@ -1564,6 +1610,10 @@
         <div class="tab-item" onclick="switchTab('history')">
             <span class="icon">📋</span>
             <span>记录</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('tools')">
+            <span class="icon">🛠️</span>
+            <span>工具</span>
         </div>
     </div>
 
@@ -1635,8 +1685,8 @@
             ]
         };
 
-        const DEFAULT_GLOBAL_DRAWS = 73206;
-        const DEFAULT_LAST_UPDATE = '2026-07-19 01:05';
+        const DEFAULT_GLOBAL_DRAWS = 73500;
+        const DEFAULT_LAST_UPDATE = '2026-07-19 09:36';
         const CURRENT_VERSION = 2;
 
         let state = {
@@ -2011,6 +2061,312 @@
             } else {
                 document.getElementById('entryFooter').classList.add('hidden');
             }
+            if (tab === 'tools') {
+                switchToolTab('ocr');
+            }
+        }
+
+        function switchToolTab(tab) {
+            if (tab === 'ocr') {
+                document.getElementById('toolTabOcr').classList.add('btn-primary');
+                document.getElementById('toolTabOcr').classList.remove('btn-secondary');
+                document.getElementById('toolTabText').classList.add('btn-secondary');
+                document.getElementById('toolTabText').classList.remove('btn-primary');
+                document.getElementById('toolOcrPanel').style.display = 'block';
+                document.getElementById('toolTextPanel').style.display = 'none';
+            } else {
+                document.getElementById('toolTabText').classList.add('btn-primary');
+                document.getElementById('toolTabText').classList.remove('btn-secondary');
+                document.getElementById('toolTabOcr').classList.add('btn-secondary');
+                document.getElementById('toolTabOcr').classList.remove('btn-primary');
+                document.getElementById('toolTextPanel').style.display = 'block';
+                document.getElementById('toolOcrPanel').style.display = 'none';
+            }
+        }
+
+        let toolOcrResults = {};
+        let toolTextResults = {};
+
+        async function handleToolOcrUpload(input) {
+            const files = input.files;
+            if (!files || files.length === 0) return;
+
+            const progressFill = document.getElementById('toolOcrProgressFill');
+            const resultsContainer = document.getElementById('toolOcrResults');
+            const footerInfo = document.getElementById('toolOcrFooterInfo');
+
+            progressFill.style.width = '0%';
+            resultsContainer.innerHTML = '<div style="text-align:center;color:var(--text-secondary);font-size:12px;">正在识别图片...</div>';
+            footerInfo.textContent = '准备识别...';
+
+            try {
+                toolOcrResults = {};
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const progress = ((i + 1) / files.length) * 80;
+                    progressFill.style.width = `${progress}%`;
+                    footerInfo.textContent = `正在处理 ${i + 1}/${files.length}`;
+
+                    let text = '';
+                    let method = '';
+                    
+                    const methods = [
+                        { name: 'Tesseract.js', fn: () => recognizeWithTesseract(file), enabled: true },
+                        { name: '腾讯云OCR', fn: () => recognizeWithTencentOCR(file), enabled: OCR_WORKER_URL },
+                        { name: 'ocr.space', fn: () => recognizeWithOcrSpace(file), enabled: OCR_SPACE_API_KEY && OCR_SPACE_API_KEY !== 'K85774251888957' }
+                    ];
+                    
+                    for (const { name, fn, enabled } of methods) {
+                        if (!enabled) continue;
+                        try {
+                            text = await fn();
+                            method = name;
+                            console.log(`[Tool OCR] 使用 ${name} 识别成功`);
+                            break;
+                        } catch (e) {
+                            console.warn(`[Tool OCR] ${name} 失败，尝试下一个方法:`, e.message);
+                        }
+                    }
+                    
+                    if (!text) {
+                        console.error('[Tool OCR] 所有方法都失败了');
+                        continue;
+                    }
+                    
+                    footerInfo.textContent = `使用 ${method} 识别成功`;
+                    
+                    console.log('Tool OCR Raw Text:', text);
+                    
+                    const validCards = generateCards().map(c => c.id);
+                    const ocrResultsTemp = {};
+                    
+                    const upperText = text.toUpperCase();
+                    
+                    const sssrMatches = upperText.match(/SSSR\d+/g) || [];
+                    const ssrMatches = upperText.match(/SSR\d+/g) || [];
+                    const srMatches = upperText.match(/SR\d+/g) || [];
+                    const rMatches = upperText.match(/\bR\d+\b/g) || [];
+                    
+                    const allMatches = [...sssrMatches, ...ssrMatches, ...srMatches, ...rMatches];
+                    
+                    allMatches.forEach(match => {
+                        if (validCards.includes(match)) {
+                            ocrResultsTemp[match] = (ocrResultsTemp[match] || 0) + 1;
+                        } else {
+                            const cleaned = match.replace(/[^A-Z0-9]/g, '');
+                            if (validCards.includes(cleaned)) {
+                                ocrResultsTemp[cleaned] = (ocrResultsTemp[cleaned] || 0) + 1;
+                            }
+                        }
+                    });
+                    
+                    for (const id in ocrResultsTemp) {
+                        toolOcrResults[id] = (toolOcrResults[id] || 0) + ocrResultsTemp[id];
+                    }
+                }
+
+                progressFill.style.width = '100%';
+                setTimeout(() => {
+                    progressFill.style.width = '0%';
+                }, 500);
+
+                renderToolOcrResults();
+                
+                let total = 0;
+                for (const id in toolOcrResults) {
+                    total += toolOcrResults[id];
+                }
+                
+                if (total > 0) {
+                    showToast(`✅ 成功识别 ${total} 张卡牌`);
+                } else {
+                    showToast('⚠️ 未识别到卡牌');
+                }
+            } catch (e) {
+                console.error('Tool OCR error:', e);
+                progressFill.style.width = '0%';
+                
+                resultsContainer.innerHTML = `<div style="text-align:center;color:var(--danger);font-size:12px;">识别失败: ${e.message}<br/><span style="font-size:10px;">请检查网络连接后重试</span></div>`;
+                footerInfo.textContent = '识别失败';
+                showToast('❌ OCR识别失败，请检查网络');
+            }
+
+            input.value = '';
+        }
+
+        function renderToolOcrResults() {
+            const container = document.getElementById('toolOcrResults');
+            const footer = document.getElementById('toolOcrFooterInfo');
+            
+            let total = 0;
+            for (const id in toolOcrResults) {
+                total += toolOcrResults[id];
+            }
+            
+            if (total === 0) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);">未识别到卡牌</div>';
+                footer.textContent = '共识别 0 张';
+                return;
+            }
+            
+            const sorted = Object.entries(toolOcrResults).sort((a, b) => {
+                const rarityOrder = { SSSR: 0, SSR: 1, SR: 2, R: 3 };
+                const rarityA = a[0].match(/^S*R/)[0];
+                const rarityB = b[0].match(/^S*R/)[0];
+                if (rarityOrder[rarityA] !== rarityOrder[rarityB]) {
+                    return rarityOrder[rarityA] - rarityOrder[rarityB];
+                }
+                return parseInt(a[0].replace(/[^0-9]/g, '')) - parseInt(b[0].replace(/[^0-9]/g, ''));
+            });
+            
+            let html = '';
+            sorted.forEach(([id, count]) => {
+                const cardInfo = getCardInfo(id);
+                html += `
+                    <div class="ocr-result-item">
+                        <div style="flex:1;font-size:13px;font-weight:600;color:${cardInfo.color};">${id}</div>
+                        <div style="font-size:12px;color:var(--text-secondary);">×${count}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            footer.textContent = `共识别 ${total} 张`;
+        }
+
+        function getCardInfo(cardId) {
+            const cards = generateCards();
+            return cards.find(c => c.id === cardId);
+        }
+
+        function addEntry(cards, source) {
+            const entries = [];
+            let totalCount = 0;
+            let totalCost = 0;
+            
+            for (const cardId in cards) {
+                const count = cards[cardId];
+                if (count <= 0) continue;
+                
+                const card = getCardInfo(cardId);
+                if (!card) continue;
+                
+                if (!state.cardCounts[card.rarity]) state.cardCounts[card.rarity] = {};
+                state.cardCounts[card.rarity][cardId] = (state.cardCounts[card.rarity][cardId] || 0) + count;
+                
+                entries.push({ cardId, count });
+                totalCount += count;
+                totalCost += count * PRICE_PER_DRAW;
+            }
+            
+            if (entries.length > 0) {
+                state.history.unshift({
+                    id: Date.now().toString(36),
+                    timestamp: Date.now(),
+                    entries: entries,
+                    totalCount: totalCount,
+                    totalCost: totalCost,
+                    source: source
+                });
+                
+                saveData();
+                renderDashboard();
+                renderCollection();
+                renderHistory();
+            }
+        }
+
+        function applyToolOcrResults() {
+            if (Object.keys(toolOcrResults).length === 0) {
+                showToast('请先识别图片！', true);
+                return;
+            }
+            
+            addEntry(toolOcrResults, 'ocr');
+            showToast('✅ 已添加到记录！');
+            
+            toolOcrResults = {};
+            renderToolOcrResults();
+        }
+
+        function handleToolTextParse() {
+            const textArea = document.getElementById('toolTextArea');
+            const text = textArea.value.trim();
+            
+            if (!text) {
+                showToast('请输入文本！', true);
+                return;
+            }
+            
+            toolTextResults = parseTextToCards(text);
+            
+            renderToolTextResults();
+            
+            let total = 0;
+            for (const id in toolTextResults) {
+                total += toolTextResults[id];
+            }
+            
+            if (total > 0) {
+                showToast(`✅ 成功解析 ${total} 张卡片！`);
+            } else {
+                showToast('⚠️ 未识别到有效卡号', true);
+            }
+        }
+
+        function renderToolTextResults() {
+            const container = document.getElementById('toolTextResults');
+            const footer = document.getElementById('toolTextFooterInfo');
+            
+            let total = 0;
+            for (const id in toolTextResults) {
+                total += toolTextResults[id];
+            }
+            
+            if (total === 0) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);">未识别到卡牌</div>';
+                footer.textContent = '共解析 0 张';
+                return;
+            }
+            
+            const sorted = Object.entries(toolTextResults).sort((a, b) => {
+                const rarityOrder = { SSSR: 0, SSR: 1, SR: 2, R: 3 };
+                const rarityA = a[0].match(/^S*R/)[0];
+                const rarityB = b[0].match(/^S*R/)[0];
+                if (rarityOrder[rarityA] !== rarityOrder[rarityB]) {
+                    return rarityOrder[rarityA] - rarityOrder[rarityB];
+                }
+                return parseInt(a[0].replace(/[^0-9]/g, '')) - parseInt(b[0].replace(/[^0-9]/g, ''));
+            });
+            
+            let html = '';
+            sorted.forEach(([id, count]) => {
+                const cardInfo = getCardInfo(id);
+                html += `
+                    <div class="ocr-result-item">
+                        <div style="flex:1;font-size:13px;font-weight:600;color:${cardInfo.color};">${id}</div>
+                        <div style="font-size:12px;color:var(--text-secondary);">×${count}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            footer.textContent = `共解析 ${total} 张`;
+        }
+
+        function applyToolTextResults() {
+            if (Object.keys(toolTextResults).length === 0) {
+                showToast('请先解析文本！', true);
+                return;
+            }
+            
+            addEntry(toolTextResults, 'manual');
+            showToast('✅ 已添加到记录！');
+            
+            toolTextResults = {};
+            document.getElementById('toolTextArea').value = '';
+            renderToolTextResults();
         }
 
         function renderDashboard() {
@@ -3642,9 +3998,9 @@
                     let method = '';
                     
                     const methods = [
+                        { name: 'Tesseract.js', fn: () => recognizeWithTesseract(file), enabled: true },
                         { name: '腾讯云OCR', fn: () => recognizeWithTencentOCR(file), enabled: OCR_WORKER_URL },
-                        { name: 'ocr.space', fn: () => recognizeWithOcrSpace(file), enabled: OCR_SPACE_API_KEY && OCR_SPACE_API_KEY !== 'K85774251888957' },
-                        { name: 'Tesseract.js', fn: () => recognizeWithTesseract(file), enabled: true }
+                        { name: 'ocr.space', fn: () => recognizeWithOcrSpace(file), enabled: OCR_SPACE_API_KEY && OCR_SPACE_API_KEY !== 'K85774251888957' }
                     ];
                     
                     for (const { name, fn, enabled } of methods) {
@@ -3855,9 +4211,13 @@
             });
             
             await worker.setParameters({
-                tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz周柯宇RSSRSSSR',
-                tessedit_pageseg_mode: Tesseract.PSM.SINGLE_BLOCK,
-                preserve_interword_spaces: '0'
+                tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                tessedit_pageseg_mode: Tesseract.PSM.AUTO,
+                preserve_interword_spaces: '0',
+                load_system_dawg: '0',
+                load_freq_dawg: '0',
+                language_model_penalty_non_freq_word: '0',
+                language_model_penalty_non_dict_word: '0'
             });
             
             try {
@@ -3897,8 +4257,10 @@
             const validCards = generateCards().map(c => c.id);
             
             const patterns = [
-                /(SS?R?\d+)/gi,
-                /(R\d+)/gi,
+                /(SSSR?\d+)/gi,
+                /(SSR\d+)/gi,
+                /(SR\d+)/gi,
+                /\b(R\d+)\b/gi,
                 /\[([^\]]+)\]/g
             ];
             
@@ -3906,6 +4268,18 @@
                 let match;
                 while ((match = pattern.exec(text)) !== null) {
                     const cardId = match[1].toUpperCase().replace(/\s/g, '');
+                    if (validCards.includes(cardId)) {
+                        results[cardId] = (results[cardId] || 0) + 1;
+                    }
+                }
+            });
+            
+            const lines = text.split(/[\n\r]+/);
+            lines.forEach(line => {
+                const cleanLine = line.trim().toUpperCase();
+                const match = cleanLine.match(/^(S{0,3}R\d+)/);
+                if (match) {
+                    const cardId = match[1].replace(/\s/g, '');
                     if (validCards.includes(cardId)) {
                         results[cardId] = (results[cardId] || 0) + 1;
                     }
