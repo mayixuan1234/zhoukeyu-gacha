@@ -353,6 +353,165 @@
             font-weight: 700;
         }
 
+        /* 活动按钮 */
+        .activity-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .activity-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+        }
+        .activity-btn .text-left {
+            text-align: left;
+        }
+        .status-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .status-badge.active {
+            background: var(--accent);
+            color: #fff;
+        }
+        .status-badge.ended {
+            background: var(--text-secondary);
+            color: var(--text);
+        }
+
+        /* 活动弹窗 */
+        .activity-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+        .activity-modal.active {
+            display: flex;
+        }
+        .activity-modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 360px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        .activity-modal-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 1;
+        }
+        .activity-modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .activity-modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg);
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .activity-modal-close:hover {
+            background: var(--bg-card-hover);
+            color: var(--text);
+        }
+        .activity-modal-body {
+            padding: 16px;
+        }
+        .activity-modal-time {
+            font-size: 12px;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .activity-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+            margin-top: 12px;
+        }
+        .activity-section-title:first-child {
+            margin-top: 0;
+        }
+        .activity-list {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .activity-image-preview {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .activity-image-preview-single {
+            margin-top: 12px;
+        }
+        .activity-image-item {
+            flex: 1;
+            text-align: center;
+        }
+        .activity-image-item img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: 8px;
+            cursor: zoom-in;
+            border: 1px solid var(--border);
+        }
+        .activity-image-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .activity-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            text-align: right;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         /* 复选框 */
         .checkbox-row { 
             display: flex; 
@@ -1183,7 +1342,7 @@
                     </div>
                     <a href="https://www.91ruyu.com/gaia/85014/bad3126a.html?share_relation=fb4e1b89f71f2875_1552552965_1&spider_token=631f&wfr=BuyercopyURL" target="_blank" class="btn btn-accent" style="font-size:14px;padding:8px 20px;flex-shrink:0;margin-left:12px;">🎁 去抽卡</a>
                 </div>
-                <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/raw/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true" style="width:100%;border-radius:10px;cursor:zoom-in;display:block;margin-top:12px;" onclick="zoomImage('https://github.com/mayixuan1234/zhoukeyu-gacha/raw/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true')" />
+                <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2%E7%89%88%E6%9C%AC2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true" style="width:100%;border-radius:10px;cursor:zoom-in;display:block;margin-top:12px;" onclick="zoomImage('https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2%E7%89%88%E6%9C%AC2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true')" />
             </div>
 
             <!-- 宣传礼 -->
@@ -1243,6 +1402,113 @@
                 </div>
             </div>
 
+            <!-- 活动列表 -->
+            <div class="card">
+                <div class="card-title">🎡 活动中心</div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                    <button class="activity-btn" onclick="showActivityModal('mainevent')">
+                        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div>🎰</div>
+                                <div class="text-left">
+                                    <div style="font-size:13px;font-weight:600;color:var(--text);">本次抽抽乐活动</div>
+                                    <div style="font-size:11px;color:var(--warning);">7.11 ~ 7.31</div>
+                                </div>
+                            </div>
+                            <span class="status-badge active">进行中</span>
+                        </div>
+                    </button>
+                    <button class="activity-btn" onclick="showActivityModal('superlike')">
+                        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div>⭐</div>
+                                <div class="text-left">
+                                    <div style="font-size:13px;font-weight:600;color:var(--text);">超Like兑换小卡活动</div>
+                                    <div style="font-size:11px;color:var(--accent);">7.19 ~ 8.18</div>
+                                </div>
+                            </div>
+                            <span class="status-badge active">进行中</span>
+                        </div>
+                    </button>
+                    <button class="activity-btn" onclick="showActivityModal('happyhour')">
+                        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div>⏰</div>
+                                <div class="text-left">
+                                    <div style="font-size:13px;font-weight:600;color:var(--text);">周末Happy Hour限时福利</div>
+                                    <div style="font-size:11px;color:var(--danger);">7.18 ~ 7.20</div>
+                                </div>
+                            </div>
+                            <span class="status-badge active">进行中</span>
+                        </div>
+                    </button>
+                    <button class="activity-btn" onclick="showActivityModal('romantic')">
+                        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div>💞</div>
+                                <div class="text-left">
+                                    <div style="font-size:13px;font-weight:600;color:var(--text);">浪漫疯子限时小卡</div>
+                                    <div style="font-size:11px;color:var(--text-secondary);">7.13 ~ 7.15</div>
+                                </div>
+                            </div>
+                            <span class="status-badge ended">已结束</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 限时小卡判断 -->
+            <div class="card">
+                <div class="card-title">⏰ 限时小卡判断</div>
+                <div style="text-align:center;margin-bottom:10px;">
+                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px;">当前时间：北京时间</div>
+                    <div id="beijingClock" style="font-size:20px;font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums;">--:--:--</div>
+                    <div id="beijingDate" style="font-size:11px;color:var(--text-secondary);margin-top:2px;">----</div>
+                </div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-bottom:10px;line-height:1.5;">
+                    <div>• 活动开始24小时内下单累计满10抽获得限时小卡</div>
+                    <div>• 端盒下单直接满足条件</div>
+                </div>
+                <div class="input-group">
+                    <label>首次下单时间</label>
+                    <input type="datetime-local" id="firstOrderTime" onchange="updateFirstOrderTime(this.value)" onclick="handleFirstOrderClick()" />
+                </div>
+                <div id="timeBonusResult" style="margin-top:12px;padding:12px;background:var(--bg);border-radius:10px;">
+                    <div style="font-size:13px;color:var(--text-secondary);">请设置首次下单时间</div>
+                </div>
+            </div>
+
+            <!-- 特殊卡池 -->
+            <div class="card">
+                <div class="card-title">💎 特殊卡池（SSSR）</div>
+                <div class="special-cards">
+                    <div class="special-card">
+                        <img src="https://si.geilicdn.com/wdseller902056251807-335e0000019f475497e40a2303ea_2560_2560.jpg" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;cursor:zoom-in;" onclick="zoomImage('https://si.geilicdn.com/wdseller902056251807-335e0000019f475497e40a2303ea_2560_2560.jpg')" />
+                        <div style="font-size:11px;text-align:center;">SSSR1 小卡精选</div>
+                    </div>
+                    <div class="special-card">
+                        <img src="https://si.geilicdn.com/wdseller902056251807-335e0000019f5b3a0c7a69b46e39_2560_2560.jpg" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;cursor:zoom-in;" onclick="zoomImage('https://si.geilicdn.com/wdseller902056251807-335e0000019f5b3a0c7a69b46e39_2560_2560.jpg')" />
+                        <div style="font-size:11px;text-align:center;">SSSR2 小卡精选</div>
+                    </div>
+                </div>
+                <div style="font-size:10px;color:var(--text-secondary);text-align:center;margin-top:8px;">仅在活动期间抽取，活动结束后不再产出</div>
+            </div>
+
+            <!-- 端盒配置 -->
+            <div class="card">
+                <div class="card-title">📦 端盒配置（¥2517）</div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                    <img src="https://raw.githubusercontent.com/mayixuan1234/zhoukeyu-gacha/refs/heads/main/%E7%AB%AF%E7%9B%92%E9%85%8D%E7%BD%AE.jpg" style="width:100%;border-radius:8px;cursor:zoom-in;" onclick="zoomImage('https://raw.githubusercontent.com/mayixuan1234/zhoukeyu-gacha/refs/heads/main/%E7%AB%AF%E7%9B%92%E9%85%8D%E7%BD%AE.jpg')" />
+                </div>
+            </div>
+        </div>
+
+        <!-- 页面2：数据 -->
+        <div class="page" id="page-stats">
+            <div class="header">
+                <div class="header-title">📊 数据中心</div>
+            </div>
+
             <!-- 核心数据 -->
             <div class="card">
                 <div class="card-title">📊 核心数据</div>
@@ -1300,7 +1566,6 @@
                 <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;">
                     <button id="fullSetBtn" class="btn btn-secondary" onclick="markFullSet()" style="width:100%;font-size:12px;padding:8px;">🎁 端盒下单 ¥2517（382抽）</button>
                     <button id="markAllBtn" class="btn btn-secondary" onclick="markAllCards()" style="width:100%;font-size:12px;padding:8px;">✨ 一键点亮全部卡片</button>
-                    <div style="text-align:center;font-size:10px;color:var(--text-secondary);margin-top:4px;">端盒赠品周边详见首页最后的长图</div>
                 </div>
             </div>
 
@@ -1371,36 +1636,9 @@
                 </div>
                 <div class="exchange-result" id="exchangeResult"></div>
             </div>
-
-            <!-- 特殊卡池 -->
-            <div class="card">
-                <div class="card-title">💎 特殊卡池（SSSR）</div>
-                <div class="special-cards">
-                    <div class="special-card">
-                        <img src="https://si.geilicdn.com/wdseller902056251807-335e0000019f475497e40a2303ea_2560_2560.jpg" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;cursor:zoom-in;" onclick="zoomImage('https://si.geilicdn.com/wdseller902056251807-335e0000019f475497e40a2303ea_2560_2560.jpg')" />
-                        <div class="name">SSSR-小李雾</div>
-                        <div class="limit">限量 20 只</div>
-                    </div>
-                    <div class="special-card">
-                        <img src="https://si.geilicdn.com/wdseller902056251807-3b440000019f475534860a2301af_2560_2560.jpg" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;cursor:zoom-in;" onclick="zoomImage('https://si.geilicdn.com/wdseller902056251807-3b440000019f475534860a2301af_2560_2560.jpg')" />
-                        <div class="name">SSSR-大李雾</div>
-                        <div class="limit">限量 15 只</div>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <!-- 端盒配置 -->
-            <div class="card">
-                <div class="card-title">📦 端盒配置（¥2517）</div>
-                <div style="display:flex;flex-direction:column;gap:8px;">
-                    <img src="https://raw.githubusercontent.com/mayixuan1234/zhoukeyu-gacha/refs/heads/main/%E7%AB%AF%E7%9B%92%E9%85%8D%E7%BD%AE.jpg" style="width:100%;border-radius:8px;cursor:zoom-in;" onclick="zoomImage('https://raw.githubusercontent.com/mayixuan1234/zhoukeyu-gacha/refs/heads/main/%E7%AB%AF%E7%9B%92%E9%85%8D%E7%BD%AE.jpg')" />
-                </div>
-            </div>
         </div>
 
-        <!-- 页面2：录入 -->
+        <!-- 页面3：录入 -->
         <div class="page" id="page-entry">
             <div class="header" style="padding:12px 16px;">
                 <div class="header-title" style="font-size:16px;">✍ 录入记录</div>
@@ -1513,7 +1751,7 @@
             </div>
         </div>
 
-        <!-- 页面3：图鉴 -->
+        <!-- 页面4：图鉴 -->
         <div class="page" id="page-collection">
             <div class="header">
                 <div class="header-title">📚 卡牌图鉴</div>
@@ -1541,7 +1779,7 @@
             <div class="card-grid" id="collectionGrid"></div>
         </div>
 
-        <!-- 页面4：记录 -->
+        <!-- 页面5：记录 -->
         <div class="page" id="page-history">
             <div class="header">
                 <div class="header-title">📋 抽卡记录</div>
@@ -1575,6 +1813,10 @@
             <span class="icon">🏠</span>
             <span>首页</span>
         </div>
+        <div class="tab-item" onclick="switchTab('stats')">
+            <span class="icon">📊</span>
+            <span>数据</span>
+        </div>
         <div class="tab-item" onclick="switchTab('entry')">
             <span class="icon">✍</span>
             <span>录入</span>
@@ -1586,6 +1828,18 @@
         <div class="tab-item" onclick="switchTab('history')">
             <span class="icon">📋</span>
             <span>记录</span>
+        </div>
+
+        <!-- 活动弹窗 -->
+        <div class="activity-modal" id="activityModal" onclick="closeActivityModal()">
+            <div class="activity-modal-content" onclick="event.stopPropagation()">
+                <div class="activity-modal-header">
+                    <div class="activity-modal-title" id="activityModalTitle">活动详情</div>
+                    <button class="activity-modal-close" onclick="closeActivityModal()">✕</button>
+                </div>
+                <div class="activity-modal-body" id="activityModalBody"></div>
+                <div class="activity-footer" id="activityModalFooter"></div>
+            </div>
         </div>
     </div>
 
@@ -1657,8 +1911,8 @@
             ]
         };
 
-        const DEFAULT_GLOBAL_DRAWS = 73578;
-        const DEFAULT_LAST_UPDATE = '2026-07-19 11:03';
+        const DEFAULT_GLOBAL_DRAWS = 74032;
+        const DEFAULT_LAST_UPDATE = '2026-07-19 14:06';
         const CURRENT_VERSION = 2;
 
         let state = {
@@ -2025,6 +2279,7 @@
             document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
             document.getElementById(`page-${tab}`).classList.add('active');
             if (tab === 'dashboard') renderDashboard();
+            if (tab === 'stats') renderDashboard();
             if (tab === 'collection') renderCollection();
             if (tab === 'history') renderHistory();
             if (tab === 'entry') {
@@ -2737,20 +2992,18 @@
         }
 
         function markFullSet() {
-            showConfirm('端盒下单', '确认端盒下单吗？这将记录 ¥2517 金额和 382 抽数，并点亮所有卡片。', '确认', '取消')
+            showConfirm('端盒下单', '确认端盒下单吗？这将记录 ¥2517 金额和 382 抽数，并点亮所有卡片各1张。', '确认', '取消')
                 .then(confirmed => {
                     if (confirmed) {
                         state.settings.isEndbox = true;
                         
                         const cards = generateCards();
-                        const baseCount = Math.floor(382 / cards.length);
-                        const remainder = 382 % cards.length;
                         
-                        cards.forEach((card, idx) => {
+                        cards.forEach(card => {
                             if (!state.cardCounts[card.rarity]) {
                                 state.cardCounts[card.rarity] = {};
                             }
-                            state.cardCounts[card.rarity][card.id] = baseCount + (idx < remainder ? 1 : 0);
+                            state.cardCounts[card.rarity][card.id] = 1;
                         });
                         
                         const orderTimeStr = state.settings.firstOrderTime || new Date().toISOString();
@@ -4235,7 +4488,124 @@
                 });
         }
 
-        
+        function showActivityModal(activityId) {
+            const modal = document.getElementById('activityModal');
+            const title = document.getElementById('activityModalTitle');
+            const body = document.getElementById('activityModalBody');
+            const footer = document.getElementById('activityModalFooter');
+            
+            const activities = {
+                superlike: {
+                    title: '⭐ 超Like兑换小卡活动',
+                    time: '7.19 ~ 8.18',
+                    body: `
+                        <div class="activity-section-title">📅 积分获取规则</div>
+                        <div class="activity-list">
+                            <div>• 每个号保持超like状态打卡1天得1分</div>
+                            <div>• 发帖打卡形式参与活动</div>
+                        </div>
+                        <div class="activity-section-title">🎁 积分兑换规则</div>
+                        <div class="activity-list">
+                            <div>• 每25分可兑换1张R卡（可指定）</div>
+                            <div>• 每75分可兑换1张SR卡（可指定）</div>
+                            <div>• 30天全勤且积100分，可兑换1张SSR卡（仅限1张，可指定）</div>
+                        </div>
+                        <div class="activity-section-title">⚠️ 兑换要求</div>
+                        <div class="activity-list">
+                            <div>• 需至少购买过一单抽抽乐</div>
+                            <div>• 8月19日后提交链接审核</div>
+                        </div>
+                        <div class="activity-image-preview-single">
+                            <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E8%B6%85like%E6%89%93%E5%8D%A1%E6%B4%BB%E5%8A%A8.jpg?raw=true" alt="活动图片" onclick="zoomImage(this.src)" style="width:100%;border-radius:8px;cursor:zoom-in;border:1px solid var(--border);" />
+                            <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%BE%85%E8%A7%A3%E9%94%81%E5%BE%AE%E5%8D%9A%E8%B6%85like%E7%A0%B44000%EF%BC%8C%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B0%8F%E5%8D%A1.jpg?raw=true" alt="活动图片" onclick="zoomImage(this.src)" style="width:100%;border-radius:8px;cursor:zoom-in;border:1px solid var(--border);margin-top:8px;" />
+                        </div>
+                    `,
+                    footer: `<a href="https://weibo.com/6077884078/5322342490444785" target="_blank" class="btn btn-secondary" style="font-size:12px;padding:6px 16px;">查看官方详情</a>`
+                },
+                happyhour: {
+                    title: '⏰ 周末Happy Hour限时福利',
+                    time: '7.18 12:00 ~ 7.20 18:00',
+                    body: `
+                        <div class="activity-list">
+                            <div>• 非首次下单6抽随1张，10抽得两张不重复</div>
+                            <div>• 首次下单12抽随1张，20抽得两张不重复</div>
+                            <div>• 满210抽随2赠1张，满300抽赠不重复2张</div>
+                        </div>
+                        <div class="activity-image-preview">
+                            <div class="activity-image-item">
+                                <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E9%99%90%E6%97%B6%E5%B0%8F%E5%8D%A1%E6%9F%AF%E8%88%9F%E6%B1%82%E5%89%91%E7%BA%A2%E8%89%B2.jpg?raw=true" alt="小卡预览1" onclick="zoomImage(this.src)" />
+                                <div class="activity-image-label">小卡预览1</div>
+                            </div>
+                            <div class="activity-image-item">
+                                <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E9%99%90%E6%97%B6%E5%B0%8F%E5%8D%A1%E6%9F%AF%E8%88%9F%E6%B1%82%E5%89%91%E8%93%9D%E8%89%B2.jpg?raw=true" alt="小卡预览2" onclick="zoomImage(this.src)" />
+                                <div class="activity-image-label">小卡预览2</div>
+                            </div>
+                        </div>
+                    `,
+                    footer: ''
+                },
+                mainevent: {
+                    title: '🎰 本次抽抽乐活动',
+                    time: '2026年7月11日17:20 ~ 7月31日17:17',
+                    body: `
+                        <div class="activity-section-title">⏱️ 24小时内下单限时小卡</div>
+                        <div class="activity-list">
+                            <div>• 活动开始1小时内：✓ 1号+2号+3号小卡</div>
+                            <div>• 活动开始1-6小时内：✓ 2号+3号小卡</div>
+                            <div>• 活动开始6-24小时内：✓ 3号小卡</div>
+                            <div>• 端盒下单直接满足条件</div>
+                        </div>
+                        <div class="activity-section-title">💰 价格说明</div>
+                        <div class="activity-list">
+                            <div>• 单抽：¥6.6</div>
+                            <div>• 6抽：¥39.6</div>
+                            <div>• 10抽：¥66</div>
+                            <div>• 端盒（382抽）：¥2517</div>
+                        </div>
+                        <div class="activity-image-preview-single">
+                            <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E9%99%90%E6%97%B6%E5%B0%8F%E5%8D%A1123.png?raw=true" alt="限时小卡123" onclick="zoomImage(this.src)" style="width:100%;border-radius:8px;cursor:zoom-in;border:1px solid var(--border);" />
+                        </div>
+                    `,
+                    footer: `<a href="https://www.91ruyu.com/gaia/85014/bad3126a.html" target="_blank" class="btn btn-accent" style="font-size:12px;padding:6px 16px;">🎰 去抽卡</a>`
+                },
+                romantic: {
+                    title: '💞 浪漫疯子限时小卡',
+                    time: '7.13 12:00 ~ 7.15 18:00',
+                    body: `
+                        <div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:12px;background:var(--bg);border-radius:8px;">
+                            <div style="font-size:16px;margin-bottom:4px;">🎉</div>
+                            <div>活动已结束</div>
+                            <div style="font-size:11px;margin-top:4px;">已参与活动的用户可查看下方奖品列表</div>
+                        </div>
+                        <div class="activity-section-title">🎁 奖品列表</div>
+                        <div class="activity-list">
+                            <div>• 非首次：6抽得1张，10抽得2张，满100抽额外赠送1张</div>
+                            <div>• 首次：12抽得1张，20抽得2张，满210抽额外赠送1张</div>
+                        </div>
+                        <div class="activity-image-preview-single">
+                            <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E6%B5%AA%E6%BC%AB%E7%96%AF%E5%AD%90%E9%99%90%E6%97%B6%E6%B4%BB%E5%8A%A8%E5%B0%8F%E5%8D%A1%E6%AF%94%E8%80%B6.jpg?raw=true" alt="浪漫疯子小卡1" onclick="zoomImage(this.src)" style="width:100%;border-radius:8px;cursor:zoom-in;border:1px solid var(--border);" />
+                            <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E6%B5%AA%E6%BC%AB%E7%96%AF%E5%AD%90%E9%99%90%E6%97%B6%E6%B4%BB%E5%8A%A8%E5%B0%8F%E5%8D%A1%E7%9C%8B%E6%89%8B%E6%9C%BA.jpg?raw=true" alt="浪漫疯子小卡2" onclick="zoomImage(this.src)" style="width:100%;border-radius:8px;cursor:zoom-in;border:1px solid var(--border);margin-top:8px;" />
+                        </div>
+                    `,
+                    footer: ''
+                }
+            };
+            
+            const activity = activities[activityId];
+            if (activity) {
+                title.textContent = activity.title;
+                body.innerHTML = `<div class="activity-modal-time">${activity.time}</div>` + activity.body;
+                footer.innerHTML = activity.footer;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeActivityModal() {
+            const modal = document.getElementById('activityModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
         function clearAllData() {
             showConfirm('清空数据', `确定要清空全部 ${state.history.length} 条记录吗？删除后可在回收站恢复。`, '全部删除', '取消')
