@@ -10,6 +10,14 @@
         const OCR_SPACE_API_URL = 'https://api.ocr.space/parse/image';
         
         const OCR_WORKER_URL = 'https://ocr-proxy-worker.1274407702.workers.dev';
+        
+        window._switchTab = function(tab) {
+            if (window._realSwitchTab) {
+                window._realSwitchTab(tab);
+            } else {
+                setTimeout(() => window._switchTab(tab), 50);
+            }
+        };
     </script>
     <style>
         :root {
@@ -390,36 +398,36 @@
         .activity-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
             display: none;
-            justify-content: flex-end;
-            align-items: flex-end;
-            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            z-index: 4000;
+            padding: 16px;
         }
         .activity-modal.active { display: flex; }
         .activity-modal-content {
             background: var(--bg-card);
-            border-radius: 20px 20px 0 0;
-            padding: 24px;
+            border-radius: var(--card-radius);
+            padding: 0;
             width: 100%;
-            max-height: 85vh;
+            max-height: 90vh;
             overflow-y: auto;
-            border-top: 1px solid var(--border);
-            animation: slideUp 0.3s ease;
-            max-width: 400px;
-            margin: 0 auto;
+            border: 1px solid var(--border);
+            animation: scaleIn 0.2s ease;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
         }
         .activity-modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
-            position: sticky;
-            top: 0;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
             background: var(--bg-card);
-            padding-top: 8px;
-            z-index: 1;
         }
         .activity-modal-title {
             font-size: 18px;
@@ -444,7 +452,9 @@
             color: var(--text);
         }
         .activity-modal-body {
-            padding: 0;
+            padding: 24px;
+            flex: 1;
+            overflow-y: auto;
         }
         .activity-modal-time {
             font-size: 12px;
@@ -1360,7 +1370,7 @@
                         <div style="font-size:20px;">🎁</div>
                         <div>
                             <div style="font-size:13px;color:var(--text);font-weight:600;">周柯宇宣传礼</div>
-                            <div style="font-size:11px;color:var(--text-secondary);">发帖集赞领取限定卡</div>
+                            <div style="font-size:11px;color:var(--text-secondary);">发帖集赞领取限定卡（自选R卡一张）</div>
                         </div>
                     </div>
                     <div id="promoMiniStatus" style="font-size:12px;font-weight:600;color:var(--danger);">未达标</div>
@@ -1405,6 +1415,9 @@
                             
                             <p style="margin:8px 0;color:var(--text);font-weight:600;">🎉 75,170抽里程碑达成</p>
                             <p style="margin:4px 0 8px;">解锁全员特典五，卡面征集同步开启。 <a href="https://weibo.com/1851141241/5321368338958387" target="_blank" style="font-size:11px;color:var(--accent);">(查看原文)</a></p>
+                            
+                            <p style="margin:8px 0;color:var(--text);font-weight:600;">🏆 75,170抽卡面结果公布</p>
+                            <p style="margin:4px 0 8px;">75,170抽全员满赠特典卡面已公布。 <a href="https://weibo.com/1851141241/5321750474657135" target="_blank" style="font-size:11px;color:var(--accent);">(查看原文)</a></p>
                         </div>
                     </div>
                 </div>
@@ -1495,7 +1508,7 @@
                         <div style="font-size:11px;text-align:center;">SSSR1 小卡精选</div>
                     </div>
                     <div class="special-card">
-                        <img src="https://si.geilicdn.com/wdseller902056251807-335e0000019f5b3a0c7a69b46e39_2560_2560.jpg" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;cursor:zoom-in;" onclick="zoomImage('https://si.geilicdn.com/wdseller902056251807-335e0000019f5b3a0c7a69b46e39_2560_2560.jpg')" />
+                        <img src="https://si.geilicdn.com/wdseller902056251807-3b440000019f475534860a2301af_2560_2560.jpg" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;cursor:zoom-in;" onclick="zoomImage('https://si.geilicdn.com/wdseller902056251807-3b440000019f475534860a2301af_2560_2560.jpg')" />
                         <div style="font-size:11px;text-align:center;">SSSR2 小卡精选</div>
                     </div>
                 </div>
@@ -1588,7 +1601,7 @@
                     </div>
                     <div style="font-size:11px;color:var(--text-secondary);text-align:center;margin-top:6px;" id="lastUpdateDisplay">更新于 --</div>
                     <div style="font-size:10px;color:var(--text-secondary);text-align:center;margin-top:4px;line-height:1.4;">
-                        <div>️ 此抽数不包括端盒抽数，随缘更新</div>
+                        <div>️ 此抽数包括端盒抽数10314（27*382），随缘更新</div>
                         <div>🌐 <a href="https://www.91ruyu.com/gaia/85014/bad3126a.html?share_relation=fb4e1b89f71f2875_1552552965_1&spider_token=631f&wfr=BuyercopyURL" target="_blank" style="color:var(--accent);">实时抽数请查看官方页面</a></div>
                     </div>
                 </div>
@@ -1796,23 +1809,23 @@
 
     <!-- 底部导航 -->
     <div class="tab-bar">
-        <div class="tab-item active" onclick="switchTab('dashboard')">
+        <div class="tab-item active" onclick="window._switchTab('dashboard')">
             <span class="icon">🏠</span>
             <span>首页</span>
         </div>
-        <div class="tab-item" onclick="switchTab('stats')">
+        <div class="tab-item" onclick="window._switchTab('stats')">
             <span class="icon">📊</span>
             <span>数据</span>
         </div>
-        <div class="tab-item" onclick="switchTab('entry')">
+        <div class="tab-item" onclick="window._switchTab('entry')">
             <span class="icon">✍</span>
             <span>录入</span>
         </div>
-        <div class="tab-item" onclick="switchTab('collection')">
+        <div class="tab-item" onclick="window._switchTab('collection')">
             <span class="icon">📚</span>
             <span>图鉴</span>
         </div>
-        <div class="tab-item" onclick="switchTab('history')">
+        <div class="tab-item" onclick="window._switchTab('history')">
             <span class="icon">📋</span>
             <span>记录</span>
         </div>
@@ -1869,13 +1882,13 @@
         ];
 
         const GLOBAL_MILESTONES = [
-            { count: 5170, label: '满5,170抽', reward: '全员特典', bonus: '加赠1张小卡' },
-            { count: 15170, label: '满15,170抽', reward: '全员特典', bonus: '加赠1张小卡' },
-            { count: 35170, label: '满35,170抽', reward: '全员特典', bonus: '加赠1张小卡' },
-            { count: 55170, label: '满55,170抽', reward: '全员特典', bonus: '加赠1张小卡' },
-            { count: 75170, label: '满75,170抽', reward: '特典（公开征集设计）', bonus: '加赠1张小卡' },
-            { count: 95170, label: '满95,170抽', reward: '特典（公开征集设计）', bonus: '加赠1张小卡' },
-            { count: 125170, label: '满125,170抽', reward: '特典（公开征集设计）', bonus: '加赠1张小卡' },
+            { count: 5170, label: '满5,170抽', reward: '全员特典卡解锁', bonus: '＋加赠1张小卡', image: 'https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%985170%E6%8A%BD%E6%BB%A1%E8%B5%A0%E7%89%B9%E5%85%B8%E5%8D%A1%E9%9D%A2.jpg?raw=true' },
+            { count: 15170, label: '满15,170抽', reward: '全员特典卡解锁', bonus: '＋加赠1张小卡', image: 'https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%9815170%E6%8A%BD%E6%BB%A1%E8%B5%A0%E7%89%B9%E5%85%B8%E5%8D%A1%E9%9D%A2.jpg?raw=true' },
+            { count: 35170, label: '满35,170抽', reward: '全员特典卡解锁', bonus: '＋加赠1张小卡', image: 'https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%9835170%E6%8A%BD%E6%BB%A1%E8%B5%A0%E7%89%B9%E5%85%B8%E5%8D%A1%E9%9D%A2.jpg?raw=true' },
+            { count: 55170, label: '满55,170抽', reward: '全员特典卡解锁', bonus: '＋加赠1张小卡', image: 'https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%9875170%E6%8A%BD%E6%BB%A1%E8%B5%A0%E7%89%B9%E5%85%B8%E5%8D%A1%E9%9D%A2.jpg?raw=true' },
+            { count: 75170, label: '满75,170抽', reward: '特典卡解锁（公开征集设计）', bonus: '＋加赠1张小卡', image: '' },
+            { count: 95170, label: '满95,170抽', reward: '特典卡解锁（公开征集设计）', bonus: '＋加赠1张小卡', image: '' },
+            { count: 125170, label: '满125,170抽', reward: '特典卡解锁（公开征集设计）', bonus: '＋加赠1张小卡', image: '' },
         ];
 
         const ACTIVITY_BONUS = [
@@ -1898,9 +1911,9 @@
             ]
         };
 
-        const DEFAULT_GLOBAL_DRAWS = 74096;
-        const DEFAULT_LAST_UPDATE = '2026-07-19 14:33';
-        const CURRENT_VERSION = 3;
+        const DEFAULT_GLOBAL_DRAWS = 85881;
+        const DEFAULT_LAST_UPDATE = '2026-07-20 14:30';
+        const CURRENT_VERSION = 4;
 
         let state = {
             cardCounts: {},
@@ -2267,10 +2280,10 @@
             if (confirmResolve) confirmResolve(false);
         });
 
-        function switchTab(tab) {
+        window._realSwitchTab = function(tab) {
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+            document.querySelector(`[onclick="window._switchTab('${tab}')"]`).classList.add('active');
             document.getElementById(`page-${tab}`).classList.add('active');
             if (tab === 'dashboard') renderDashboard();
             if (tab === 'stats') renderDashboard();
@@ -2282,7 +2295,7 @@
             } else {
                 document.getElementById('entryFooter').classList.add('hidden');
             }
-        }
+        };
 
         function renderDashboard() {
             const totalDraws = getTotalDraws();
@@ -2361,17 +2374,27 @@
                 }
             }
             let html = '';
+            
+            html += `
+                <div style="margin-bottom:16px;text-align:center;">
+                    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">🎁 已经获得</div>
+                    <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2%E7%89%88%E6%9C%AC2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true" style="width:100%;max-width:320px;border-radius:12px;cursor:zoom-in;" onclick="zoomImage('https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2%E7%89%88%E6%9C%AC2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true')" />
+                </div>`;
 
             GLOBAL_MILESTONES.forEach(m => {
                 const unlocked = total >= m.count;
+                const hasImage = m.image && m.image !== '';
                 html += `
                     <div class="milestone-item ${unlocked ? 'unlocked' : 'locked'}">
                         <div class="milestone-icon">${unlocked ? '✅' : '🔒'}</div>
                         <div class="milestone-info">
                             <div class="milestone-name">${m.label}</div>
-                            <div class="milestone-reward">${m.reward} ${m.bonus ? '· ' + m.bonus : ''}</div>
+                            <div class="milestone-reward">${m.reward}${m.bonus ? m.bonus : ''}</div>
                         </div>
-                        <div class="milestone-progress">${unlocked ? '已解锁' : `${total.toLocaleString()}/${m.count.toLocaleString()}`}</div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            ${hasImage ? `<button onclick="showCardPreview('${m.image}')" style="background:var(--accent);color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;">查看小卡</button>` : ''}
+                            <div class="milestone-progress">${unlocked ? '已解锁' : `${total.toLocaleString()}/${m.count.toLocaleString()}`}</div>
+                        </div>
                     </div>
                 `;
             });
@@ -2902,6 +2925,17 @@
             setupZoomGestures();
         }
 
+        function showCardPreview(src) {
+            imageScale = 1;
+            imageTranslateX = 0;
+            imageTranslateY = 0;
+            const img = document.getElementById('zoomImage');
+            img.src = src;
+            updateImageTransform();
+            document.getElementById('imageZoomModal').classList.add('active');
+            setupZoomGestures();
+        }
+
         function updateImageTransform() {
             const img = document.getElementById('zoomImage');
             img.style.transform = `translate(${imageTranslateX}px, ${imageTranslateY}px) scale(${imageScale})`;
@@ -3208,7 +3242,9 @@
             'SSR5': { front: 'https://si.geilicdn.com/wdseller902056251807-2ce80000019f47527ddd0a2304a0_2560_2560.jpg' },
             'SSR6': { front: 'https://si.geilicdn.com/wdseller902056251807-50ad0000019f4752e38a0a210247_2560_2560.jpg' },
             'SSR7': { front: 'https://si.geilicdn.com/wdseller902056251807-58d20000019f4753445e0a2301f1_2560_2560.jpg' },
-            'SSR8': { front: 'https://si.geilicdn.com/wdseller902056251807-5bb30000019f475392c40a23c191_2560_2560.jpg' }
+            'SSR8': { front: 'https://si.geilicdn.com/wdseller902056251807-5bb30000019f475392c40a23c191_2560_2560.jpg' },
+            'SSSR1': { front: 'https://si.geilicdn.com/wdseller902056251807-335e0000019f475497e40a2303ea_2560_2560.jpg' },
+            'SSSR2': { front: 'https://si.geilicdn.com/wdseller902056251807-3b440000019f475534860a2301af_2560_2560.jpg' }
         };
 
         function getCardImages(cardId) {
