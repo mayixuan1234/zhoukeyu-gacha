@@ -4013,48 +4013,33 @@
             let method = '';
 
             try {
-                footerInfo.textContent = `正在使用本地OCR...`;
+                footerInfo.textContent = `正在识别...`;
                 if (!tesseractWorker) {
-                    footerInfo.textContent = `正在加载OCR引擎...`;
+                    footerInfo.textContent = `正在加载识别引擎...`;
                     await preloadTesseract();
                 }
                 
                 if (tesseractWorker) {
                     const { data } = await tesseractWorker.recognize(file);
                     text = data.text;
-                    method = 'Tesseract.js（本地）';
+                    method = '本地识别';
                     
-                    if (isOCRResultValid(text)) {
-                        footerInfo.textContent = `本地OCR识别成功`;
+                    if (text && text.trim()) {
+                        footerInfo.textContent = `识别成功`;
                         return { text, method };
                     }
-                    
-                    console.log('本地OCR结果无效，尝试云端OCR');
                 }
             } catch (e) {
                 console.warn('本地OCR失败:', e);
             }
 
             try {
-                footerInfo.textContent = `正在调用腾讯OCR...`;
-                text = await recognizeWithTencentOCR(file);
-                method = '腾讯OCR（Cloudflare代理）';
-                
-                if (isOCRResultValid(text)) {
-                    footerInfo.textContent = `腾讯OCR识别成功`;
-                    return { text, method };
-                }
-            } catch (e) {
-                console.warn('腾讯OCR失败:', e);
-            }
-
-            try {
-                footerInfo.textContent = `正在调用 ocr.space API...`;
+                footerInfo.textContent = `正在云端识别...`;
                 text = await recognizeWithOcrSpace(file);
-                method = 'ocr.space API';
+                method = '云端识别';
                 
-                if (isOCRResultValid(text)) {
-                    footerInfo.textContent = `ocr.space识别成功`;
+                if (text && text.trim()) {
+                    footerInfo.textContent = `识别成功`;
                     return { text, method };
                 }
             } catch (e) {
@@ -4062,10 +4047,23 @@
             }
 
             try {
-                footerInfo.textContent = `正在使用备用OCR...`;
+                footerInfo.textContent = `正在云端识别...`;
+                text = await recognizeWithTencentOCR(file);
+                method = '云端识别';
+                
+                if (text && text.trim()) {
+                    footerInfo.textContent = `识别成功`;
+                    return { text, method };
+                }
+            } catch (e) {
+                console.warn('腾讯OCR失败:', e);
+            }
+
+            try {
+                footerInfo.textContent = `正在识别...`;
                 text = await recognizeWithTesseract(file);
-                method = 'Tesseract.js（备用）';
-                footerInfo.textContent = `备用OCR识别完成`;
+                method = '本地识别';
+                footerInfo.textContent = `识别完成`;
                 return { text, method };
             } catch (e) {
                 console.error('所有OCR方式均失败:', e);
@@ -4182,8 +4180,7 @@
                 }
                 
                 if (total > 0) {
-                    const cloudInfo = cloudCalls > 0 ? `\n☁️ 云端调用 ${cloudCalls} 次` : '\n🌐 全部本地识别';
-                    showToast(`✅ 成功识别 ${total} 张卡牌\n📡 使用方式：${ocrMethod}${cloudInfo}`);
+                    showToast(`✅ 成功识别 ${total} 张卡牌`);
                 } else {
                     showToast('⚠️ 未识别到卡牌，请手动添加');
                 }
