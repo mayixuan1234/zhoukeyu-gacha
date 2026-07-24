@@ -1351,7 +1351,7 @@
                 <div class="header-subtitle">抽抽乐记录器</div>
             </div>
 
-            <!-- 去抽卡 + 全员满赠卡面图 -->
+            <!-- 去抽卡 + 双图展示 -->
             <div class="card">
                 <div style="display:flex;align-items:center;justify-content:space-between;">
                     <div>
@@ -1360,7 +1360,27 @@
                     </div>
                     <a href="https://www.91ruyu.com/gaia/85014/bad3126a.html?share_relation=fb4e1b89f71f2875_1552552965_1&spider_token=631f&wfr=BuyercopyURL" target="_blank" class="btn btn-accent" style="font-size:14px;padding:8px 20px;flex-shrink:0;margin-left:12px;">🎁 去抽卡</a>
                 </div>
-                <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2%E7%89%88%E6%9C%AC2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true" style="width:100%;border-radius:10px;cursor:zoom-in;display:block;margin-top:12px;" onclick="zoomImage('https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2%E7%89%88%E6%9C%AC2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true')" />
+                <div style="display:flex;gap:8px;margin-top:12px;">
+                    <div style="flex:1;">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">全员满赠卡面</div>
+                        <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2%E7%89%88%E6%9C%AC2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true" style="width:100%;border-radius:10px;cursor:zoom-in;display:block;" onclick="zoomImage('https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2%E7%89%88%E6%9C%AC2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg?raw=true')" />
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">🏆 收官终极活动</div>
+                        <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%91%A8%E6%9F%AF%E5%AE%87%E6%8A%BD%E6%8A%BD%E4%B9%90%E7%BB%88%E6%9E%81%E6%B4%BB%E5%8A%A8.gif?raw=true" style="width:100%;border-radius:10px;cursor:zoom-in;display:block;" onclick="zoomImage('https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%91%A8%E6%9F%AF%E5%AE%87%E6%8A%BD%E6%8A%BD%E4%B9%90%E7%BB%88%E6%9E%81%E6%B4%BB%E5%8A%A8.gif?raw=true')" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🏆 收官终极活动 -->
+            <div class="card">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <div>
+                        <div style="font-size:20px;font-weight:800;color:var(--accent);">🏆 收官终极活动</div>
+                        <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">7.25 12:00 ~ 7.31 17:17 | 满270/330/390抽获得镜头签等奖励</div>
+                    </div>
+                    <a href="https://weibo.com/1851141241/5324255218632900" target="_blank" class="btn btn-accent" style="font-size:13px;padding:6px 14px;">查看详情</a>
+                </div>
             </div>
 
             <!-- 宣传礼 -->
@@ -1473,6 +1493,18 @@
                                 </div>
                             </div>
                             <span class="status-badge ended">已结束</span>
+                        </div>
+                    </button>
+                    <button class="activity-btn" onclick="showActivityModal('finale')">
+                        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div>🏆</div>
+                                <div class="text-left">
+                                    <div style="font-size:13px;font-weight:600;color:var(--text);">收官终极活动</div>
+                                    <div style="font-size:11px;color:var(--accent);">7.25 ~ 7.31</div>
+                                </div>
+                            </div>
+                            <span class="status-badge active">进行中</span>
                         </div>
                     </button>
                 </div>
@@ -4746,6 +4778,43 @@
                         </div>
                     `,
                     footer: ''
+                },
+                finale: {
+                    title: '🏆 收官终极活动',
+                    time: '7.25 12:00 ~ 7.31 17:17',
+                    body: `
+                        <div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:12px;background:var(--bg);border-radius:8px;">
+                            <div style="font-size:16px;margin-bottom:4px;">🎊</div>
+                            <div>本次活动为抽抽乐期间最后一次限时活动</div>
+                        </div>
+                        <div class="activity-section-title">✨ 活动宣传</div>
+                        <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%91%A8%E6%9F%AF%E5%AE%87%E6%8A%BD%E6%8A%BD%E4%B9%90%E7%BB%88%E6%9E%81%E6%B4%BB%E5%8A%A8.gif?raw=true" style="width:100%;border-radius:10px;margin-top:8px;cursor:zoom-in;" onclick="zoomImage(this.src)" />
+                        <div class="activity-section-title">🎯 卡面</div>
+                        <div class="activity-list">
+                            <div>• 镜头签：1套3张（本次活动核心小卡）</div>
+                            <div>• 周正小卡：1套2张</div>
+                            <div>• 开推制服小卡：1张</div>
+                        </div>
+                        <div class="activity-section-title">🎁 获取方式</div>
+                        <div class="activity-list">
+                            <div>• 满270抽：随机1张镜头签 + 23中随机1张</div>
+                            <div>• 满330抽：随机2张镜头签 + 23中随机2张</div>
+                            <div>• 满390抽：全部3张镜头签 + 23所有小卡</div>
+                            <div>• 端盒算381抽，赠送最多获得1套终极活动小卡</div>
+                        </div>
+                        <div class="activity-section-title">📋 其他玩家</div>
+                        <div class="activity-list">
+                            <div>• 非首次下单：+7抽随1张，+14抽随2张，+21抽得全套3张</div>
+                            <div>• 首次下单：+15抽随1张，+25抽随2张，+35抽得全套3张</div>
+                        </div>
+                        <div class="activity-section-title">🔄 可复数</div>
+                        <div class="activity-list">
+                            <div>• 已获1套后，再+10抽可复数1套</div>
+                            <div>• 再+20抽可复数2套</div>
+                            <div>• 每人最多可获得3套终极活动小卡</div>
+                        </div>
+                    `,
+                    footer: `<a href="https://weibo.com/1851141241/5324255218632900" target="_blank" class="btn btn-secondary" style="font-size:12px;padding:6px 16px;">查看官方详情</a>`
                 }
             };
             
