@@ -1363,7 +1363,7 @@
                 <div style="display:flex;gap:8px;margin-top:12px;">
                     <div style="flex:1;">
                         <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">全员满赠卡面</div>
-                        <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81%EF%BC%8B%E8%B6%85like%E5%85%91%E6%8D%A2%E6%B4%BB%E5%8A%A8%EF%BC%8C%E6%B5%B7%E6%8A%A53.jpg?raw=true" style="width:100%;border-radius:10px;cursor:zoom-in;display:block;" onclick="zoomImage('https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81%EF%BC%8B%E8%B6%85like%E5%85%91%E6%8D%A2%E6%B4%BB%E5%8A%A8%EF%BC%8C%E6%B5%B7%E6%8A%A53.jpg?raw=true')" />
+                        <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2+%E8%B6%85like%E7%A0%B44000+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81%EF%BC%8B%E8%B6%85like%E5%85%91%E6%8D%A2%E6%B4%BB%E5%8A%A8%EF%BC%8C%E6%B5%B7%E6%8A%A54.jpg?raw=true" style="width:100%;border-radius:10px;cursor:zoom-in;display:block;" onclick="zoomImage('https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B7%B2%E8%A7%A3%E9%94%81%E5%8D%A1%E9%9D%A2+%E8%B6%85like%E7%A0%B44000+%E5%AE%A3%E4%BC%A0%E7%A4%BC%E5%85%91%E6%8D%A2%E4%BA%8C%E7%BB%B4%E7%A0%81%EF%BC%8B%E8%B6%85like%E5%85%91%E6%8D%A2%E6%B4%BB%E5%8A%A8%EF%BC%8C%E6%B5%B7%E6%8A%A54.jpg?raw=true')" />
                     </div>
                     <div style="flex:1;">
                         <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">🏆 收官终极活动</div>
@@ -1396,13 +1396,14 @@
             </div>
 
             <!-- 超Like兑换小卡活动 -->
-            <div class="card" onclick="window.open('https://weibo.com/6077884078/5322342490444785', '_blank')" style="cursor:pointer;">
+            <div class="card" onclick="showSuperLikeModal()" style="cursor:pointer;">
                 <div style="display:flex;align-items:center;justify-content:space-between;">
                     <div style="display:flex;align-items:center;gap:8px;">
                         <div style="font-size:20px;">⭐</div>
                         <div>
                             <div style="font-size:13px;color:var(--text);font-weight:600;">超Like兑换小卡活动</div>
-                            <div style="font-size:11px;color:var(--text-secondary);">周柯宇超话超Like4000解锁（待解锁）</div>
+                            <div style="font-size:11px;color:var(--text-secondary);">周柯宇超话超Like5000全员特典双面小卡（待解锁）</div>
+                            <div style="font-size:10px;color:var(--accent);margin-top:2px;">👉 点击查看已解锁全员小卡</div>
                         </div>
                     </div>
                     <span class="status-badge" style="background:rgba(255,215,0,0.2);color:#ffd700;">待解锁</span>
@@ -1411,8 +1412,11 @@
 
             <!-- 通知公告 -->
             <div class="card" id="notificationCard">
-                <div class="card-title">📢 公告</div>
-                <div id="notificationContent" style="padding:0 10px;">
+                <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="toggleNotification()">
+                    <span>📢 公告（必看）</span>
+                    <span id="notificationToggle" style="font-size:12px;color:var(--text-secondary);">展开 ▼</span>
+                </div>
+                <div id="notificationContent" style="padding:0 10px;display:none;">
                     <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:10px;">
                         <div style="font-size:13px;color:var(--warning);font-weight:700;">⚠️ 重要提醒</div>
                         <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.5;">
@@ -1431,8 +1435,11 @@
                     </div>
                     
                     <div style="padding:10px 0;margin-bottom:10px;">
-                        <div style="font-size:13px;color:var(--accent);font-weight:700;"> 活动公告</div>
+                        <div style="font-size:13px;color:var(--accent);font-weight:700;">🎊 活动公告</div>
                         <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:8px;">
+                            <p style="margin:8px 0;color:var(--text);font-weight:600;">🎨 超Like破5000卡面征集</p>
+                            <p style="margin:4px 0 8px;">【超like破5000】卡面征集开始！征集时间：即刻起至超like5000达成48小时后。投稿格式：高清原图 + 原图链接/授权，一评一图且必须附素材链接或图片授权证明。 <a href="https://weibo.com/1851141241/5325340784197876" target="_blank" style="font-size:11px;color:var(--accent);">(查看原文)</a></p>
+                            
                             <p style="margin:8px 0;color:var(--text);font-weight:600;">💬 客服回复相关</p>
                             <p style="margin:4px 0 8px;">满十抽包U，后续有确认地址环节；以确认地址/补邮为准，盲盒地址错了没事；宣传兑奖等待后续兑换方案发布。 <a href="https://weibo.com/1851141241/5319937126305726" target="_blank" style="font-size:11px;color:var(--accent);">(查看原文)</a></p>
                             
@@ -1893,6 +1900,36 @@
                 <div class="activity-footer" id="activityModalFooter"></div>
             </div>
         </div>
+
+        <!-- 超Like弹窗 -->
+        <div class="activity-modal" id="superLikeModal" onclick="closeSuperLikeModal()">
+            <div class="activity-modal-content" onclick="event.stopPropagation()">
+                <div class="activity-modal-header">
+                    <div class="activity-modal-title">⭐ 超Like兑换小卡活动</div>
+                    <button class="activity-modal-close" onclick="closeSuperLikeModal()">✕</button>
+                </div>
+                <div class="activity-modal-body" style="padding:16px;overflow-y:auto;max-height:70vh;">
+                    <div style="margin-bottom:16px;padding:12px;background:rgba(255,215,0,0.1);border-radius:10px;border:1px solid rgba(255,215,0,0.2);">
+                        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">🎯 当前目标：超Like 5000</div>
+                        <div style="font-size:12px;color:var(--text-secondary);">全员特典双面小卡（待解锁）</div>
+                        <a href="https://weibo.com/6077884078/5322342490444785" target="_blank" style="display:inline-block;margin-top:8px;font-size:12px;color:var(--accent);text-decoration:none;">👉 查看活动微博</a>
+                    </div>
+
+                    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;">📸 已解锁全员小卡</div>
+                    
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div>
+                            <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px;">✅ 超Like破3000（已解锁）</div>
+                            <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%B7%B2%E8%A7%A3%E9%94%81%E5%BE%AE%E5%8D%9A%E8%B6%85like%E7%A0%B43000%EF%BC%8C%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B0%8F%E5%8D%A1.jpg?raw=true" style="width:100%;border-radius:10px;cursor:zoom-in;" onclick="zoomImage(this.src)" alt="超Like破3000全员满赠小卡" />
+                        </div>
+                        <div>
+                            <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px;">✅ 超Like破4000（已解锁）</div>
+                            <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%BE%85%E8%A7%A3%E9%94%81%E5%BE%AE%E5%8D%9A%E8%B6%85like%E7%A0%B44000%EF%BC%8C%E5%85%A8%E5%91%98%E6%BB%A1%E8%B5%A0%E5%B0%8F%E5%8D%A1.jpg?raw=true" style="width:100%;border-radius:10px;cursor:zoom-in;" onclick="zoomImage(this.src)" alt="超Like破4000全员满赠小卡" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1963,9 +2000,9 @@
             ]
         };
 
-        const DEFAULT_GLOBAL_DRAWS = 101090;
-        const DEFAULT_LAST_UPDATE = '2026-07-25 16:54';
-        const CURRENT_VERSION = 8;
+        const DEFAULT_GLOBAL_DRAWS = 103427;
+        const DEFAULT_LAST_UPDATE = '2026-07-27 19:40';
+        const CURRENT_VERSION = 9;
 
         let state = {
             cardCounts: {},
@@ -4854,6 +4891,32 @@
             document.body.style.overflow = '';
         }
 
+        // 超Like弹窗
+        function showSuperLikeModal() {
+            const modal = document.getElementById('superLikeModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSuperLikeModal() {
+            const modal = document.getElementById('superLikeModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // 公告折叠/展开
+        function toggleNotification() {
+            const content = document.getElementById('notificationContent');
+            const toggle = document.getElementById('notificationToggle');
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '收起 ▲';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '展开 ▼';
+            }
+        }
+
         function clearAllData() {
             showConfirm('清空数据', `确定要清空全部 ${state.history.length} 条记录吗？删除后可在回收站恢复。`, '全部删除', '取消')
                 .then(confirmed => {
@@ -5014,5 +5077,14 @@
 
         init();
     </script>
+
+    <!-- 版权免责声明 -->
+    <footer style="padding:20px 16px;text-align:center;border-top:1px solid var(--border);margin-top:20px;">
+        <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">
+            <p>© 2026 周柯宇抽抽乐记录器 | 纯娱乐无收益</p>
+            <p>📷 图源活动官方公开微博，侵删</p>
+            <p style="margin-top:4px;">⚠️ 本工具仅用于记录抽卡数据，一切以活动官方微博发布信息为准</p>
+        </div>
+    </footer>
 </body>
 </html>
