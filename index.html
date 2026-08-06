@@ -158,6 +158,33 @@
             justify-content: center;
         }
         .header-btn:hover { background: rgba(255,255,255,0.3); }
+        .header-download-btn {
+            position: absolute;
+            top: 50%;
+            right: 90px;
+            transform: translateY(-50%);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 999px;
+            color: #ff5757;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 50;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .header-download-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-50%) scale(1.04); }
+        .header-download-btn:active { transform: translateY(-50%) scale(0.97); }
+        .header-download-icon { font-size: 13px; line-height: 1; }
+        @media (max-width: 380px) {
+            .header-download-btn { right: 78px; font-size: 11px; padding: 5px 10px; }
+        }
 
         /* 卡片容器 */
         .card {
@@ -982,6 +1009,89 @@
         .modal-actions { display: flex; gap: 10px; }
         .modal-actions .btn { flex: 1; }
 
+        /* 手机 App 下载弹窗 */
+        .dlm-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2100;
+            padding: 24px;
+        }
+        .dlm-overlay.active { display: flex; }
+        .dlm-box {
+            background: var(--bg-card);
+            border-radius: var(--card-radius);
+            padding: 22px 18px 18px;
+            width: 100%;
+            max-width: 380px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            animation: scaleIn 0.22s ease;
+            position: relative;
+        }
+        .dlm-close {
+            position: absolute;
+            top: 10px; right: 12px;
+            width: 28px; height: 28px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .dlm-close:hover { color: var(--text); }
+        .dlm-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 4px; text-align: center; }
+        .dlm-sub { font-size: 12px; color: var(--text-secondary); text-align: center; margin-bottom: 14px; }
+        .dlm-card {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        .dlm-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .dlm-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            flex: 0 0 40px;
+        }
+        .dlm-icon.android { background: linear-gradient(135deg,#a4c639,#7a9a2e); color: #fff; }
+        .dlm-icon.harmony { background: linear-gradient(135deg,#ff6b35,#d44a1a); color: #fff; }
+        .dlm-icon.ios { background: linear-gradient(135deg,#8e8e93,#5a5a5e); color: #fff; }
+        .dlm-card-name { font-size: 14px; font-weight: 700; color: var(--text); }
+        .dlm-card-tag { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+        .dlm-btn {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 11px 0;
+            border-radius: 10px;
+            margin-top: 6px;
+        }
+        .dlm-btn.android { background: linear-gradient(135deg,#e7c26d,#c9a227); color: #1a1a1a; }
+        .dlm-btn.harmony { background: linear-gradient(135deg,#ff8a65,#e64a19); color: #fff; }
+        .dlm-btn.ios { background: linear-gradient(135deg,#9e9e9e,#616161); color: #fff; }
+        .dlm-btn:hover { filter: brightness(1.08); }
+        .dlm-note { font-size: 11px; color: var(--text-secondary); margin-top: 8px; line-height: 1.55; }
+        .dlm-tip {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+
         /* Toast */
         .toast {
             position: fixed;
@@ -1349,6 +1459,10 @@
                 </div>
                 <div class="header-title">周柯宇爱意正值炽夏</div>
                 <div class="header-subtitle">抽抽乐记录器</div>
+                <button class="header-download-btn" onclick="openDownloadModal()" title="下载手机 App">
+                    <span class="header-download-icon">⬇</span>
+                    <span>下载手机app应用</span>
+                </button>
             </div>
 
             <!-- 通知公告 -->
@@ -1413,7 +1527,11 @@
             </div>
 
             
-<!-- 活动圆满收官 -->
+
+
+
+
+            <!-- 活动圆满收官 -->
             <div class="card" style="border:2px solid var(--accent);background:linear-gradient(135deg, rgba(231,194,109,0.08), rgba(32,81,125,0.08));">
                 <div style="text-align:center;padding:4px 0 12px;">
                     <div style="font-size:18px;font-weight:900;color:var(--accent);">🎊 活动圆满收官 🎊</div>
@@ -5137,7 +5255,16 @@
             }
         }
 
-        function clearAllData() {
+        function openDownloadModal(){ document.getElementById('downloadModal').classList.add('active'); document.body.style.overflow='hidden'; }
+function closeDownloadModal(){ document.getElementById('downloadModal').classList.remove('active'); document.body.style.overflow=''; }
+function dlmEscClose(e){ if(e.key==='Escape')closeDownloadModal(); }
+document.addEventListener('keydown',dlmEscClose);
+window.addEventListener('load',function(){ window.removeEventListener('keydown',dlmEscClose); document.addEventListener('keydown',dlmEscClose); });
+function dlmEscClose(e){ if(e.key==='Escape')closeDownloadModal(); }
+document.addEventListener('keydown',dlmEscClose);
+window.addEventListener('load',function(){ window.removeEventListener('keydown',dlmEscClose); document.addEventListener('keydown',dlmEscClose); });
+
+function clearAllData() {
             showConfirm('清空数据', `确定要清空全部 ${state.history.length} 条记录吗？删除后可在回收站恢复。`, '全部删除', '取消')
                 .then(confirmed => {
                     if (confirmed) {
@@ -5306,5 +5433,51 @@
             <p style="margin-top:4px;">⚠️ 本工具仅用于记录抽卡数据，一切以活动官方微博发布信息为准</p>
         </div>
     </footer>
+<!-- 手机 App 下载弹窗 -->
+<div class="dlm-overlay" id="downloadModal" onclick="if(event.target===this)closeDownloadModal()">
+    <div class="dlm-box" role="dialog" aria-modal="true" aria-label="手机 App 下载">
+        <button class="dlm-close" onclick="closeDownloadModal()" aria-label="关闭">×</button>
+        <div class="dlm-title">手机客户端下载</div>
+        <div class="dlm-sub">按你的设备选对应版本 · 全部免费</div>
+
+        <div class="dlm-card">
+            <div class="dlm-card-head">
+                <div class="dlm-icon android">📲</div>
+                <div>
+                    <div class="dlm-card-name">Android 安卓</div>
+                    <div class="dlm-card-tag">直接下载 APK 安装 · 约 140KB</div>
+                </div>
+            </div>
+            <a href="FocusGacha.apk" download="FocusGacha.apk" class="dlm-btn android">⬇️ 下载安卓版 APK</a>
+            <div class="dlm-note">安装时若提示「未知来源 / Play 保护」，点「仍要安装」即可（自签名应用）。卡牌图与 OCR 需联网。</div>
+        </div>
+
+        <div class="dlm-card">
+            <div class="dlm-card-head">
+                <div class="dlm-icon harmony">🌿</div>
+                <div>
+                    <div class="dlm-card-name">HarmonyOS 鸿蒙</div>
+                    <div class="dlm-card-tag">HarmonyOS 4 及以前 · 直接装上面 APK</div>
+                </div>
+            </div>
+            <a href="FocusGacha.apk" download="FocusGacha.apk" class="dlm-btn harmony">⬇️ 下载同一份 APK 即可</a>
+            <div class="dlm-note">鸿蒙系统兼容 Android 应用，直接装上面安卓版 APK 就能用。纯血鸿蒙 NEXT 暂不支持。</div>
+        </div>
+
+        <div class="dlm-card">
+            <div class="dlm-card-head">
+                <div class="dlm-icon ios">🍎</div>
+                <div>
+                    <div class="dlm-card-name">iOS 苹果</div>
+                    <div class="dlm-card-tag">暂无 ipa · 用 Safari 添加到主屏幕</div>
+                </div>
+            </div>
+            <div class="dlm-note" style="margin-top:6px;">iPhone 打开本站 → 底部分享 → "添加到主屏幕"，桌面会出现「抽抽乐记录器」图标，点开全屏使用。功能 95% 还原（OCR 因 Safari 限制不可用）。</div>
+        </div>
+
+        <div class="dlm-tip">⚠ 建议在 WiFi 下下载 · 安装后遇到问题可联系开发者</div>
+    </div>
+</div>
+
 </body>
 </html>
