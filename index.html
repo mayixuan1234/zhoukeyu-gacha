@@ -5486,6 +5486,10 @@ function clearAllData() {
             <!-- 备用下载入口 -->
             <a href="ZhouKeYuGachaRecorder.zip" download="ZhouKeYuGachaRecorder.zip" class="dlm-btn" style="background:linear-gradient(135deg,#5b9eff,#3563e8);color:#fff;display:block;text-align:center;text-decoration:none;font-weight:700;font-size:13px;padding:10px 0;border-radius:10px;margin-top:10px;">📦 下载 .zip 包（备用，安装更稳）</a>
             <div class="dlm-note">部分手机（小米/华为旧版）直接下 .apk 会被错误识别为损坏。改下 .zip → 解压 → 点里面的 APK 即可正常安装。</div>
+
+            <!-- 终极兜底：APK 内嵌页（不依赖 Cloudflare MIME/SPA 路由） -->
+            <a href="apk-installer.html" target="_blank" rel="noopener" class="dlm-btn" style="background:linear-gradient(135deg,#ff7e5f,#feb47b);color:#fff;display:block;text-align:center;text-decoration:none;font-weight:700;font-size:13px;padding:10px 0;border-radius:10px;margin-top:10px;">🛟 终极兜底：APK 内嵌页（最稳）</a>
+            <div class="dlm-note">上面两个都装不上的话，用这个：APK 已完整 base64 嵌在网页里，点按钮直接下载原始字节（不经过任何服务器 / MIME / 微信处理）。<b>100% 等于本地文件</b>。</div>
         </div>
 
         <div class="dlm-card">
