@@ -126,9 +126,10 @@
             margin-bottom: 4px;
             position: relative;
             z-index: 1;
-            padding-right: 80px;
+            padding-right: 230px;
             line-height: 1.3;
         }
+        @media (max-width: 380px) { .header-title { padding-right: 190px; } }
         .header-subtitle {
             font-size: 12px;
             color: rgba(255,255,255,0.8);
@@ -160,30 +161,31 @@
         .header-btn:hover { background: rgba(255,255,255,0.3); }
         .header-download-btn {
             position: absolute;
-            top: 50%;
-            right: 90px;
-            transform: translateY(-50%);
+            top: 12px;
+            right: 80px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
+            gap: 5px;
+            padding: 5px 11px;
             background: rgba(255,255,255,0.18);
             backdrop-filter: blur(6px);
             border: 1px solid rgba(255,255,255,0.35);
             border-radius: 999px;
             color: #ff5757;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             cursor: pointer;
             z-index: 50;
-            transition: all 0.2s;
+            transition: all 0.18s;
             white-space: nowrap;
+            line-height: 1;
         }
-        .header-download-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-50%) scale(1.04); }
-        .header-download-btn:active { transform: translateY(-50%) scale(0.97); }
-        .header-download-icon { font-size: 13px; line-height: 1; }
+        .header-download-btn:hover { background: rgba(255,255,255,0.32); transform: scale(1.04); }
+        .header-download-btn:active { transform: scale(0.97); }
+        .header-download-icon { font-size: 12px; line-height: 1; }
         @media (max-width: 380px) {
-            .header-download-btn { right: 78px; font-size: 11px; padding: 5px 10px; }
+            .header-download-btn { right: 70px; font-size: 10px; padding: 4px 9px; gap: 4px; }
+            .header-download-icon { font-size: 11px; }
         }
 
         /* 卡片容器 */
@@ -5448,7 +5450,7 @@ function clearAllData() {
                     <div class="dlm-card-tag">直接下载 APK 安装 · 约 140KB</div>
                 </div>
             </div>
-            <a href="FocusGacha.apk" download="FocusGacha.apk" class="dlm-btn android">⬇️ 下载安卓版 APK</a>
+            <a href="FocusGacha.apk" download="FocusGacha.apk" target="_blank" rel="noopener" type="application/vnd.android.package-archive" class="dlm-btn android">⬇️ 下载安卓版 APK</a>
             <div class="dlm-note">安装时若提示「未知来源 / Play 保护」，点「仍要安装」即可（自签名应用）。卡牌图与 OCR 需联网。</div>
         </div>
 
@@ -5460,7 +5462,7 @@ function clearAllData() {
                     <div class="dlm-card-tag">HarmonyOS 4 及以前 · 直接装上面 APK</div>
                 </div>
             </div>
-            <a href="FocusGacha.apk" download="FocusGacha.apk" class="dlm-btn harmony">⬇️ 下载同一份 APK 即可</a>
+            <a href="FocusGacha.apk" download="FocusGacha.apk" target="_blank" rel="noopener" type="application/vnd.android.package-archive" class="dlm-btn harmony">⬇️ 下载同一份 APK 即可</a>
             <div class="dlm-note">鸿蒙系统兼容 Android 应用，直接装上面安卓版 APK 就能用。纯血鸿蒙 NEXT 暂不支持。</div>
         </div>
 
