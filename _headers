@@ -1,0 +1,19 @@
+/* APK 安装包 - 必须用这个 MIME 类型，安卓才能正确识别 */
+ZhouKeYuGachaRecorder.apk
+  Content-Type: application/vnd.android.package-archive
+  Content-Disposition: attachment; filename="ZhouKeYuGachaRecorder.apk"
+  X-Content-Type-Options: nosniff
+
+/* Zip 备用包 - 也强制下载 */
+ZhouKeYuGachaRecorder.zip
+  Content-Type: application/zip
+  Content-Disposition: attachment; filename="ZhouKeYuGachaRecorder.zip"
+  X-Content-Type-Options: nosniff
+
+/* JSON / 文本 - 避免被压缩器误处理 */
+/*.json
+  Content-Type: application/json; charset=utf-8
+
+/*.txt
+  Content-Type: text/plain; charset=utf-8
+*/
