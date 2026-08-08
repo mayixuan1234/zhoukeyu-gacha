@@ -8,6 +8,59 @@
 
 🔗 [https://zhoukeyu-gacha.pages.dev/](https://zhoukeyu-gacha.pages.dev/)
 
+## 📱 Android APK
+
+网页版打包为真·安卓 App，全屏无浏览器痕迹，桌面图标金色扭蛋圆。
+
+### 下载安装
+
+1. 从本仓库下载 `ZhouKeYuGachaRecorder.apk`
+2. 微信发给「文件传输助手」或数据线拖进手机
+3. 点击安装，安卓会提示「不允许安装未知来源应用」→ **设置 → 打开「允许来自此来源」→ 返回继续**
+
+| 项目 | 详情 |
+|------|------|
+| 包名 | `com.myx.gacha` |
+| 版本 | 1.2 |
+| 签名 | v1 + v2 + v3 三重 |
+| 权限 | 仅 INTERNET（联网） |
+
+### 从网页版迁移数据
+
+APK 和浏览器是独立的存储空间。迁移步骤：
+
+1. 手机浏览器打开网页版 → **备份/导出** → 下载 JSON
+2. 打开 APK → **导入** → 选刚下载的 JSON
+3. 完成。之后只用 APK，网页版留作备份入口
+
+### 更新 APK
+
+新 APK 传手机**直接覆盖安装，数据不丢**。构建命令：
+
+```bash
+cd gacha-apk && bash build.sh
+```
+
+> ⚠️ 签名证书 `focus.keystore`（密码 `focus2026`）**不能删**——证书丢了就得先卸载才能装，数据全没。建议备份到网盘。
+
+### 离线 vs 联网
+
+| 功能 | 离线 | 联网 |
+|------|------|------|
+| 抽卡记录增删改查 | ✅ | ✅ |
+| 统计图表（Chart.js 已打包） | ✅ | ✅ |
+| 数据导出 / 导入 / 备份 | ✅ | ✅ |
+| 商品图、参考图鉴等外链图片 | ❌ 裂图 | ✅ |
+| OCR 识别（tesseract.js 按需拉取） | ❌ | ✅ |
+| 云端总抽数同步 | ❌ | ✅ |
+
+### 技术要点
+
+- `aapt2 + d8 + apksigner` 命令行工具链直接构建，不依赖 Android Studio，产物 ~190KB
+- WebView 使用虚拟域名 `https://focus.local/` 确保 localStorage 不受 ROM 清理策略影响
+- 站外链接交给系统浏览器，App 内不裸奔
+- APK 构建工程单独维护：[gacha-apk](https://github.com/mayixuan1234/zhoukeyu-gacha/tree/main)
+
 ## 功能模块
 
 ### 数据录入（三种方式）
@@ -40,23 +93,29 @@
 | 存储 | localStorage（客户端持久化） |
 | 部署 | Cloudflare Pages |
 | 扩展 | Chrome Extension（数据同步辅助） |
+| Android | WebView + aapt2/d8/apksigner 工具链 |
 
 ## 项目结构
 
 ```
-docs/工作/
-├── index.html              # 主程序（v6.1，244KB 单文件 SPA）
-├── gacha-sync-extension/   # Chrome 浏览器扩展
-├── functions/              # Cloudflare Worker 函数
-├── index - 副本 (*).html   # v1-v6 历史版本归档
+/
+├── index.html                          # 主程序（v6.1，244KB 单文件 SPA）
+├── ZhouKeYuGachaRecorder.apk           # Android 安装包
+├── functions/api/                      # Cloudflare Worker（OCR 代理）
+├── gacha-sync-extension/               # Chrome 浏览器扩展
+├── apk-installer.html                  # APK 安装引导页
+├── 抽卡记录器.html                     # 1.0 版本归档
 └── README.md
 ```
+
+> APK 构建工程在独立目录维护，详见 `gacha-apk/`。
 
 ## 关键设计决策
 
 - **为什么纯前端**：用户数据存储在浏览器 localStorage，零服务器成本、零运维
 - **为什么 OCR 用 Worker 代理**：Tesseract.js 在前端暴露 API Key 不安全，Worker 层做鉴权转发
 - **为什么不做账号系统**：粉丝社群场景下用户不愿意注册，localStorage 够用
+- **为什么做 APK**：网页版用户有安装需求，WebView 壳体积小、零权限，无需上架应用商店
 
 ## 迭代历程
 
@@ -66,3 +125,4 @@ docs/工作/
 | v5 | 2025.01 | OCR 识别 + Excel 导入 |
 | v6 | 2025.03 | 排行榜 + 公告系统 + 移动端适配 |
 | v6.1 | 2025.06 | Bug 修复 + 微信兼容 |
+| v6.1 APK v1.2 | 2025.08 | 碎卡兑换 + 公告同步 + APK 覆盖升级 |
