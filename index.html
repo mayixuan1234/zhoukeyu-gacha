@@ -1638,6 +1638,9 @@
                             <p style="margin:8px 0;color:var(--text);font-weight:600;">🏆 95,170抽卡面结果公布</p>
                             <p style="margin:4px 0 8px;">抽抽乐满95,170抽！全员满赠特典卡面已公布！ <a href="https://weibo.com/1851141241/5324951219605145" target="_blank" style="font-size:11px;color:var(--accent);">(查看原文)</a></p>
                             
+                            <p style="margin:8px 0;color:var(--text);font-weight:600;">🔄 碎卡兑换机制发布</p>
+                            <p style="margin:4px 0 8px;">【非酋机制碎卡兑换】兑换时间：2026.08.02 10:15~2026.08.16 21:00。每满36抽使用6张任意R/SR换1张SR卡面；每满72抽可用6张R/SR换1张任意卡面；每满72抽可用1张SSR换1张SSR。 <a href="https://weibo.com/1851141241/5327409427518357" target="_blank" style="font-size:11px;color:var(--accent);">(查看原文)</a></p>
+                            
                             <p style="margin:8px 0;color:var(--text);font-weight:600;">🎊 活动圆满收官</p>
                             <p style="margin:4px 0 8px;">爱意正值炽夏抽抽乐正式结束，总销量111,801抽，总销售额737,886+。加赠卡全图鉴已公布，碎卡通道即将发布。 <a href="https://weibo.com/1851141241/5326856832418368" target="_blank" style="font-size:11px;color:var(--accent);">(查看原文)</a></p>
                         </div>
@@ -1645,10 +1648,34 @@
                 </div>
             </div>
 
-            
-
-
-
+            <!-- 碎卡兑换通道 -->
+            <div class="card" style="border:2px solid #10b981;background:linear-gradient(135deg, rgba(16,185,129,0.08), rgba(32,81,125,0.08));">
+                <div style="text-align:center;padding:4px 0 8px;">
+                    <div style="font-size:17px;font-weight:900;color:#10b981;">🔄 碎卡兑换通道已开启 🔄</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">兑换时间：2026.08.02 10:15 ~ 2026.08.16 21:00</div>
+                </div>
+                <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:8px;border:1px solid var(--border);">
+                        <div style="font-size:10px;color:var(--accent);font-weight:600;">满36抽</div>
+                        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">6张R/SR → 1张SR</div>
+                    </div>
+                    <div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:8px;border:1px solid var(--border);">
+                        <div style="font-size:10px;color:var(--accent);font-weight:600;">满72抽</div>
+                        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">6张R/SR → 1张任意卡面</div>
+                    </div>
+                    <div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:8px;border:1px solid var(--border);">
+                        <div style="font-size:10px;color:var(--accent);font-weight:600;">满72抽</div>
+                        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">1张SSR → 1张SSR</div>
+                    </div>
+                </div>
+                <div style="background:var(--bg);border-radius:12px;padding:12px;text-align:center;border:1px solid var(--border);">
+                    <img src="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%B0%8F%E5%8D%A1%E9%9D%9E%E9%85%8B%E6%9C%BA%E5%88%B6%E7%A2%8E%E5%8D%A1%E5%85%91%E6%8D%A2.jpg?raw=true" alt="碎卡兑换二维码" style="width:180px;height:auto;border-radius:8px;cursor:zoom-in;border:1px solid var(--border);" onclick="zoomImage(this.src)" />
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:6px;">📱 扫描二维码，填写表单进行兑换</div>
+                </div>
+                <div style="text-align:center;margin-top:10px;">
+                    <a href="https://weibo.com/1851141241/5327409427518357" target="_blank" class="btn btn-secondary" style="font-size:12px;padding:6px 18px;">📖 查看兑换规则原文</a>
+                </div>
+            </div>
 
             <!-- 活动圆满收官 -->
             <div class="card" style="border:2px solid var(--accent);background:linear-gradient(135deg, rgba(231,194,109,0.08), rgba(32,81,125,0.08));">
@@ -1915,29 +1942,58 @@
             <div class="card">  
                 <div class="card-title">🔄 碎卡兑换机制</div>
                 <div style="padding:0 15px 15px;">
-                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
-                        <p style="margin:8px 0;">同一下单账号，每满36抽可使用6张R卡兑换1张SR卡</p>
-                        <p style="margin:8px 0;">每满72抽，可使用6张R卡或者SR卡兑换1张任意卡面</p>
-                        <p style="margin:8px 0;">具体兑换方式及时间另行通知，请关注活动官方微博：</p>
-                        <a href="https://weibo.com/u/1851141241" target="_blank" style="font-size:12px;color:var(--accent);display:block;margin-top:4px;">Liid·宇航员巡游卫星</a>
+                    <div style="background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(32,81,125,0.1));border-radius:10px;padding:10px;margin-bottom:10px;border:1px solid rgba(16,185,129,0.3);">
+                        <div style="font-size:12px;color:#10b981;font-weight:700;text-align:center;">✅ 兑换通道已开启</div>
+                        <div style="font-size:11px;color:var(--text-secondary);text-align:center;margin-top:2px;">兑换时间：2026.08.02 10:15 ~ 2026.08.16 21:00</div>
+                    </div>
+                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.8;">
+                        <div style="margin-bottom:6px;font-weight:600;color:var(--text);">📋 兑换规则：</div>
+                        <div style="background:var(--bg);border-radius:8px;padding:8px 10px;margin-bottom:6px;border:1px solid var(--border);">
+                            <span style="color:var(--accent);font-weight:600;">规则一</span>：每满36抽，使用<strong>6张任意R卡或SR卡</strong>，可兑换<strong>1张指定SR卡面</strong>
+                        </div>
+                        <div style="background:var(--bg);border-radius:8px;padding:8px 10px;margin-bottom:6px;border:1px solid var(--border);">
+                            <span style="color:var(--accent);font-weight:600;">规则二</span>：每满72抽，使用<strong>6张任意R卡或SR卡</strong>，可兑换<strong>1张任意卡面</strong>
+                        </div>
+                        <div style="background:var(--bg);border-radius:8px;padding:8px 10px;margin-bottom:6px;border:1px solid var(--border);">
+                            <span style="color:var(--accent);font-weight:600;">规则三</span>：每满72抽，使用<strong>1张任意SSR卡</strong>，可兑换<strong>1张SSR卡面</strong>
+                        </div>
+                        <div style="font-size:11px;color:var(--warning);margin-top:4px;">⚠️ 兑换次数不可叠加，已兑换的抽数不可再次使用</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">💡 示例：满180抽 = 6张R/SR兑换指定SR + 6张R/SR兑换任意卡面 + 1张SSR兑换SSR</div>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px;">
+                        <a href="https://weibo.com/1851141241/5327409427518357" target="_blank" style="flex:1;text-align:center;font-size:11px;padding:6px;background:var(--bg);border-radius:8px;color:var(--accent);border:1px solid var(--border);">📖 查看原文</a>
+                        <a href="https://github.com/mayixuan1234/zhoukeyu-gacha/blob/main/%E5%B0%8F%E5%8D%A1%E9%9D%9E%E9%85%8B%E6%9C%BA%E5%88%B6%E7%A2%8E%E5%8D%A1%E5%85%91%E6%8D%A2.jpg?raw=true" target="_blank" style="flex:1;text-align:center;font-size:11px;padding:6px;background:var(--bg);border-radius:8px;color:var(--accent);border:1px solid var(--border);">📱 二维码</a>
                     </div>
                 </div>
             </div>
 
             <!-- 碎卡兑换计算器 -->
             <div class="card">
-                <div class="card-title">🔄 碎卡兑换计算器 <span style="font-size:11px;color:var(--warning);font-weight:400;">（待优化，目前功能不完全）</span></div>
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>R卡数量</label>
-                        <input type="number" id="dCardCount" value="0" min="0" oninput="calculateExchange()" />
+                <div class="card-title">🔄 碎卡兑换计算器（更新时间2026.8.8 11：00 可能有bug欢迎向网站制作者反馈）</div>
+                <div style="padding:0 15px 15px;">
+                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:8px;">根据当前抽数和卡片数量，计算可兑换次数</div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>总抽数</label>
+                            <input type="number" id="totalDrawsInput" value="0" min="0" oninput="calculateExchange()" />
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>SR卡数量</label>
-                        <input type="number" id="sdCardCount" value="0" min="0" oninput="calculateExchange()" />
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>R卡数量</label>
+                            <input type="number" id="dCardCount" value="0" min="0" oninput="calculateExchange()" />
+                        </div>
+                        <div class="input-group">
+                            <label>SR卡数量</label>
+                            <input type="number" id="sdCardCount" value="0" min="0" oninput="calculateExchange()" />
+                        </div>
+                        <div class="input-group">
+                            <label>SSR卡数量</label>
+                            <input type="number" id="ssrCardCount" value="0" min="0" oninput="calculateExchange()" />
+                        </div>
                     </div>
+                    <div class="exchange-result" id="exchangeResult"></div>
                 </div>
-                <div class="exchange-result" id="exchangeResult"></div>
             </div>
         </div>
 
@@ -2713,6 +2769,24 @@
             document.getElementById('statSSRChip').textContent = rarityCounts.SSR;
             document.getElementById('statSSSR').textContent = rarityCounts.SSSR || 0;
 
+            // 自动填充碎卡兑换计算器
+            const totalDrawsInput = document.getElementById('totalDrawsInput');
+            if (totalDrawsInput && (!totalDrawsInput.value || parseInt(totalDrawsInput.value) === 0)) {
+                totalDrawsInput.value = totalDraws;
+            }
+            const dCardInput = document.getElementById('dCardCount');
+            if (dCardInput && (!dCardInput.value || parseInt(dCardInput.value) === 0)) {
+                dCardInput.value = rarityCounts.R;
+            }
+            const sdCardInput = document.getElementById('sdCardCount');
+            if (sdCardInput && (!sdCardInput.value || parseInt(sdCardInput.value) === 0)) {
+                sdCardInput.value = rarityCounts.SR;
+            }
+            const ssrCardInput = document.getElementById('ssrCardCount');
+            if (ssrCardInput && (!ssrCardInput.value || parseInt(ssrCardInput.value) === 0)) {
+                ssrCardInput.value = rarityCounts.SSR;
+            }
+
             renderPersonalMilestones(totalDraws);
             renderGlobalMilestones();
             updateGlobalDrawsDisplay();
@@ -3209,25 +3283,59 @@
         function calculateExchange() {
             const dCards = parseInt(document.getElementById('dCardCount').value) || 0;
             const sdCards = parseInt(document.getElementById('sdCardCount').value) || 0;
-            const totalDraws = getTotalDraws();
+            const ssrCards = parseInt(document.getElementById('ssrCardCount').value) || 0;
+            const totalDrawsInput = document.getElementById('totalDrawsInput');
+            const totalDraws = totalDrawsInput && totalDrawsInput.value ? parseInt(totalDrawsInput.value) : getTotalDraws();
 
-            const sdExchangeCount = Math.floor(totalDraws / 36);
-            const anyExchangeCount = Math.floor(totalDraws / 72);
+            // 根据新规则：
+            // 规则一：每满36抽，6张R/SR → 1张SR
+            // 规则二：每满72抽，6张R/SR → 1张任意卡面
+            // 规则三：每满72抽，1张SSR → 1张SSR
+            // 说明：规则一和规则二的R/SR不可叠加使用
 
-            let remainingD = dCards;
-            let remainingSD = sdCards;
+            // 计算可用次数（按顺序使用，先到先得）
+            const rule1Max = Math.floor(totalDraws / 36);
+            const rule2Max = Math.floor(totalDraws / 72);
+            const rule3Max = Math.floor(totalDraws / 72);
 
-            const canExchangeSD = Math.min(sdExchangeCount, Math.floor(remainingD / 6));
-            remainingD -= canExchangeSD * 6;
+            // R和SR合计可用：用于规则一和规则二
+            let availableRS = dCards + sdCards;
+            let availableSSR = ssrCards;
 
-            const canExchangeAny = Math.min(anyExchangeCount, Math.floor((remainingD + remainingSD) / 6));
+            // 规则一优先使用
+            let rule1Count = Math.min(rule1Max, Math.floor(availableRS / 6));
+            availableRS -= rule1Count * 6;
+
+            // 规则二其次使用
+            let rule2Count = Math.min(rule2Max, Math.floor(availableRS / 6));
+            availableRS -= rule2Count * 6;
+
+            // 规则三使用SSR
+            let rule3Count = Math.min(rule3Max, availableSSR);
+            availableSSR -= rule3Count;
 
             const container = document.getElementById('exchangeResult');
             container.innerHTML = `
-                <div class="line"><span class="label">可兑换SR卡：</span><span class="value">×${canExchangeSD}</span></div>
-                <div class="line"><span class="label">可兑换任意卡面：</span><span class="value">×${canExchangeAny}</span></div>
-                <div class="line"><span class="label">剩余R卡：</span><span class="value">${remainingD}</span></div>
-                <div class="line"><span class="label">剩余SR卡：</span><span class="value">${remainingSD}</span></div>
+                <div style="background:var(--bg);border-radius:10px;padding:10px;border:1px solid var(--border);margin-bottom:8px;">
+                    <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;">📊 可兑换统计</div>
+                    <div class="line"><span class="label">总抽数：</span><span class="value" style="color:var(--accent);font-weight:700;">${totalDraws}抽</span></div>
+                    <div class="line"><span class="label">可兑换次数（36抽/次）：</span><span class="value">${rule1Max}次</span></div>
+                    <div class="line"><span class="label">可兑换次数（72抽/次）：</span><span class="value">${rule2Max}次</span></div>
+                </div>
+                <div style="background:linear-gradient(135deg, rgba(16,185,129,0.08), rgba(32,81,125,0.08));border-radius:10px;padding:10px;border:1px solid rgba(16,185,129,0.3);margin-bottom:8px;">
+                    <div style="font-size:12px;font-weight:600;color:#10b981;margin-bottom:6px;">✅ 实际可兑换</div>
+                    <div class="line"><span class="label">规则一：6张R/SR → SR卡面</span><span class="value" style="color:#10b981;font-weight:700;">×${rule1Count}</span></div>
+                    <div class="line"><span class="label">规则二：6张R/SR → 任意卡面</span><span class="value" style="color:#10b981;font-weight:700;">×${rule2Count}</span></div>
+                    <div class="line"><span class="label">规则三：1张SSR → SSR卡面</span><span class="value" style="color:#10b981;font-weight:700;">×${rule3Count}</span></div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:10px;border:1px solid var(--border);">
+                    <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;">📦 兑换后剩余</div>
+                    <div class="line"><span class="label">剩余R+SR卡片：</span><span class="value">${availableRS}张</span></div>
+                    <div class="line"><span class="label">剩余SSR卡片：</span><span class="value">${availableSSR}张</span></div>
+                </div>
+                <div style="text-align:center;margin-top:10px;font-size:11px;">
+                    <a href="https://weibo.com/1851141241/5327409427518357" target="_blank" style="color:var(--accent);">📖 查看兑换规则原文</a>
+                </div>
             `;
         }
 
@@ -5537,7 +5645,7 @@ function clearAllData() {
     <!-- 版权免责声明 -->
     <footer style="padding:20px 16px;text-align:center;border-top:1px solid var(--border);margin-top:20px;">
         <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">
-            <p>© 2026 周柯宇抽抽乐记录器 | 纯娱乐 最新更新时间:2026/8/1 19:30</p>
+            <p>© 2026 周柯宇抽抽乐记录器 | 纯娱乐 最新更新时间:2026/8/8 11:00</p>
             <p>📷 图源活动官方公开微博，侵删</p>
             <p style="margin-top:4px;">⚠️ 本工具仅用于记录抽卡数据，一切以活动官方微博发布信息为准</p>
         </div>
