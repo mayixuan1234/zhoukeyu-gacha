@@ -84,7 +84,7 @@ cd gacha-apk && bash build.sh
 | 方式 | 说明 | 为什么做 |
 |------|------|----------|
 | Excel 导入 | 批量导入粉丝在微店/接龙平台购买的抽卡数据 | 用户最初的数据就在 Excel 里，最快上手 |
-| OCR 识别 | 上传"我的抽卡"截图，Tesseract.js 自动识别卡牌信息 | 有些用户手机里只有截图没有 Excel |
+| OCR 识别 | 上传"我的抽卡"截图，双引擎 OCR 自动识别（OCR.space 主 + Tesseract.js 备） | 有些用户手机里只有截图没有 Excel |
 | 手动录入 | 表单逐条输入，支持格式清洗（如 "R44、SR8、R25"） | 抽得少的用户不想折腾 Excel |
 
 ### 数据展示
@@ -105,7 +105,7 @@ cd gacha-apk && bash build.sh
 
 - **微信内置浏览器适配**：最坑的一块——微信内核和标准浏览器行为不一致
 - **移动端响应式**：大部分用户用手机打开
-- **PWA 离线支持**：加了 service worker，无网也能打开
+- **离线能力**：Chart.js 打包到本地，无网也能看图表和记录（但 OCR 和云端总抽数需联网）
 
 ---
 
@@ -115,8 +115,8 @@ cd gacha-apk && bash build.sh
 |------|------|-----------|
 | 前端 | 原生 HTML/CSS/JS | 不需要框架学习成本，一个文件写完部署 |
 | 图表 | Chart.js | 需要饼图、柱状图、折线图，CDN 加载就行 |
-| OCR | Tesseract.js | 浏览器端 OCR 的唯一选择，虽然慢但能用 |
-| OCR 代理 | Cloudflare Worker | 避免 API Key 暴露在前端代码里 |
+| OCR 主 | OCR.space API | 云端识别速度快、准确率高，通过 Worker 代理隐藏 API Key |
+| OCR 备 | Tesseract.js | OCR.space 挂了自动降级到浏览器端 WASM，保底方案 |
 | 存储 | localStorage | 用户数据存自己手机，不用服务器 |
 | 部署 | Cloudflare Pages | 免费、自动 HTTPS、全球 CDN |
 | 扩展 | Chrome Extension | 从网页批量抓取抽卡数据 |
@@ -141,11 +141,11 @@ cd gacha-apk && bash build.sh
 
 **解决**：加了强制备份提醒——检测到数据为空的瞬间弹窗"你的数据好像丢失了，建议尽快备份"。同时做了剪贴板备份方案（因为微信内核 `navigator.clipboard` 也不兼容，得用 `document.execCommand('copy')` 降级）。
 
-### 2. Tesseract.js 加载慢 + 安全风险
+### 2. OCR 双引擎策略
 
-Tesseract.js 的 WASM 文件有几十 MB，直接前端加载网页卡死。而且训练数据和 API Key 不能放前端。
+OCR.space API 速度快准确率高，但有时服务不稳定。Tesseract.js 浏览器端 WASM 不依赖外部服务，但加载慢、准确率略低。
 
-**解决**：Tesseract.js 按需加载（`createWorker` 懒加载），OCR 调 Cloudflare Worker 代理。Worker 侧做鉴权 + 请求频率限制，避免被恶意调用。
+**解决**：双引擎——先调 OCR.space（通过 Cloudflare Worker 代理隐藏 API Key），失败自动降级到 Tesseract.js。用户无感知切换。Tesseract.js WASM 文件几十 MB，用 `createWorker` 懒加载，用户点到 OCR 才开始下载。
 
 ### 3. OCR 识别准确率
 
@@ -226,7 +226,7 @@ APK 构建工程在独立目录维护，详见 `gacha-apk/`。
 | v4 | 2026.7.13 晚上 | 排行榜 + 数据导出备份 |
 | v5 | 2026.7.14 | OCR 识别 + 批量文本导入 |
 | v6 | 2026.7.15 | 公告系统 + 移动端适配 + 微信兼容 |
-| v6.1 | 2026.7.16 | Bug 修复 + service worker PWA |
+| v6.1 | 2026.7.16 | Bug 修复 + 微信兼容增强 + Chart.js 本地化 |
 | APK v1.0 | 2026.8.5 | 首次打包 Android APK |
 | APK v1.1 | 2026.8.6 | 公告同步 |
 | APK v1.2 | 2026.8.8 | 碎卡兑换合并 + 新版 README |
