@@ -120,7 +120,7 @@ cd gacha-apk && bash build.sh
 
 ---
 
-## 🧪 踩过的坑（面试能聊）
+## 🧪 踩过的坑
 
 ### 1. 微信内置浏览器清 localStorage
 
