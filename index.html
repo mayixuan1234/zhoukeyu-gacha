@@ -1312,6 +1312,16 @@
             .app { padding: 20px; }
         }
 
+        /* 排行榜（2026-09-16 新增） */
+        .rank-my-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--card-radius); padding: 16px; margin-bottom: 8px; }
+        .rank-list-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin-bottom: 8px; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); }
+        .rank-list-item.top3 { background: linear-gradient(135deg, rgba(231, 194, 109, 0.16), rgba(231, 194, 109, 0.04)); border-color: rgba(231, 194, 109, 0.45); }
+        .rank-no { width: 44px; text-align: center; font-weight: 700; color: var(--text-secondary); font-size: 15px; flex-shrink: 0; }
+        .rank-no.top3 { color: var(--accent); font-size: 20px; }
+        .rank-name { flex: 1; font-size: 14px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+        .rank-name.top3 { font-weight: 600; }
+        .rank-draws { font-size: 14px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+        .rank-draws span { font-size: 11px; color: var(--text-secondary); font-weight: 400; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -2162,6 +2172,47 @@
 
         </div>
 
+        <!-- 页面6：排行（2026-09-16 新增） -->
+        <div class="page" id="page-rank">
+            <div class="header">
+                <div class="header-title">🏆 抽卡排行榜</div>
+                <div class="header-subtitle">全站粉丝抽数排行 · 晒排名 = 传播</div>
+            </div>
+
+            <div class="rank-my-card">
+                <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">👤 我的信息</div>
+                <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+                    <input type="text" id="rankNickname" placeholder="输入昵称（上榜用，最多12字）" maxlength="12"
+                           style="flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:14px;min-width:0;" />
+                    <button class="btn btn-primary" onclick="saveRankNickname()" style="padding:10px 14px;font-size:13px;flex-shrink:0;">保存</button>
+                </div>
+                <div style="display:flex;gap:8px;text-align:center;">
+                    <div style="flex:1;background:var(--bg);border-radius:12px;padding:12px 8px;">
+                        <div style="font-size:12px;color:var(--text-secondary);">我的总抽数</div>
+                        <div style="font-size:22px;font-weight:700;color:var(--accent);margin-top:4px;" id="rankMyDraws">-</div>
+                    </div>
+                    <div style="flex:1;background:var(--bg);border-radius:12px;padding:12px 8px;">
+                        <div style="font-size:12px;color:var(--text-secondary);">全站排名</div>
+                        <div style="font-size:22px;font-weight:700;color:var(--accent);margin-top:4px;" id="rankMyRank">-</div>
+                    </div>
+                    <div style="flex:1;background:var(--bg);border-radius:12px;padding:12px 8px;">
+                        <div style="font-size:12px;color:var(--text-secondary);">参与人数</div>
+                        <div style="font-size:22px;font-weight:700;color:var(--accent);margin-top:4px;" id="rankTotalPeople">-</div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="refreshRanking()" style="width:100%;margin-top:12px;font-size:14px;padding:10px;">🔄 刷新排名</button>
+            </div>
+
+            <div style="font-size:15px;font-weight:700;margin:16px 4px 10px;">🏅 全站榜单 Top 50</div>
+            <div id="rankList">
+                <div style="text-align:center;padding:30px;color:var(--text-secondary);font-size:13px;">打开后自动加载榜单</div>
+            </div>
+            <div style="font-size:11px;color:var(--text-secondary);line-height:1.7;margin-top:16px;text-align:center;">
+                数据由用户自主上报，仅用于社区互动展示<br/>
+                抽数超过全站总抽数会被拒绝，请确保记录真实
+            </div>
+        </div>
+
     <!-- 隐藏输入 -->
     <input type="file" id="importInput" accept=".json" class="hidden" onchange="importData(this)" />
     <input type="file" id="ocrInput" accept="image/*" multiple class="hidden" onchange="handleOcrUpload(this)" />
@@ -2187,6 +2238,12 @@
         <div class="tab-item" onclick="window._switchTab('history')">
             <span class="icon">📋</span>
             <span>记录</span>
+        </div>
+        <div class="tab-item" onclick="window._switchTab('rank')">
+            <span class="icon">🏆</span>
+            <span>排行</span>
+        </div>
+
         </div>
 
         <!-- 活动弹窗 -->
@@ -2595,6 +2652,111 @@
         function saveData() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         }
+        // ===== 排行榜逻辑（2026-09-16 新增）=====
+        const RANK_UID_KEY = 'zhoukeyu_gacha_uid';
+        const RANK_NICK_KEY = 'zhoukeyu_gacha_nickname';
+        const RANK_API = '/api/rank';
+
+        function getRankUid() {
+            let uid = localStorage.getItem(RANK_UID_KEY);
+            if (!uid) {
+                uid = 'u_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+                localStorage.setItem(RANK_UID_KEY, uid);
+            }
+            return uid;
+        }
+
+        function getRankNickname() {
+            return (localStorage.getItem(RANK_NICK_KEY) || '').trim();
+        }
+
+        function saveRankNickname() {
+            const input = document.getElementById('rankNickname');
+            const name = (input.value || '').trim();
+            if (!name) { showToast('请输入昵称'); return; }
+            if (name.length > 12) { showToast('昵称最多 12 个字'); return; }
+            localStorage.setItem(RANK_NICK_KEY, name);
+            showToast('✅ 昵称已保存');
+            reportMyRank(false);
+        }
+
+        function initRankPage() {
+            const nickInput = document.getElementById('rankNickname');
+            const nick = getRankNickname();
+            if (nickInput && nick) nickInput.value = nick;
+            const myDraws = getTotalDraws();
+            const el = document.getElementById('rankMyDraws');
+            if (el) el.textContent = myDraws;
+            refreshRanking();
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+
+        async function reportMyRank(silent) {
+            const nickname = getRankNickname();
+            if (!nickname) return;
+            const draws = getTotalDraws();
+            if (draws <= 0) return;
+            try {
+                const res = await fetch(RANK_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid: getRankUid(), nickname: nickname, draws: draws })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const rankEl = document.getElementById('rankMyRank');
+                    if (rankEl) rankEl.textContent = '第 ' + data.rank + ' 名';
+                    const totalEl = document.getElementById('rankTotalPeople');
+                    if (totalEl) totalEl.textContent = data.total + ' 人';
+                    if (!silent) showToast('✅ 排名已更新');
+                } else if (data.message) {
+                    if (!silent) showToast('⚠️ ' + data.message);
+                }
+            } catch (e) {
+                if (!silent) showToast('网络异常，排行暂不可用');
+            }
+        }
+
+        async function refreshRanking() {
+            const listEl = document.getElementById('rankList');
+            if (!listEl) return;
+            listEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);font-size:13px;">加载中…</div>';
+            try {
+                const res = await fetch(RANK_API);
+                const data = await res.json();
+                if (!data.success) throw new Error(data.message || '加载失败');
+                if (!data.list || data.list.length === 0) {
+                    listEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);font-size:13px;">榜单空空如也，快来抢占第一名！</div>';
+                    const totalEl = document.getElementById('rankTotalPeople');
+                    if (totalEl) totalEl.textContent = '0 人';
+                    return;
+                }
+                const medals = ['🥇', '🥈', '🥉'];
+                let htmlStr = '';
+                data.list.forEach(function (item, i) {
+                    const rank = i + 1;
+                    const medal = rank <= 3 ? medals[rank - 1] : rank;
+                    const top3 = rank <= 3;
+                    htmlStr += '<div class="rank-list-item' + (top3 ? ' top3' : '') + '">'
+                        + '<div class="rank-no' + (top3 ? ' top3' : '') + '">' + medal + '</div>'
+                        + '<div class="rank-name' + (top3 ? ' top3' : '') + '">' + escapeHtml(item.nickname) + '</div>'
+                        + '<div class="rank-draws">' + item.draws + ' <span>抽</span></div>'
+                        + '</div>';
+                });
+                listEl.innerHTML = htmlStr;
+                const totalEl = document.getElementById('rankTotalPeople');
+                if (totalEl) totalEl.textContent = (data.total || data.list.length) + ' 人';
+                if (getRankNickname()) reportMyRank(true);
+            } catch (e) {
+                listEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);font-size:13px;">排行榜加载失败，请检查网络后点击刷新</div>';
+            }
+        }
+
 
         function getTotalDraws() {
             if (state.settings.isEndbox) {
@@ -2753,6 +2915,7 @@
             if (tab === 'stats') renderDashboard();
             if (tab === 'collection') renderCollection();
             if (tab === 'history') renderHistory();
+            if (tab === 'rank') initRankPage();
             if (tab === 'entry') {
                 initEntry();
                 document.getElementById('entryFooter').classList.remove('hidden');
